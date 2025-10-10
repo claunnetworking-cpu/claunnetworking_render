@@ -1,10 +1,9 @@
 services:
-  # Backend API
   - type: web
     name: claunnet-api
     env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "python3 -m gunicorn --bind 0.0.0.0:$PORT wsgi:application"
+    buildCommand: pip install -r requirements.txt
+    startCommand: python3 -m gunicorn --bind 0.0.0.0:$PORT wsgi:application
     envVars:
       - key: FLASK_ENV
         value: production
@@ -12,11 +11,10 @@ services:
         generateValue: true
     healthCheckPath: /api/health
 
-  # Site Principal (claunnet.com.br)
   - type: static
     name: claunnet-main
     staticPublishPath: ./main-site
-    buildCommand: "echo 'No build required for static site'"
+    buildCommand: echo 'No build required for static site'
     headers:
       - path: /*
         name: X-Frame-Options
@@ -30,11 +28,10 @@ services:
         destination: https://admin.claunnet.com.br
         status: 301
 
-  # Painel Administrativo (admin.claunnet.com.br)
   - type: static
     name: claunnet-admin
     staticPublishPath: ./admin-site
-    buildCommand: "echo 'No build required for admin site'"
+    buildCommand: echo 'No build required for admin site'
     headers:
       - path: /*
         name: X-Frame-Options
