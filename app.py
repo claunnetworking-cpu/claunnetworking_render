@@ -8,8 +8,8 @@ Sistema completo de backend para a plataforma ClaunNetworking
 from flask import Flask, request, jsonify, session, send_from_directory
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
-import sqlite3
 import os
+import sqlite3
 import json
 from datetime import datetime, timedelta
 import uuid
