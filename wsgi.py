@@ -5,9 +5,9 @@
 WSGI entry point para produção
 """
 
-from app import create_app
+from app import app
 
-application = create_app()
+application = app
 
 if __name__ == "__main__":
     application.run()
