@@ -504,5 +504,8 @@ def serve_static(filename):
 # Inicializar banco de dados
 init_database()
 
+def create_app():
+    return app
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
