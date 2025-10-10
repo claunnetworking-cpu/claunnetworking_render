@@ -2,14 +2,17 @@ services:
   - type: web
     name: claunnet-api
     env: python
+    plan: free
     pythonVersion: "3.11"
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn --bind 0.0.0.0:$PORT wsgi:application
+    startCommand: python app.py
     envVars:
       - key: FLASK_ENV
         value: production
       - key: ADMIN_PASSWORD
         generateValue: true
+      - key: PORT
+        value: 10000
     healthCheckPath: /api/health
 
   - type: static
