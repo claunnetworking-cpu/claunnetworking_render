@@ -6,14 +6,14 @@ services:
     region: oregon
     branch: main
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn --bind 0.0.0.0:$PORT wsgi:application
+    startCommand: gunicorn --bind 0.0.0.0:$PORT app:app
     envVars:
       - key: FLASK_ENV
         value: production
       - key: SECRET_KEY
         generateValue: true
-      - key: ADMIN_PASSWORD
-        generateValue: true
+      - key: DATABASE_URL
+        value: postgresql://claunnetworking_user:SHZXzj6270IughZA7c5mLJYqPxe6bzNe@dpg-d3pcfr49c44c73budb40-a/claunnetworking
     healthCheckPath: /api/health
   
   - type: static
@@ -47,4 +47,3 @@ services:
       - path: /*
         name: Cache-Control
         value: no-cache, no-store, must-revalidate
-

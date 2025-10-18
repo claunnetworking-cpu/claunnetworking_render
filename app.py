@@ -3,261 +3,264 @@
 """
 ClaunNetworking Backend API
 Sistema completo de backend para a plataforma ClaunNetworking
-Suporta PostgreSQL (produção) e SQLite (desenvolvimento)
 """
 
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
-import json
-from datetime import datetime, timedelta
-import uuid
-from urllib.parse import urlparse
+import sys
+from datetime import datetime
 
 app = Flask(__name__)
 
 # Configuração de Secret Key via variável de ambiente
 app.secret_key = os.environ.get('SECRET_KEY', 'dev_secret_key_change_in_production')
 
-# Configuração de CORS - ajuste as origens conforme necessário
+# Configuração de CORS
 ALLOWED_ORIGINS = os.environ.get('ALLOWED_ORIGINS', '*').split(',')
 CORS(app, 
      resources={r"/api/*": {"origins": ALLOWED_ORIGINS}},
      supports_credentials=True)
 
-# Configurações de Banco de Dados - USANDO POSTGRESQL
+# Configurações de Banco de Dados
 DATABASE_URL = os.environ.get('DATABASE_URL', 'postgresql://claunnetworking_user:SHZXzj6270IughZA7c5mLJYqPxe6bzNe@dpg-d3pcfr49c44c73budb40-a/claunnetworking')
 
 # Ajustar URL do PostgreSQL se necessário
-if DATABASE_URL.startswith('postgres://'):
+if DATABASE_URL and DATABASE_URL.startswith('postgres://'):
     DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
 
 UPLOAD_FOLDER = 'uploads'
-
-# Criar diretórios necessários
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# SEMPRE usar PostgreSQL em produção
-USE_POSTGRESQL = True
-
-import psycopg2
-from psycopg2.extras import RealDictCursor
+# Importar psycopg3 (moderno e compatível com Python 3.13)
+try:
+    import psycopg
+    from psycopg.rows import dict_row
+    print("✅ psycopg3 importado com sucesso")
+except ImportError as e:
+    print(f"❌ Erro ao importar psycopg3: {e}")
+    sys.exit(1)
 
 def get_db_connection():
-    """Retorna uma conexão com o banco de dados PostgreSQL"""
+    """Retorna uma conexão com o banco de dados PostgreSQL usando psycopg3"""
     try:
-        conn = psycopg2.connect(DATABASE_URL)
+        conn = psycopg.connect(DATABASE_URL)
+        print("✅ Conexão com PostgreSQL estabelecida")
         return conn
     except Exception as e:
-        print(f"Erro ao conectar com PostgreSQL: {e}")
+        print(f"❌ Erro ao conectar com PostgreSQL: {e}")
         raise e
 
 def init_database():
-    """Inicializa o banco de dados com todas as tabelas necessárias"""
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
-    # SQL para PostgreSQL
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-            id SERIAL PRIMARY KEY,
-            email VARCHAR(255) UNIQUE NOT NULL,
-            password_hash VARCHAR(255) NOT NULL,
-            user_type VARCHAR(50) NOT NULL,
-            name VARCHAR(255) NOT NULL,
-            phone VARCHAR(50),
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            is_active BOOLEAN DEFAULT TRUE,
-            is_verified BOOLEAN DEFAULT FALSE,
-            profile_public BOOLEAN DEFAULT TRUE
-        )
-    ''')
-    
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS candidate_profiles (
-            id SERIAL PRIMARY KEY,
-            user_id INTEGER NOT NULL,
-            birth_date DATE,
-            marital_status VARCHAR(50),
-            nationality VARCHAR(100),
-            linkedin_url VARCHAR(255),
-            address_cep VARCHAR(20),
-            address_street VARCHAR(255),
-            address_number VARCHAR(20),
-            address_complement VARCHAR(100),
-            address_neighborhood VARCHAR(100),
-            address_city VARCHAR(100),
-            address_state VARCHAR(50),
-            professional_title VARCHAR(255),
-            experience_years INTEGER,
-            sector VARCHAR(100),
-            level VARCHAR(50),
-            work_modality VARCHAR(50),
-            salary_expectation DECIMAL(10,2),
-            summary TEXT,
-            skills TEXT,
-            languages TEXT,
-            education_level VARCHAR(100),
-            course VARCHAR(255),
-            institution VARCHAR(255),
-            graduation_year INTEGER,
-            availability_status VARCHAR(50),
-            start_availability DATE,
-            FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-        )
-    ''')
-    
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS company_profiles (
-            id SERIAL PRIMARY KEY,
-            user_id INTEGER NOT NULL,
-            cnpj VARCHAR(20),
-            company_type VARCHAR(100),
-            founded_year INTEGER,
-            sector VARCHAR(100),
-            employees_count VARCHAR(50),
-            tagline VARCHAR(255),
-            description TEXT,
-            address_cep VARCHAR(20),
-            address_street VARCHAR(255),
-            address_number VARCHAR(20),
-            address_complement VARCHAR(100),
-            address_neighborhood VARCHAR(100),
-            address_city VARCHAR(100),
-            address_state VARCHAR(50),
-            work_modality VARCHAR(50),
-            company_culture TEXT,
-            benefits TEXT,
-            areas_of_operation TEXT,
-            website VARCHAR(255),
-            linkedin_url VARCHAR(255),
-            responsible_name VARCHAR(255),
-            responsible_email VARCHAR(255),
-            responsible_phone VARCHAR(50),
-            FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-        )
-    ''')
-    
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS institution_profiles (
-            id SERIAL PRIMARY KEY,
-            user_id INTEGER NOT NULL,
-            cnpj VARCHAR(20),
-            institution_type VARCHAR(100),
-            founded_year INTEGER,
-            students_count INTEGER,
-            mec_code VARCHAR(50),
-            description TEXT,
-            address_cep VARCHAR(20),
-            address_street VARCHAR(255),
-            address_number VARCHAR(20),
-            address_complement VARCHAR(100),
-            address_neighborhood VARCHAR(100),
-            address_city VARCHAR(100),
-            address_state VARCHAR(50),
-            courses_offered TEXT,
-            education_levels TEXT,
-            modalities TEXT,
-            specialization_areas TEXT,
-            special_programs TEXT,
-            website VARCHAR(255),
-            linkedin_url VARCHAR(255),
-            responsible_name VARCHAR(255),
-            responsible_email VARCHAR(255),
-            responsible_phone VARCHAR(50),
-            FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-        )
-    ''')
-    
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS jobs (
-            id SERIAL PRIMARY KEY,
-            company_id INTEGER NOT NULL,
-            title VARCHAR(255) NOT NULL,
-            description TEXT,
-            requirements TEXT,
-            benefits TEXT,
-            salary_range VARCHAR(100),
-            location VARCHAR(255),
-            work_modality VARCHAR(50),
-            job_type VARCHAR(50),
-            area VARCHAR(100),
-            level VARCHAR(50),
-            is_active BOOLEAN DEFAULT TRUE,
-            is_featured BOOLEAN DEFAULT FALSE,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            expires_at DATE,
-            FOREIGN KEY (company_id) REFERENCES users (id) ON DELETE CASCADE
-        )
-    ''')
-    
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS applications (
-            id SERIAL PRIMARY KEY,
-            job_id INTEGER NOT NULL,
-            candidate_id INTEGER NOT NULL,
-            status VARCHAR(50) DEFAULT 'pending',
-            applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            message TEXT,
-            FOREIGN KEY (job_id) REFERENCES jobs (id) ON DELETE CASCADE,
-            FOREIGN KEY (candidate_id) REFERENCES users (id) ON DELETE CASCADE
-        )
-    ''')
-    
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS courses (
-            id SERIAL PRIMARY KEY,
-            institution_id INTEGER NOT NULL,
-            title VARCHAR(255) NOT NULL,
-            description TEXT,
-            category VARCHAR(100),
-            level VARCHAR(50),
-            modality VARCHAR(50),
-            duration VARCHAR(100),
-            price DECIMAL(10,2) DEFAULT 0,
-            is_free BOOLEAN DEFAULT TRUE,
-            is_featured BOOLEAN DEFAULT FALSE,
-            is_active BOOLEAN DEFAULT TRUE,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (institution_id) REFERENCES users (id) ON DELETE CASCADE
-        )
-    ''')
-    
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS plans (
-            id SERIAL PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-            description TEXT,
-            price DECIMAL(10,2) NOT NULL,
-            features TEXT,
-            plan_type VARCHAR(50) NOT NULL,
-            is_active BOOLEAN DEFAULT TRUE
-        )
-    ''')
-    
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS subscriptions (
-            id SERIAL PRIMARY KEY,
-            user_id INTEGER NOT NULL,
-            plan_id INTEGER NOT NULL,
-            status VARCHAR(50) DEFAULT 'active',
-            started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            expires_at DATE,
-            FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-            FOREIGN KEY (plan_id) REFERENCES plans (id) ON DELETE CASCADE
-        )
-    ''')
-    
-    conn.commit()
-    conn.close()
+    """Inicializa o banco de dados com tratamento de erro"""
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # SQL para PostgreSQL
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                email VARCHAR(255) UNIQUE NOT NULL,
+                password_hash VARCHAR(255) NOT NULL,
+                user_type VARCHAR(50) NOT NULL,
+                name VARCHAR(255) NOT NULL,
+                phone VARCHAR(50),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                is_active BOOLEAN DEFAULT TRUE,
+                is_verified BOOLEAN DEFAULT FALSE,
+                profile_public BOOLEAN DEFAULT TRUE
+            )
+        ''')
+        
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS candidate_profiles (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL,
+                birth_date DATE,
+                marital_status VARCHAR(50),
+                nationality VARCHAR(100),
+                linkedin_url VARCHAR(255),
+                address_cep VARCHAR(20),
+                address_street VARCHAR(255),
+                address_number VARCHAR(20),
+                address_complement VARCHAR(100),
+                address_neighborhood VARCHAR(100),
+                address_city VARCHAR(100),
+                address_state VARCHAR(50),
+                professional_title VARCHAR(255),
+                experience_years INTEGER,
+                sector VARCHAR(100),
+                level VARCHAR(50),
+                work_modality VARCHAR(50),
+                salary_expectation DECIMAL(10,2),
+                summary TEXT,
+                skills TEXT,
+                languages TEXT,
+                education_level VARCHAR(100),
+                course VARCHAR(255),
+                institution VARCHAR(255),
+                graduation_year INTEGER,
+                availability_status VARCHAR(50),
+                start_availability DATE,
+                FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+            )
+        ''')
+        
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS company_profiles (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL,
+                cnpj VARCHAR(20),
+                company_type VARCHAR(100),
+                founded_year INTEGER,
+                sector VARCHAR(100),
+                employees_count VARCHAR(50),
+                tagline VARCHAR(255),
+                description TEXT,
+                address_cep VARCHAR(20),
+                address_street VARCHAR(255),
+                address_number VARCHAR(20),
+                address_complement VARCHAR(100),
+                address_neighborhood VARCHAR(100),
+                address_city VARCHAR(100),
+                address_state VARCHAR(50),
+                work_modality VARCHAR(50),
+                company_culture TEXT,
+                benefits TEXT,
+                areas_of_operation TEXT,
+                website VARCHAR(255),
+                linkedin_url VARCHAR(255),
+                responsible_name VARCHAR(255),
+                responsible_email VARCHAR(255),
+                responsible_phone VARCHAR(50),
+                FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+            )
+        ''')
+        
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS institution_profiles (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL,
+                cnpj VARCHAR(20),
+                institution_type VARCHAR(100),
+                founded_year INTEGER,
+                students_count INTEGER,
+                mec_code VARCHAR(50),
+                description TEXT,
+                address_cep VARCHAR(20),
+                address_street VARCHAR(255),
+                address_number VARCHAR(20),
+                address_complement VARCHAR(100),
+                address_neighborhood VARCHAR(100),
+                address_city VARCHAR(100),
+                address_state VARCHAR(50),
+                courses_offered TEXT,
+                education_levels TEXT,
+                modalities TEXT,
+                specialization_areas TEXT,
+                special_programs TEXT,
+                website VARCHAR(255),
+                linkedin_url VARCHAR(255),
+                responsible_name VARCHAR(255),
+                responsible_email VARCHAR(255),
+                responsible_phone VARCHAR(50),
+                FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+            )
+        ''')
+        
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS jobs (
+                id SERIAL PRIMARY KEY,
+                company_id INTEGER NOT NULL,
+                title VARCHAR(255) NOT NULL,
+                description TEXT,
+                requirements TEXT,
+                benefits TEXT,
+                salary_range VARCHAR(100),
+                location VARCHAR(255),
+                work_modality VARCHAR(50),
+                job_type VARCHAR(50),
+                area VARCHAR(100),
+                level VARCHAR(50),
+                is_active BOOLEAN DEFAULT TRUE,
+                is_featured BOOLEAN DEFAULT FALSE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                expires_at DATE,
+                FOREIGN KEY (company_id) REFERENCES users (id) ON DELETE CASCADE
+            )
+        ''')
+        
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS applications (
+                id SERIAL PRIMARY KEY,
+                job_id INTEGER NOT NULL,
+                candidate_id INTEGER NOT NULL,
+                status VARCHAR(50) DEFAULT 'pending',
+                applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                message TEXT,
+                FOREIGN KEY (job_id) REFERENCES jobs (id) ON DELETE CASCADE,
+                FOREIGN KEY (candidate_id) REFERENCES users (id) ON DELETE CASCADE
+            )
+        ''')
+        
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS courses (
+                id SERIAL PRIMARY KEY,
+                institution_id INTEGER NOT NULL,
+                title VARCHAR(255) NOT NULL,
+                description TEXT,
+                category VARCHAR(100),
+                level VARCHAR(50),
+                modality VARCHAR(50),
+                duration VARCHAR(100),
+                price DECIMAL(10,2) DEFAULT 0,
+                is_free BOOLEAN DEFAULT TRUE,
+                is_featured BOOLEAN DEFAULT FALSE,
+                is_active BOOLEAN DEFAULT TRUE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (institution_id) REFERENCES users (id) ON DELETE CASCADE
+            )
+        ''')
+        
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS plans (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                description TEXT,
+                price DECIMAL(10,2) NOT NULL,
+                features TEXT,
+                plan_type VARCHAR(50) NOT NULL,
+                is_active BOOLEAN DEFAULT TRUE
+            )
+        ''')
+        
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS subscriptions (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL,
+                plan_id INTEGER NOT NULL,
+                status VARCHAR(50) DEFAULT 'active',
+                started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                expires_at DATE,
+                FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+                FOREIGN KEY (plan_id) REFERENCES plans (id) ON DELETE CASCADE
+            )
+        ''')
+        
+        conn.commit()
+        conn.close()
+        print("✅ Banco de dados inicializado com sucesso")
+        
+    except Exception as e:
+        print(f"❌ Erro ao inicializar banco de dados: {e}")
 
 # Rota de Health Check
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Health check endpoint para monitoramento do Render"""
     try:
-        # Verifica se o banco de dados está acessível
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('SELECT 1')
@@ -530,10 +533,11 @@ def get_courses():
         return jsonify({'error': str(e)}), 500
 
 # Inicializar banco de dados
-init_database()
-
-def create_app():
-    return app
+try:
+    init_database()
+    print("✅ Aplicação inicializada com sucesso")
+except Exception as e:
+    print(f"❌ Erro na inicialização: {e}")
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
