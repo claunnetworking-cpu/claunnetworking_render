@@ -40,12 +40,24 @@ try:
     print("✅ psycopg3 importado com sucesso")
 except ImportError as e:
     print(f"❌ Erro ao importar psycopg3: {e}")
-    sys.exit(1)
+    # Tentar fallback para psycopg2 se psycopg3 falhar
+    try:
+        import psycopg2
+        from psycopg2.extras import RealDictCursor
+        print("✅ psycopg2 importado como fallback")
+    except ImportError as e2:
+        print(f"❌ Erro ao importar psycopg2: {e2}")
+        sys.exit(1)
 
 def get_db_connection():
-    """Retorna uma conexão com o banco de dados PostgreSQL usando psycopg3"""
+    """Retorna uma conexão com o banco de dados PostgreSQL"""
     try:
-        conn = psycopg.connect(DATABASE_URL)
+        # Tentar psycopg3 primeiro
+        if 'psycopg' in sys.modules:
+            conn = psycopg.connect(DATABASE_URL)
+        else:
+            # Fallback para psycopg2
+            conn = psycopg2.connect(DABASE_URL)
         print("✅ Conexão com PostgreSQL estabelecida")
         return conn
     except Exception as e:
