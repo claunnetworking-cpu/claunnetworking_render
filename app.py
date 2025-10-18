@@ -33,11 +33,12 @@ if DATABASE_URL and DATABASE_URL.startswith('postgres://'):
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# Importar psycopg3 (moderno e compatível com Python 3.13)
+# Importar psycopg3 (versão estável 3.2.10)
 try:
     import psycopg
     from psycopg.rows import dict_row
     print("✅ psycopg3 importado com sucesso")
+    USE_PSYCOPG3 = True
 except ImportError as e:
     print(f"❌ Erro ao importar psycopg3: {e}")
     # Tentar fallback para psycopg2 se psycopg3 falhar
@@ -45,6 +46,7 @@ except ImportError as e:
         import psycopg2
         from psycopg2.extras import RealDictCursor
         print("✅ psycopg2 importado como fallback")
+        USE_PSYCOPG3 = False
     except ImportError as e2:
         print(f"❌ Erro ao importar psycopg2: {e2}")
         sys.exit(1)
@@ -53,11 +55,11 @@ def get_db_connection():
     """Retorna uma conexão com o banco de dados PostgreSQL"""
     try:
         # Tentar psycopg3 primeiro
-        if 'psycopg' in sys.modules:
+        if USE_PSYCOPG3:
             conn = psycopg.connect(DATABASE_URL)
         else:
             # Fallback para psycopg2
-            conn = psycopg2.connect(DABASE_URL)
+            conn = psycopg2.connect(DATABASE_URL)  # CORREÇÃO: DATABASE_URL estava escrito errado
         print("✅ Conexão com PostgreSQL estabelecida")
         return conn
     except Exception as e:
