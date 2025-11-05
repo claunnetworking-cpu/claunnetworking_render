@@ -1,0 +1,12 @@
+# Redirecionamentos para o painel administrativo ClaunNetworking
+
+# Redirecionar root para index
+/ /index.html 200
+
+# Redirecionamentos para páginas do admin
+/dashboard /index.html 200
+/painel /index.html 200
+/admin /index.html 200
+
+# Fallback para SPA
+/* /index.html 200

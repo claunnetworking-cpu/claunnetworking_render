@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Candidatos - ClaunNetworking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .logo img {
+            width: 35px;
+            height: 35px;
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: #1F2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #6B7280;
+            font-size: 1.1rem;
+        }
+
+        .search-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-input, .filter-select {
+            padding: 0.75rem;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .filter-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: #6B46C1;
+        }
+
+        .search-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #6B46C1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #553C9A;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #F3F4F6;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #E5E7EB;
+        }
+
+        .results-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #E5E7EB;
+        }
+
+        .results-count {
+            font-size: 1.1rem;
+            color: #6B7280;
+        }
+
+        .sort-select {
+            padding: 0.5rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 6px;
+        }
+
+        .candidates-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .candidate-card {
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .candidate-card:hover {
+            border-color: #6B46C1;
+            box-shadow: 0 4px 20px rgba(107, 70, 193, 0.1);
+        }
+
+        .candidate-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .candidate-info {
+            flex: 1;
+        }
+
+        .candidate-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .candidate-title {
+            color: #6B46C1;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .candidate-location {
+            color: #6B7280;
+            font-size: 0.9rem;
+        }
+
+        .candidate-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .btn-view {
+            background: #EBF8FF;
+            color: #3182CE;
+        }
+
+        .btn-view:hover {
+            background: #BEE3F8;
+        }
+
+        .btn-invite {
+            background: #F0FDF4;
+            color: #16A34A;
+        }
+
+        .btn-invite:hover {
+            background: #DCFCE7;
+        }
+
+        .btn-save {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+
+        .btn-save:hover {
+            background: #FDE68A;
+        }
+
+        .candidate-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #6B7280;
+        }
+
+        .candidate-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .skill-tag {
+            background: #F3F4F6;
+            color: #374151;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .profile-views {
+            background: #EBF8FF;
+            color: #3182CE;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6B7280;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-actions {
+                flex-direction: column;
+            }
+
+            .candidate-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .candidate-actions {
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="assets/logo_transparent.png" alt="ClaunNetworking">
+                ClaunNetworking
+            </div>
+            <a href="company_dashboard.html" class="back-link">
+                ← Voltar ao Painel
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">🔍 Buscar Candidatos</h1>
+            <p class="page-subtitle">Encontre os melhores talentos para sua empresa</p>
+        </div>
+
+        <div class="search-section">
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Área de Atuação</label>
+                    <select class="filter-select" id="areaFilter">
+                        <option value="">Todas as áreas</option>
+                        <option value="tecnologia">Tecnologia</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="vendas">Vendas</option>
+                        <option value="financas">Finanças</option>
+                        <option value="rh">Recursos Humanos</option>
+                        <option value="educacao">Educação</option>
+                        <option value="saude">Saúde</option>
+                        <option value="engenharia">Engenharia</option>
+                        <option value="design">Design</option>
+                        <option value="juridico">Jurídico</option>
+                        <option value="administracao">Administração</option>
+                        <option value="logistica">Logística</option>
+                        <option value="producao">Produção</option>
+                        <option value="qualidade">Qualidade</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Experiência</label>
+                    <select class="filter-select" id="experienceFilter">
+                        <option value="">Qualquer experiência</option>
+                        <option value="sem_experiencia">Sem experiência</option>
+                        <option value="ate_1_ano">Até 1 ano</option>
+                        <option value="1_3_anos">1 a 3 anos</option>
+                        <option value="3_5_anos">3 a 5 anos</option>
+                        <option value="5_10_anos">5 a 10 anos</option>
+                        <option value="mais_10_anos">Mais de 10 anos</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Setor</label>
+                    <select class="filter-select" id="sectorFilter">
+                        <option value="">Todos os setores</option>
+                        <option value="tecnologia">Tecnologia</option>
+                        <option value="financeiro">Financeiro</option>
+                        <option value="saude">Saúde</option>
+                        <option value="educacao">Educação</option>
+                        <option value="varejo">Varejo</option>
+                        <option value="industrial">Industrial</option>
+                        <option value="servicos">Serviços</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Nível</label>
+                    <select class="filter-select" id="levelFilter">
+                        <option value="">Todos os níveis</option>
+                        <option value="estagiario">Estagiário</option>
+                        <option value="trainee">Trainee</option>
+                        <option value="junior">Júnior</option>
+                        <option value="pleno">Pleno</option>
+                        <option value="senior">Sênior</option>
+                        <option value="especialista">Especialista</option>
+                        <option value="coordenador">Coordenador</option>
+                        <option value="gerente">Gerente</option>
+                        <option value="diretor">Diretor</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Localização</label>
+                    <input type="text" class="filter-input" id="locationFilter" placeholder="Cidade, Estado">
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Modalidade</label>
+                    <select class="filter-select" id="workModeFilter">
+                        <option value="">Qualquer modalidade</option>
+                        <option value="presencial">Presencial</option>
+                        <option value="remoto">Remoto</option>
+                        <option value="hibrido">Híbrido</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Status</label>
+                    <select class="filter-select" id="statusFilter">
+                        <option value="">Qualquer status</option>
+                        <option value="procurando">Procurando emprego</option>
+                        <option value="disponivel">Disponível</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Palavra-chave</label>
+                    <input type="text" class="filter-input" id="keywordFilter" placeholder="Habilidades, cargo...">
+                </div>
+            </div>
+
+            <div class="search-actions">
+                <button class="btn btn-secondary" onclick="clearFilters()">
+                    Limpar Filtros
+                </button>
+                <button class="btn btn-primary" onclick="searchCandidates()">
+                    🔍 Buscar Candidatos
+                </button>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <div class="results-header">
+                <div class="results-count" id="resultsCount">
+                    Encontrados 0 candidatos
+                </div>
+                <select class="sort-select" id="sortSelect" onchange="sortResults()">
+                    <option value="relevance">Mais relevantes</option>
+                    <option value="experience">Mais experientes</option>
+                    <option value="recent">Mais recentes</option>
+                    <option value="views">Mais visualizados</option>
+                </select>
+            </div>
+
+            <div class="candidates-grid" id="candidatesGrid">
+                <div class="empty-state">
+                    <h3>🔍 Pronto para encontrar talentos?</h3>
+                    <p>Use os filtros acima para buscar candidatos que se encaixem no perfil da sua vaga.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados simulados de candidatos
+        const mockCandidates = [
+            {
+                id: 1,
+                name: "Ana Silva",
+                title: "Desenvolvedora Full Stack",
+                location: "São Paulo, SP",
+                area: "tecnologia",
+                experience: "3_5_anos",
+                sector: "tecnologia",
+                level: "pleno",
+                workMode: "hibrido",
+                status: "procurando",
+                skills: ["React", "Node.js", "Python", "AWS"],
+                views: 127,
+                summary: "Desenvolvedora apaixonada por tecnologia com 4 anos de experiência em desenvolvimento web.",
+                publicProfile: true,
+                lookingForJob: true
+            },
+            {
+                id: 2,
+                name: "Carlos Santos",
+                title: "Analista de Marketing Digital",
+                location: "Rio de Janeiro, RJ",
+                area: "marketing",
+                experience: "1_3_anos",
+                sector: "servicos",
+                level: "junior",
+                workMode: "remoto",
+                status: "procurando",
+                skills: ["Google Ads", "Facebook Ads", "Analytics", "SEO"],
+                views: 89,
+                summary: "Especialista em marketing digital com foco em performance e ROI.",
+                publicProfile: true,
+                lookingForJob: true
+            },
+            {
+                id: 3,
+                name: "Maria Oliveira",
+                title: "Gerente de Vendas",
+                location: "Belo Horizonte, MG",
+                area: "vendas",
+                experience: "5_10_anos",
+                sector: "varejo",
+                level: "gerente",
+                workMode: "presencial",
+                status: "disponivel",
+                skills: ["Gestão de Equipes", "CRM", "Negociação", "B2B"],
+                views: 203,
+                summary: "Gerente de vendas com histórico comprovado de superação de metas.",
+                publicProfile: true,
+                lookingForJob: false
+            },
+            {
+                id: 4,
+                name: "João Costa",
+                title: "Designer UX/UI",
+                location: "Curitiba, PR",
+                area: "design",
+                experience: "3_5_anos",
+                sector: "tecnologia",
+                level: "pleno",
+                workMode: "hibrido",
+                status: "procurando",
+                skills: ["Figma", "Adobe XD", "Prototyping", "User Research"],
+                views: 156,
+                summary: "Designer focado em experiência do usuário e interfaces intuitivas.",
+                publicProfile: true,
+                lookingForJob: true
+            },
+            {
+                id: 5,
+                name: "Fernanda Lima",
+                title: "Analista Financeiro",
+                location: "Brasília, DF",
+                area: "financas",
+                experience: "1_3_anos",
+                sector: "financeiro",
+                level: "junior",
+                workMode: "presencial",
+                status: "procurando",
+                skills: ["Excel Avançado", "Power BI", "Análise de Dados", "Controladoria"],
+                views: 78,
+                summary: "Analista financeiro com expertise em análise de dados e relatórios gerenciais.",
+                publicProfile: true,
+                lookingForJob: true
+            }
+        ];
+
+        let filteredCandidates = [];
+
+        function searchCandidates() {
+            const filters = {
+                area: document.getElementById('areaFilter').value,
+                experience: document.getElementById('experienceFilter').value,
+                sector: document.getElementById('sectorFilter').value,
+                level: document.getElementById('levelFilter').value,
+                location: document.getElementById('locationFilter').value.toLowerCase(),
+                workMode: document.getElementById('workModeFilter').value,
+                status: document.getElementById('statusFilter').value,
+                keyword: document.getElementById('keywordFilter').value.toLowerCase()
+            };
+
+            filteredCandidates = mockCandidates.filter(candidate => {
+                // Apenas candidatos com perfil público aparecem na busca
+                if (!candidate.publicProfile) return false;
+
+                // Filtros específicos
+                if (filters.area && candidate.area !== filters.area) return false;
+                if (filters.experience && candidate.experience !== filters.experience) return false;
+                if (filters.sector && candidate.sector !== filters.sector) return false;
+                if (filters.level && candidate.level !== filters.level) return false;
+                if (filters.workMode && candidate.workMode !== filters.workMode) return false;
+                if (filters.status && candidate.status !== filters.status) return false;
+                
+                // Filtro de localização
+                if (filters.location && !candidate.location.toLowerCase().includes(filters.location)) return false;
+                
+                // Filtro de palavra-chave (busca em skills, título e resumo)
+                if (filters.keyword) {
+                    const searchText = `${candidate.title} ${candidate.summary} ${candidate.skills.join(' ')}`.toLowerCase();
+                    if (!searchText.includes(filters.keyword)) return false;
+                }
+
+                return true;
+            });
+
+            displayResults();
+        }
+
+        function displayResults() {
+            const grid = document.getElementById('candidatesGrid');
+            const count = document.getElementById('resultsCount');
+            
+            count.textContent = `Encontrados ${filteredCandidates.length} candidatos`;
+
+            if (filteredCandidates.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <h3>😔 Nenhum candidato encontrado</h3>
+                        <p>Tente ajustar os filtros para encontrar mais candidatos.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filteredCandidates.map(candidate => `
+                <div class="candidate-card" onclick="viewProfile(${candidate.id})">
+                    <div class="candidate-header">
+                        <div class="candidate-info">
+                            <div class="candidate-name">${candidate.name}</div>
+                            <div class="candidate-title">${candidate.title}</div>
+                            <div class="candidate-location">📍 ${candidate.location}</div>
+                        </div>
+                        <div class="candidate-actions">
+                            <button class="action-btn btn-view" onclick="event.stopPropagation(); viewProfile(${candidate.id})" title="Ver perfil">
+                                👁️
+                            </button>
+                            <button class="action-btn btn-invite" onclick="event.stopPropagation(); inviteCandidate(${candidate.id})" title="Convidar">
+                                ✉️
+                            </button>
+                            <button class="action-btn btn-save" onclick="event.stopPropagation(); saveCandidate(${candidate.id})" title="Salvar">
+                                💾
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="candidate-details">
+                        <div class="detail-item">
+                            <span>💼</span>
+                            <span>${getExperienceLabel(candidate.experience)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>🏢</span>
+                            <span>${getSectorLabel(candidate.sector)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>📊</span>
+                            <span>${getLevelLabel(candidate.level)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>🌐</span>
+                            <span>${getWorkModeLabel(candidate.workMode)}</span>
+                        </div>
+                    </div>
+                    
+                    <p style="color: #6B7280; font-size: 0.9rem; margin: 1rem 0;">${candidate.summary}</p>
+                    
+                    <div class="candidate-skills">
+                        <div class="profile-views">${candidate.views} visualizações</div>
+                        ${candidate.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function clearFilters() {
+            document.getElementById('areaFilter').value = '';
+            document.getElementById('experienceFilter').value = '';
+            document.getElementById('sectorFilter').value = '';
+            document.getElementById('levelFilter').value = '';
+            document.getElementById('locationFilter').value = '';
+            document.getElementById('workModeFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('keywordFilter').value = '';
+            
+            filteredCandidates = [];
+            document.getElementById('candidatesGrid').innerHTML = `
+                <div class="empty-state">
+                    <h3>🔍 Pronto para encontrar talentos?</h3>
+                    <p>Use os filtros acima para buscar candidatos que se encaixem no perfil da sua vaga.</p>
+                </div>
+            `;
+            document.getElementById('resultsCount').textContent = 'Encontrados 0 candidatos';
+        }
+
+        function sortResults() {
+            const sortBy = document.getElementById('sortSelect').value;
+            
+            filteredCandidates.sort((a, b) => {
+                switch (sortBy) {
+                    case 'experience':
+                        const expOrder = ['sem_experiencia', 'ate_1_ano', '1_3_anos', '3_5_anos', '5_10_anos', 'mais_10_anos'];
+                        return expOrder.indexOf(b.experience) - expOrder.indexOf(a.experience);
+                    case 'recent':
+                        return b.id - a.id; // Simular por ID (mais recente)
+                    case 'views':
+                        return b.views - a.views;
+                    default: // relevance
+                        return b.views - a.views; // Por enquanto, usar views como relevância
+                }
+            });
+            
+            displayResults();
+        }
+
+        function viewProfile(candidateId) {
+            const candidate = mockCandidates.find(c => c.id === candidateId);
+            if (candidate) {
+                // Incrementar contador de visualizações
+                candidate.views++;
+                
+                // Redirecionar para a página de perfil do candidato
+                window.location.href = `candidato_perfil.html?id=${candidateId}`;
+                
+                // Atualizar a exibição se o candidato estiver nos resultados filtrados
+                if (filteredCandidates.find(c => c.id === candidateId)) {
+                    displayResults();
+                }
+            }
+        }
+
+        function inviteCandidate(candidateId) {
+            const candidate = mockCandidates.find(c => c.id === candidateId);
+            if (candidate) {
+                const message = prompt(`Enviar convite para ${candidate.name}:\n\nDigite sua mensagem personalizada:`);
+                if (message) {
+                    alert(`Convite enviado com sucesso para ${candidate.name}!\n\nMensagem: "${message}"\n\nO candidato receberá uma notificação e poderá aceitar ou recusar o convite.`);
+                }
+            }
+        }
+
+        function saveCandidate(candidateId) {
+            const candidate = mockCandidates.find(c => c.id === candidateId);
+            if (candidate) {
+                alert(`${candidate.name} foi salvo no seu banco de currículos!\n\nVocê pode acessar todos os candidatos salvos na seção "Banco de Currículos" do seu painel.`);
+            }
+        }
+
+        // Funções auxiliares para labels
+        function getExperienceLabel(exp) {
+            const labels = {
+                'sem_experiencia': 'Sem experiência',
+                'ate_1_ano': 'Até 1 ano',
+                '1_3_anos': '1-3 anos',
+                '3_5_anos': '3-5 anos',
+                '5_10_anos': '5-10 anos',
+                'mais_10_anos': '10+ anos'
+            };
+            return labels[exp] || exp;
+        }
+
+        function getSectorLabel(sector) {
+            const labels = {
+                'tecnologia': 'Tecnologia',
+                'financeiro': 'Financeiro',
+                'saude': 'Saúde',
+                'educacao': 'Educação',
+                'varejo': 'Varejo',
+                'industrial': 'Industrial',
+                'servicos': 'Serviços'
+            };
+            return labels[sector] || sector;
+        }
+
+        function getLevelLabel(level) {
+            const labels = {
+                'estagiario': 'Estagiário',
+                'trainee': 'Trainee',
+                'junior': 'Júnior',
+                'pleno': 'Pleno',
+                'senior': 'Sênior',
+                'especialista': 'Especialista',
+                'coordenador': 'Coordenador',
+                'gerente': 'Gerente',
+                'diretor': 'Diretor'
+            };
+            return labels[level] || level;
+        }
+
+        function getWorkModeLabel(mode) {
+            const labels = {
+                'presencial': 'Presencial',
+                'remoto': 'Remoto',
+                'hibrido': 'Híbrido'
+            };
+            return labels[mode] || mode;
+        }
+    </script>
+</body>
+</html>

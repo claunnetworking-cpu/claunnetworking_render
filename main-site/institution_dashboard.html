@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel da Instituição de Ensino - ClaunNetworking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6, #A855F7);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B46C1;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: transparent;
+            color: #6B46C1;
+            border: 2px solid #6B46C1;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #6B46C1;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            height: fit-content;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            color: #6B7280;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: linear-gradient(135deg, #EDE9FE, #F3E8FF);
+            color: #6B46C1;
+            transform: translateX(5px);
+        }
+
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #F8FAFC, #FFFFFF);
+            border: 2px solid #E5E7EB;
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            border-color: #6B46C1;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .metric-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: #6B7280;
+            font-weight: 500;
+        }
+
+        .metric-change {
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .metric-up {
+            color: #059669;
+        }
+
+        .metric-down {
+            color: #DC2626;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 2px solid #F3F4F6;
+            margin-bottom: 1rem;
+        }
+
+        .chart-container {
+            height: 300px;
+            background: #F9FAFB;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6B7280;
+            margin: 1rem 0;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(107, 70, 193, 0.3);
+        }
+
+        .btn-secondary {
+            background: #F3F4F6;
+            color: #374151;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background: #E5E7EB;
+        }
+
+        .course-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .course-table th,
+        .course-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .course-table th {
+            background: #F9FAFB;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .course-table tr:hover {
+            background: #F9FAFB;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .status-paused {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 0.75rem;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            background: white;
+            min-width: 150px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .top-courses {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .course-card {
+            background: linear-gradient(135deg, #F8FAFC, #FFFFFF);
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .course-card:hover {
+            border-color: #6B46C1;
+            transform: translateY(-3px);
+        }
+
+        .course-title {
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .course-stats {
+            display: flex;
+            justify-content: space-between;
+            color: #6B7280;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .sidebar {
+                order: 2;
+            }
+
+            .main-content {
+                order: 1;
+            }
+
+            .metrics-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="assets/logo_clean.png" alt="ClaunNetworking" style="height: 50px; width: auto;">
+                <div style="margin-left: 10px;">
+                    <div style="font-size: 18px; font-weight: bold;">ClaunNetworking</div>
+                    <div style="font-size: 11px; opacity: 0.8;">Painel da Instituição</div>
+                </div>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">UT</div>
+                <span>Universidade Tecnológica</span>
+                <button class="logout-btn" onclick="window.location.href='index.html'">Voltar ao Site</button>
+                <button class="logout-btn" onclick="logout()">Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active" onclick="showSection('dashboard')">📊 Dashboard</a></li>
+                <li><a href="#" onclick="showSection('courses')">📚 Meus Cursos</a></li>
+                <li><a href="#" onclick="showSection('analytics')">📈 Análises</a></li>
+                <li><a href="#" onclick="showSection('reports')">📋 Relatórios</a></li>
+                <li><a href="#" onclick="showSection('add-course')">➕ Adicionar Curso</a></li>
+                <li><a href="buscar_estudantes.html">🔍 Buscar Estudantes</a></li>
+                <li><a href="#" onclick="showSection('settings')">⚙️ Configurações</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <!-- Dashboard Section -->
+            <div id="dashboard-section" class="section-content">
+                <h1 class="page-title">📊 Dashboard</h1>
+                
+                <!-- Métricas Principais -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon">📚</div>
+                        <div class="metric-value">24</div>
+                        <div class="metric-label">Cursos Ativos</div>
+                        <div class="metric-change metric-up">↗ +3 este mês</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">👁️</div>
+                        <div class="metric-value">15.2K</div>
+                        <div class="metric-label">Visualizações</div>
+                        <div class="metric-change metric-up">↗ +12% vs mês anterior</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">🎯</div>
+                        <div class="metric-value">3.8K</div>
+                        <div class="metric-label">Cliques em Links</div>
+                        <div class="metric-change metric-up">↗ +8% vs mês anterior</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">❤️</div>
+                        <div class="metric-value">892</div>
+                        <div class="metric-label">Curtidas</div>
+                        <div class="metric-change metric-up">↗ +15% vs mês anterior</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">📤</div>
+                        <div class="metric-value">234</div>
+                        <div class="metric-label">Compartilhamentos</div>
+                        <div class="metric-change metric-up">↗ +22% vs mês anterior</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">📝</div>
+                        <div class="metric-value">1.2K</div>
+                        <div class="metric-label">Inscrições</div>
+                        <div class="metric-change metric-up">↗ +18% vs mês anterior</div>
+                    </div>
+                </div>
+
+                <!-- Gráfico de Engajamento -->
+                <div class="section">
+                    <h3 class="section-title">📈 Engajamento dos Últimos 30 Dias</h3>
+                    <div class="card">
+                        <div class="chart-container">
+                            <div style="text-align: center;">
+                                <p>📊 Gráfico de Engajamento</p>
+                                <p style="font-size: 0.9rem; margin-top: 0.5rem;">Visualizações, Cliques e Inscrições ao longo do tempo</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cursos Mais Acessados -->
+                <div class="section">
+                    <h3 class="section-title">🏆 Top 5 Cursos Mais Acessados</h3>
+                    <div class="top-courses">
+                        <div class="course-card">
+                            <div class="course-title">React Avançado - Hooks e Context API</div>
+                            <div class="course-stats">
+                                <span>👁️ 2.1K visualizações</span>
+                                <span>🎯 485 cliques</span>
+                            </div>
+                        </div>
+                        <div class="course-card">
+                            <div class="course-title">JavaScript ES6+ Essencial</div>
+                            <div class="course-stats">
+                                <span>👁️ 1.8K visualizações</span>
+                                <span>🎯 392 cliques</span>
+                            </div>
+                        </div>
+                        <div class="course-card">
+                            <div class="course-title">Python para Data Science</div>
+                            <div class="course-stats">
+                                <span>👁️ 1.5K visualizações</span>
+                                <span>🎯 341 cliques</span>
+                            </div>
+                        </div>
+                        <div class="course-card">
+                            <div class="course-title">UI/UX Design Fundamentals</div>
+                            <div class="course-stats">
+                                <span>👁️ 1.3K visualizações</span>
+                                <span>🎯 298 cliques</span>
+                            </div>
+                        </div>
+                        <div class="course-card">
+                            <div class="course-title">Node.js e APIs RESTful</div>
+                            <div class="course-stats">
+                                <span>👁️ 1.1K visualizações</span>
+                                <span>🎯 267 cliques</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Áreas Mais Procuradas -->
+                <div class="section">
+                    <h3 class="section-title">🎯 Áreas Mais Procuradas</h3>
+                    <div class="card">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <div style="text-align: center; padding: 1rem;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">💻</div>
+                                <div style="font-weight: 600;">Tecnologia</div>
+                                <div style="color: #6B7280;">45% das buscas</div>
+                            </div>
+                            <div style="text-align: center; padding: 1rem;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎨</div>
+                                <div style="font-weight: 600;">Design</div>
+                                <div style="color: #6B7280;">23% das buscas</div>
+                            </div>
+                            <div style="text-align: center; padding: 1rem;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📊</div>
+                                <div style="font-weight: 600;">Gestão</div>
+                                <div style="color: #6B7280;">18% das buscas</div>
+                            </div>
+                            <div style="text-align: center; padding: 1rem;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📈</div>
+                                <div style="font-weight: 600;">Marketing</div>
+                                <div style="color: #6B7280;">14% das buscas</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Courses Section -->
+            <div id="courses-section" class="section-content hidden">
+                <h1 class="page-title">📚 Meus Cursos</h1>
+                
+                <!-- Filtros -->
+                <div class="filters">
+                    <select class="filter-select">
+                        <option>Todas as Categorias</option>
+                        <option>Tecnologia</option>
+                        <option>Design</option>
+                        <option>Gestão</option>
+                        <option>Marketing</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>Todos os Status</option>
+                        <option>Ativo</option>
+                        <option>Pausado</option>
+                        <option>Rascunho</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>Todos os Tipos</option>
+                        <option>Curso</option>
+                        <option>Treinamento</option>
+                        <option>Workshop</option>
+                        <option>Mentoria</option>
+                    </select>
+                </div>
+
+                <!-- Tabela de Cursos -->
+                <div class="card">
+                    <table class="course-table">
+                        <thead>
+                            <tr>
+                                <th>Curso</th>
+                                <th>Categoria</th>
+                                <th>Status</th>
+                                <th>Visualizações</th>
+                                <th>Cliques</th>
+                                <th>Data</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>React Avançado - Hooks e Context API</td>
+                                <td>Tecnologia</td>
+                                <td><span class="status-badge status-active">Ativo</span></td>
+                                <td>2.1K</td>
+                                <td>485</td>
+                                <td>15/09/2025</td>
+                                <td>
+                                    <button class="btn-secondary" onclick="editCourse(1)">Editar</button>
+                                    <button class="btn-secondary" onclick="pauseCourse(1)">Pausar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>JavaScript ES6+ Essencial</td>
+                                <td>Tecnologia</td>
+                                <td><span class="status-badge status-active">Ativo</span></td>
+                                <td>1.8K</td>
+                                <td>392</td>
+                                <td>12/09/2025</td>
+                                <td>
+                                    <button class="btn-secondary" onclick="editCourse(2)">Editar</button>
+                                    <button class="btn-secondary" onclick="pauseCourse(2)">Pausar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Python para Data Science</td>
+                                <td>Tecnologia</td>
+                                <td><span class="status-badge status-paused">Pausado</span></td>
+                                <td>1.5K</td>
+                                <td>341</td>
+                                <td>10/09/2025</td>
+                                <td>
+                                    <button class="btn-secondary" onclick="editCourse(3)">Editar</button>
+                                    <button class="btn-primary" onclick="activateCourse(3)">Ativar</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div id="analytics-section" class="section-content hidden">
+                <h1 class="page-title">📈 Análises Detalhadas</h1>
+                
+                <!-- Performance por Período -->
+                <div class="section">
+                    <h3 class="section-title">📊 Performance por Período</h3>
+                    <div class="card">
+                        <div class="filters">
+                            <select class="filter-select">
+                                <option>Últimos 7 dias</option>
+                                <option>Últimos 30 dias</option>
+                                <option>Últimos 3 meses</option>
+                                <option>Último ano</option>
+                            </select>
+                        </div>
+                        <div class="chart-container">
+                            <div style="text-align: center;">
+                                <p>📈 Gráfico de Performance</p>
+                                <p style="font-size: 0.9rem; margin-top: 0.5rem;">Análise detalhada de engajamento por período</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparativo de Cursos -->
+                <div class="section">
+                    <h3 class="section-title">⚖️ Comparativo entre Cursos</h3>
+                    <div class="card">
+                        <div class="chart-container">
+                            <div style="text-align: center;">
+                                <p>📊 Gráfico Comparativo</p>
+                                <p style="font-size: 0.9rem; margin-top: 0.5rem;">Compare o desempenho dos seus cursos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Section -->
+            <div id="reports-section" class="section-content hidden">
+                <h1 class="page-title">📋 Relatórios</h1>
+                
+                <!-- Botões de Exportação -->
+                <div class="export-buttons">
+                    <button class="btn-primary" onclick="exportToPDF()">📄 Exportar PDF</button>
+                    <button class="btn-primary" onclick="exportToExcel()">📊 Exportar Excel</button>
+                </div>
+
+                <!-- Relatório Resumido -->
+                <div class="section">
+                    <h3 class="section-title">📈 Relatório de Engajamento - Setembro 2025</h3>
+                    <div class="card">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+                            <div>
+                                <h4 style="color: #6B46C1; margin-bottom: 1rem;">Métricas Gerais</h4>
+                                <p><strong>Total de Cursos:</strong> 24</p>
+                                <p><strong>Visualizações:</strong> 15.2K</p>
+                                <p><strong>Cliques:</strong> 3.8K</p>
+                                <p><strong>Taxa de Clique:</strong> 25%</p>
+                            </div>
+                            <div>
+                                <h4 style="color: #6B46C1; margin-bottom: 1rem;">Engajamento</h4>
+                                <p><strong>Curtidas:</strong> 892</p>
+                                <p><strong>Compartilhamentos:</strong> 234</p>
+                                <p><strong>Inscrições:</strong> 1.2K</p>
+                                <p><strong>Taxa de Conversão:</strong> 7.9%</p>
+                            </div>
+                            <div>
+                                <h4 style="color: #6B46C1; margin-bottom: 1rem;">Crescimento</h4>
+                                <p><strong>Visualizações:</strong> +12%</p>
+                                <p><strong>Cliques:</strong> +8%</p>
+                                <p><strong>Inscrições:</strong> +18%</p>
+                                <p><strong>Engajamento:</strong> +15%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Performers -->
+                <div class="section">
+                    <h3 class="section-title">🏆 Cursos com Melhor Performance</h3>
+                    <div class="card">
+                        <table class="course-table">
+                            <thead>
+                                <tr>
+                                    <th>Posição</th>
+                                    <th>Curso</th>
+                                    <th>Visualizações</th>
+                                    <th>Taxa de Clique</th>
+                                    <th>Inscrições</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>🥇 1º</td>
+                                    <td>React Avançado - Hooks e Context API</td>
+                                    <td>2.1K</td>
+                                    <td>23%</td>
+                                    <td>156</td>
+                                    <td>95/100</td>
+                                </tr>
+                                <tr>
+                                    <td>🥈 2º</td>
+                                    <td>JavaScript ES6+ Essencial</td>
+                                    <td>1.8K</td>
+                                    <td>22%</td>
+                                    <td>134</td>
+                                    <td>92/100</td>
+                                </tr>
+                                <tr>
+                                    <td>🥉 3º</td>
+                                    <td>Python para Data Science</td>
+                                    <td>1.5K</td>
+                                    <td>23%</td>
+                                    <td>118</td>
+                                    <td>89/100</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Course Section -->
+            <div id="add-course-section" class="section-content hidden">
+                <h1 class="page-title">➕ Adicionar Novo Curso</h1>
+                
+                <div class="card">
+                    <form onsubmit="addCourse(event)">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Título do Curso:</label>
+                                <input type="text" required style="width: 100%; padding: 0.75rem; border: 2px solid #E5E7EB; border-radius: 8px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Categoria:</label>
+                                <select required style="width: 100%; padding: 0.75rem; border: 2px solid #E5E7EB; border-radius: 8px;">
+                                    <option value="">Selecione uma categoria</option>
+                                    <option>Tecnologia</option>
+                                    <option>Design</option>
+                                    <option>Gestão</option>
+                                    <option>Marketing</option>
+                                    <option>Vendas</option>
+                                    <option>Finanças</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Tipo:</label>
+                                <select required style="width: 100%; padding: 0.75rem; border: 2px solid #E5E7EB; border-radius: 8px;">
+                                    <option value="">Selecione o tipo</option>
+                                    <option>Curso</option>
+                                    <option>Treinamento</option>
+                                    <option>Workshop</option>
+                                    <option>Mentoria</option>
+                                    <option>Consultoria</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Preço:</label>
+                                <input type="number" step="0.01" required style="width: 100%; padding: 0.75rem; border: 2px solid #E5E7EB; border-radius: 8px;">
+                            </div>
+                        </div>
+                        
+                        <div style="margin: 1.5rem 0;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Descrição:</label>
+                            <textarea required rows="4" style="width: 100%; padding: 0.75rem; border: 2px solid #E5E7EB; border-radius: 8px; resize: vertical;"></textarea>
+                        </div>
+                        
+                        <div style="margin: 1.5rem 0;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Link do Curso:</label>
+                            <input type="url" required style="width: 100%; padding: 0.75rem; border: 2px solid #E5E7EB; border-radius: 8px;">
+                        </div>
+                        
+                        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                            <button type="submit" class="btn-primary">Publicar Curso</button>
+                            <button type="button" class="btn-secondary" onclick="saveDraft()">Salvar como Rascunho</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings-section" class="section-content hidden">
+                <h1 class="page-title">⚙️ Configurações</h1>
+                
+                <div class="section">
+                    <h3 class="section-title">🏢 Informações da Instituição</h3>
+                    <div class="card">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Nome da Instituição:</label>
+                                <input type="text" value="Universidade Tecnológica do Brasil" style="width: 100%; padding: 0.75rem; border: 2px solid #E5E7EB; border-radius: 8px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Email:</label>
+                                <input type="email" value="instituicao@teste.com" style="width: 100%; padding: 0.75rem; border: 2px solid #E5E7EB; border-radius: 8px;">
+                            </div>
+                        </div>
+                        <button class="btn-primary" style="margin-top: 1rem;">Salvar Alterações</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">📊 Plano Atual</h3>
+                    <div class="card">
+                        <div style="background: linear-gradient(135deg, #EDE9FE, #F3E8FF); padding: 1.5rem; border-radius: 12px;">
+                            <h4 style="color: #6B46C1; margin-bottom: 1rem;">Plano Growth</h4>
+                            <p><strong>Cursos Ativos:</strong> 24/20 (4 excedentes)</p>
+                            <p><strong>Destaques:</strong> 3/5 disponíveis</p>
+                            <p><strong>Valor:</strong> R$ 990/mês</p>
+                            <button class="btn-primary" style="margin-top: 1rem;">Upgrade para Unlimited</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionName) {
+            // Esconder todas as seções
+            const sections = document.querySelectorAll('.section-content');
+            sections.forEach(section => section.classList.add('hidden'));
+            
+            // Mostrar seção selecionada
+            document.getElementById(sectionName + '-section').classList.remove('hidden');
+            
+            // Atualizar menu ativo
+            const menuItems = document.querySelectorAll('.sidebar-menu a');
+            menuItems.forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function exportToPDF() {
+            showSuccessMessage('Relatório PDF será gerado e enviado por email em alguns minutos!');
+        }
+
+        function exportToExcel() {
+            showSuccessMessage('Relatório Excel será gerado e enviado por email em alguns minutos!');
+        }
+
+        function editCourse(courseId) {
+            showSuccessMessage(`Redirecionando para edição do curso ${courseId}...`);
+        }
+
+        function pauseCourse(courseId) {
+            showSuccessMessage(`Curso ${courseId} foi pausado com sucesso!`);
+        }
+
+        function activateCourse(courseId) {
+            showSuccessMessage(`Curso ${courseId} foi ativado com sucesso!`);
+        }
+
+        function addCourse(event) {
+            event.preventDefault();
+            showSuccessMessage('Curso adicionado com sucesso! Aguardando aprovação.');
+        }
+
+        function saveDraft() {
+            showSuccessMessage('Rascunho salvo com sucesso!');
+        }
+
+        function showSuccessMessage(message) {
+            const successDiv = document.createElement('div');
+            successDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #10B981, #059669);
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+                z-index: 10000;
+                font-weight: 600;
+            `;
+            successDiv.textContent = message;
+            document.body.appendChild(successDiv);
+            
+            setTimeout(() => {
+                document.body.removeChild(successDiv);
+            }, 3000);
+        }
+
+        function logout() {
+            if (confirm('Tem certeza que deseja sair?')) {
+                showSuccessMessage('Logout realizado com sucesso!');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>
