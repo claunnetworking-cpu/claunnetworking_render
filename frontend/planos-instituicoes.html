@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planos para Instituições de Ensino - ClaunNetworking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6, #A855F7);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B46C1;
+            text-decoration: none;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .back-btn {
+            background: #6B46C1;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #553C9A;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #FFFFFF, #F3E8FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-highlight {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .hero-highlight h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #F3E8FF;
+        }
+
+        .hero-highlight p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .plans-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .plan-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .plan-card.featured {
+            border: 3px solid #F59E0B;
+            transform: scale(1.05);
+        }
+
+        .plan-card.featured::before {
+            content: "MAIS POPULAR";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #F59E0B;
+            color: white;
+            text-align: center;
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .plan-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-top: 1rem;
+        }
+
+        .plan-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #6B46C1;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-period {
+            color: #6B7280;
+            font-size: 1rem;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .plan-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #E5E7EB;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-icon {
+            color: #10B981;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 0.1rem;
+        }
+
+        .feature-text {
+            color: #374151;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .feature-highlight {
+            font-weight: 600;
+            color: #6B46C1;
+        }
+
+        .plan-btn {
+            width: 100%;
+            background: #6B46C1;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .plan-btn:hover {
+            background: #553C9A;
+            transform: translateY(-2px);
+        }
+
+        .plan-btn.featured {
+            background: #F59E0B;
+        }
+
+        .plan-btn.featured:hover {
+            background: #D97706;
+        }
+
+        .features-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .features-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .feature-item-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .feature-item h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-item p {
+            color: #6B7280;
+            font-size: 0.95rem;
+        }
+
+        .cta-section {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .cta-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .cta-text {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+        }
+
+        .cta-btn {
+            background: white;
+            color: #6B46C1;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .plans-container {
+                grid-template-columns: 1fr;
+            }
+
+            .plan-card.featured {
+                transform: none;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <img src="assets/logo_clean.png" alt="ClaunNetworking">
+                ClaunNetworking
+            </a>
+            <button class="back-btn" onclick="history.back()">← Voltar</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Planos para Instituições de Ensino</h1>
+            <p>Promova seus cursos e alcance mais estudantes com nossa plataforma especializada</p>
+            
+            <div class="hero-highlight">
+                <h3>🎯 Foco na Quantidade, Não na Complexidade</h3>
+                <p>Todos os planos incluem o mesmo painel administrativo completo com relatórios avançados. A diferença está apenas na quantidade de cursos ativos e destaques que você pode publicar.</p>
+            </div>
+        </div>
+
+        <div class="plans-container">
+            <!-- Plano Start -->
+            <div class="plan-card">
+                <div class="plan-header">
+                    <h2 class="plan-name">Plano Start</h2>
+                    <div class="plan-price">R$ 490</div>
+                    <div class="plan-period">por mês</div>
+                </div>
+                
+                <ul class="plan-features">
+                    <li>
+                        <span class="feature-icon">🔹</span>
+                        <span class="feature-text">Até <span class="feature-highlight">5 cursos ativos</span></span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">⭐</span>
+                        <span class="feature-text">Até <span class="feature-highlight">1 curso em destaque</span> por mês</span>
+                    </li>
+
+                    <li>
+                        <span class="feature-icon">📊</span>
+                        <span class="feature-text"><span class="feature-highlight">Painel administrativo completo</span></span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">📈</span>
+                        <span class="feature-text">Relatórios de <span class="feature-highlight">engajamento</span></span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">👍</span>
+                        <span class="feature-text">Métricas de <span class="feature-highlight">curtidas e compartilhamentos</span></span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">🖱️</span>
+                        <span class="feature-text">Relatórios de <span class="feature-highlight">cliques</span></span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">📄</span>
+                        <span class="feature-text">Exportação <span class="feature-highlight">PDF/Excel</span></span>
+                    </li>
+                </ul>
+                
+                <button class="plan-btn" onclick="selectPlan('start')">Escolher Start</button>
+            </div>
+
+            <!-- Plano Growth -->
+            <div class="plan-card featured">
+                <div class="plan-header">
+                    <h2 class="plan-name">Plano Growth</h2>
+                    <div class="plan-price">R$ 990</div>
+                    <div class="plan-period">por mês</div>
+                </div>
+                
+                <ul class="plan-features">
+                    <li>
+                        <span class="feature-icon">🔹</span>
+                        <span class="feature-text">Até <span class="feature-highlight">20 cursos ativos</span></span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">⭐</span>
+                        <span class="feature-text">Até <span class="feature-highlight">5 cursos em destaque</span> por mês</span>
+                    </li>
+
+                    <li>
+                        <span class="feature-icon">📊</span>
+                        <span class="feature-text"><span class="feature-highlight">Painel administrativo completo</span></span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">📈</span>
+                        <span class="feature-text">Relatórios de <span class="feature-highlight">engajamento</span></span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">👍</span>
+                        <span class="feature-text">Métricas de <span class="feature-highlight">curtidas e compartilhamentos</span></span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">🖱️</span>
+                        <span class="feature-text">Relatórios de <span class="feature-highlight">cliques</span></span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">📄</span>
+                        <span class="feature-text">Exportação <span class="feature-highlight">PDF/Excel</span></span>
+                    </li>
+                </ul>
+                
+                <button class="plan-btn featured" onclick="selectPlan('growth')">Escolher Growth</button>
+            </div>
+
+            <!-- Plano Unlimited -->
+            <div class="plan-card">
+                <div class="plan-header">
+                    <h2 class="plan-name">Plano Unlimited</h2>
+                    <div class="plan-price">R$ 1.990</div>
+                    <div class="plan-period">por mês</div>
+                </div>
+                
+                <ul class="plan-features">
+                    <li>
+                        <span class="feature-icon">🔹</span>
+                        <span class="feature-text"><span class="feature-highlight">Cursos ilimitados</span></span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">⭐</span>
+                        <span class="feature-text"><span class="feature-highlight">Destaques ilimitados</span></span>
+                    </li>
+
+                    <li>
+                        <span class="feature-icon">📊</span>
+                        <span class="feature-text"><span class="feature-highlight">Painel administrativo completo</span></span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">📈</span>
+                        <span class="feature-text">Relatórios de <span class="feature-highlight">engajamento</span></span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">👍</span>
+                        <span class="feature-text">Métricas de <span class="feature-highlight">curtidas e compartilhamentos</span></span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">🖱️</span>
+                        <span class="feature-text">Relatórios de <span class="feature-highlight">cliques</span></span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">📄</span>
+                        <span class="feature-text">Exportação <span class="feature-highlight">PDF/Excel</span></span>
+                    </li>
+                </ul>
+                
+                <button class="plan-btn" onclick="selectPlan('unlimited')">Escolher Unlimited</button>
+            </div>
+        </div>
+
+        <!-- Recursos Inclusos -->
+        <div class="features-section">
+            <h2 class="features-title">Recursos Inclusos em Todos os Planos</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-item-icon">📊</div>
+                    <h3>Painel Completo</h3>
+                    <p>Dashboard com todas as métricas e relatórios avançados</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-item-icon">📈</div>
+                    <h3>Analytics Detalhado</h3>
+                    <p>Acompanhe engajamento, cliques e performance dos cursos</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-item-icon">📄</div>
+                    <h3>Exportação de Dados</h3>
+                    <p>Exporte relatórios em PDF e Excel para análises</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-item-icon">🏛️</div>
+                    <p>Promova seus melhores cursos com maior visibilidade</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-item-icon">🎯</div>
+                    <h3>Alcance Direcionado</h3>
+                    <p>Conecte-se com estudantes interessados em suas áreas</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="cta-section">
+            <h2 class="cta-title">Pronto para Começar?</h2>
+            <p class="cta-text">Cadastre sua instituição e comece a promover seus cursos hoje mesmo</p>
+            <a href="instituicao_cadastro.html" class="cta-btn">Cadastrar Instituição</a>
+        </div>
+    </div>
+
+    <script>
+        function selectPlan(planType) {
+            // Aqui você pode implementar a lógica de seleção do plano
+            alert(`Você selecionou o plano ${planType.charAt(0).toUpperCase() + planType.slice(1)}!\n\nVocê será redirecionado para o processo de contratação.`);
+            
+            // Redirecionar para página de checkout ou contato
+            // window.location.href = `checkout.html?plan=${planType}`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planos Empresariais - Claunnetworking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #8B5CF6 0%, #06D6A0 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .plan-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .plan-card.popular::before {
+            content: 'MAIS POPULAR';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            text-align: center;
+            padding: 0.5rem;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .plan-card.popular {
+            padding-top: 3rem;
+            border: 3px solid #FF6B6B;
+        }
+
+        .plan-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .plan-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #8B5CF6;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-description {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .plan-features li {
+            padding: 0.75rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        .plan-features li::before {
+            content: '✓';
+            background: #06D6A0;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .plan-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #8B5CF6, #06D6A0);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .plan-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .contact-section {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            margin-top: 2rem;
+        }
+
+        .contact-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-section p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .contact-btn {
+            background: white;
+            color: #8B5CF6;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255,255,255,0.3);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #8B5CF6;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #8B5CF6, #06D6A0);
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .plans-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .back-btn {
+                position: static;
+                margin-bottom: 2rem;
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-btn">
+        ← Voltar ao Site
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <h1>Planos Empresariais</h1>
+            <p>Seja nosso parceiro e escolha o melhor plano para sua empresa. Maximize seu alcance e encontre os melhores talentos com nossa plataforma especializada.</p>
+        </div>
+
+        <div class="plans-grid">
+            <div class="plan-card">
+                <div class="plan-header">
+                    <h3 class="plan-name">Básico</h3>
+                    <p class="plan-description">Ideal para pequenas empresas que estão começando</p>
+                </div>
+                <ul class="plan-features">
+                    <li>Até 10 vagas por mês</li>
+                    <li>Painel exclusivo para gestão</li>
+                    <li>Relatórios básicos de métricas</li>
+                    <li>Suporte por email</li>
+                    <li>Publicação de vagas padrão</li>
+                </ul>
+                <button class="plan-btn" onclick="selectPlan('basico')">Escolher Básico</button>
+            </div>
+
+            <div class="plan-card popular">
+                <div class="plan-header">
+                    <h3 class="plan-name">Profissional</h3>
+                    <p class="plan-description">Perfeito para empresas em crescimento</p>
+                </div>
+                <ul class="plan-features">
+                    <li>Até 25 vagas por mês</li>
+                    <li>Painel exclusivo avançado</li>
+                    <li>Relatórios detalhados com métricas</li>
+                    <li>Destaque de vagas na página</li>
+                    <li>Suporte prioritário</li>
+                    <li>Analytics de engajamento</li>
+                </ul>
+                <button class="plan-btn" onclick="selectPlan('profissional')">Escolher Profissional</button>
+            </div>
+
+            <div class="plan-card">
+                <div class="plan-header">
+                    <h3 class="plan-name">Premium</h3>
+                    <p class="plan-description">Para grandes empresas com alta demanda</p>
+                </div>
+                <ul class="plan-features">
+                    <li>Até 50 vagas por mês</li>
+                    <li>Painel exclusivo completo</li>
+                    <li>Relatórios avançados e exportáveis</li>
+                    <li>Destaque premium em nossa página</li>
+                    <li>Suporte 24/7 dedicado</li>
+                    <li>Gerente de conta exclusivo</li>
+                    <li>Métricas avançadas de ROI</li>
+                </ul>
+                <button class="plan-btn" onclick="selectPlan('premium')">Escolher Premium</button>
+            </div>
+        </div>
+
+        <div class="contact-section">
+            <h2>Precisa de um Plano Personalizado?</h2>
+            <p>Entre em contato conosco para discutir soluções customizadas para sua empresa</p>
+            <a href="#" class="contact-btn" onclick="openContactModal()">Falar com Especialista</a>
+        </div>
+    </div>
+
+    <!-- Modal de Cadastro -->
+    <div id="cadastroModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('cadastroModal')">&times;</span>
+            <h2 style="margin-bottom: 1.5rem; color: #8B5CF6;">Cadastro da Empresa</h2>
+            <form id="empresaForm">
+                <div class="form-group">
+                    <label for="nomeEmpresa">Nome da Empresa *</label>
+                    <input type="text" id="nomeEmpresa" name="nomeEmpresa" required>
+                </div>
+                <div class="form-group">
+                    <label for="cnpj">CNPJ *</label>
+                    <input type="text" id="cnpj" name="cnpj" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Corporativo *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefone">Telefone *</label>
+                    <input type="tel" id="telefone" name="telefone" required>
+                </div>
+                <div class="form-group">
+                    <label for="responsavel">Nome do Responsável *</label>
+                    <input type="text" id="responsavel" name="responsavel" required>
+                </div>
+                <div class="form-group">
+                    <label for="cargo">Cargo do Responsável *</label>
+                    <input type="text" id="cargo" name="cargo" required>
+                </div>
+                <div class="form-group">
+                    <label for="planoSelecionado">Plano Selecionado</label>
+                    <input type="text" id="planoSelecionado" name="planoSelecionado" readonly>
+                </div>
+                <button type="submit" class="submit-btn">Prosseguir para Pagamento</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Contato -->
+    <div id="contatoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('contatoModal')">&times;</span>
+            <h2 style="margin-bottom: 1.5rem; color: #8B5CF6;">Falar com Especialista</h2>
+            <form id="contatoForm">
+                <div class="form-group">
+                    <label for="nomeContato">Nome Completo *</label>
+                    <input type="text" id="nomeContato" name="nomeContato" required>
+                </div>
+                <div class="form-group">
+                    <label for="empresaContato">Empresa *</label>
+                    <input type="text" id="empresaContato" name="empresaContato" required>
+                </div>
+                <div class="form-group">
+                    <label for="emailContato">Email *</label>
+                    <input type="email" id="emailContato" name="emailContato" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefoneContato">Telefone *</label>
+                    <input type="tel" id="telefoneContato" name="telefoneContato" required>
+                </div>
+                <div class="form-group">
+                    <label for="mensagem">Mensagem *</label>
+                    <textarea id="mensagem" name="mensagem" rows="4" placeholder="Descreva suas necessidades e como podemos ajudar..." required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Enviar Solicitação</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function selectPlan(plano) {
+            document.getElementById('planoSelecionado').value = plano.charAt(0).toUpperCase() + plano.slice(1);
+            openModal('cadastroModal');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function openContactModal() {
+            openModal('contatoModal');
+        }
+
+        // Fechar modal ao clicar fora dele
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // Formulário de cadastro
+        document.getElementById('empresaForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simular processamento
+            const submitBtn = this.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Processando...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                alert('Cadastro realizado com sucesso! Você será redirecionado para o pagamento.');
+                closeModal('cadastroModal');
+                
+                // Aqui seria o redirecionamento para o gateway de pagamento
+                // window.location.href = '/pagamento';
+                
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 2000);
+        });
+
+        // Formulário de contato
+        document.getElementById('contatoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = this.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Enviando...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                alert('Solicitação enviada com sucesso! Nossa equipe entrará em contato em até 24 horas.');
+                closeModal('contatoModal');
+                this.reset();
+                
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 2000);
+        });
+
+        // Máscara para CNPJ
+        document.getElementById('cnpj').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/^(\d{2})(\d)/, '$1.$2');
+            value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+            value = value.replace(/\.(\d{3})(\d)/, '.$1/$2');
+            value = value.replace(/(\d{4})(\d)/, '$1-$2');
+            e.target.value = value;
+        });
+    </script>
+</body>
+</html>
+

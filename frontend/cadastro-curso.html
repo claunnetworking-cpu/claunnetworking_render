@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Curso - ClaunNetworking</title>
+    <script src="js/auth-system.js"></script>
+    <script src="js/course-pricing-logic.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo-image {
+            height: 40px;
+            width: auto;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #6B46C1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #553C9A;
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            color: #6B46C1;
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: #64748b;
+        }
+
+        /* Form Container */
+        .form-container {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: #6B46C1;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .required {
+            color: #EF4444;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #6B46C1;
+            box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .radio-option:hover {
+            border-color: #6B46C1;
+        }
+
+        .radio-option.selected {
+            border-color: #6B46C1;
+            background: rgba(107, 70, 193, 0.1);
+        }
+
+        .radio-option input[type="radio"] {
+            margin: 0;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #553C9A, #7C3AED);
+            transform: translateY(-2px);
+        }
+
+        .btn-cancel {
+            background: #6B7280;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .btn-cancel:hover {
+            background: #4B5563;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background: #EBF8FF;
+            border-color: #3B82F6;
+            color: #1E40AF;
+        }
+
+        .alert-warning {
+            background: #FFFBEB;
+            border-color: #F59E0B;
+            color: #92400E;
+        }
+
+        .alert-success {
+            background: #F0FDF4;
+            border-color: #10B981;
+            color: #065F46;
+        }
+
+        /* Price Input */
+        .price-input-group {
+            position: relative;
+        }
+
+        .price-prefix {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6B7280;
+            font-weight: 600;
+        }
+
+        .price-input {
+            padding-left: 3rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+
+            .form-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .radio-group {
+                flex-direction: column;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <img src="assets/logo_clean.png" alt="ClaunNetworking" class="logo-image">
+            </a>
+            <a href="index.html" class="btn btn-primary">← Voltar ao Início</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Cadastrar Curso</h1>
+            <p class="page-subtitle">Compartilhe conhecimento e atraia interessados</p>
+        </div>
+
+        <!-- Form Container -->
+        <div class="form-container">
+            <div class="alert alert-info">
+            <form id="courseForm" onsubmit="submitCourse(event)">
+                <!-- Informações Básicas -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        Dados do Curso
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Título do Curso <span class="required">*</span></label>
+                        <input type="text" class="form-input" name="title" required placeholder="Ex: Introdução ao Python para Data Science">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Instrutor/Instituição <span class="required">*</span></label>
+                            <input type="text" class="form-input" name="instructor" required placeholder="Nome do instrutor ou instituição">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Categoria <span class="required">*</span></label>
+                            <select class="form-select" name="category" required>
+                                <option value="">Selecione a categoria</option>
+                                <option value="tecnologia">Tecnologia</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="design">Design</option>
+                                <option value="negocios">Negócios</option>
+                                <option value="idiomas">Idiomas</option>
+                                <option value="desenvolvimento-pessoal">Desenvolvimento Pessoal</option>
+                                <option value="financas">Finanças</option>
+                                <option value="saude">Saúde e Bem-estar</option>
+                                <option value="outros">Outros</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Descrição do Curso <span class="required">*</span></label>
+                        <textarea class="form-textarea" name="description" required placeholder="Descreva o conteúdo do curso, objetivos de aprendizagem e público-alvo..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Preço e Modalidade -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        💰 Preço e Modalidade
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Curso <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <div class="radio-option" onclick="selectPrice('free')">
+                                <input type="radio" name="priceType" value="free" id="free" required>
+                                <label for="free">🆓 Gratuito</label>
+                            </div>
+                            <div class="radio-option" onclick="selectPrice('paid')">
+                                <input type="radio" name="priceType" value="paid" id="paid" required>
+                                <label for="paid">💳 Pago</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" id="priceGroup" style="display: none;">
+                        <label class="form-label">Valor do Curso</label>
+                        <div class="price-input-group">
+                            <span class="price-prefix">R$</span>
+                            <input type="number" class="form-input price-input" name="price" placeholder="0,00" step="0.01" min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Modalidade <span class="required">*</span></label>
+                            <select class="form-select" name="modality" required>
+                                <option value="">Selecione a modalidade</option>
+                                <option value="online">Online</option>
+                                <option value="presencial">Presencial</option>
+                                <option value="hibrido">Híbrido</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nível <span class="required">*</span></label>
+                            <select class="form-select" name="level" required>
+                                <option value="">Selecione o nível</option>
+                                <option value="basico">Básico</option>
+                                <option value="intermediario">Intermediário</option>
+                                <option value="avancado">Avançado</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detalhes do Curso -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        📚 Detalhes do Curso
+                    </h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Duração (em horas)</label>
+                            <input type="number" class="form-input" name="duration" placeholder="Ex: 40" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Cidade (se presencial)</label>
+                            <input type="text" class="form-input" name="city" placeholder="Ex: São Paulo, SP">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Pré-requisitos</label>
+                        <textarea class="form-textarea" name="prerequisites" placeholder="Descreva os conhecimentos prévios necessários (se houver)..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">O que será aprendido</label>
+                        <textarea class="form-textarea" name="learningOutcomes" placeholder="Liste os principais tópicos e habilidades que serão desenvolvidas..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Acesso e Contato -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        🔗 Acesso e Contato
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Link de Acesso <span class="required">*</span></label>
+                        <input type="url" class="form-input" name="accessLink" required placeholder="https://exemplo.com/curso">
+                    </div>
+                    
+
+                </div>
+
+                <!-- Configurações -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        ⚙️ Configurações
+                    </h3>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="withCertificate" name="certificate">
+                        <label for="withCertificate">Curso oferece certificado</label>
+                    </div>
+                    
+
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="acceptTermsCourse" name="terms" required>
+                        <label for="acceptTermsCourse">Aceito os <a href="#" onclick="showTerms()" style="color: #6B46C1;">termos de uso</a> e confirmo que as informações são verdadeiras <span class="required">*</span></label>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="cancelForm()">Cancelar</button>
+                    <button type="submit" class="btn-submit">📤 Enviar para Aprovação</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        function selectPrice(type) {
+            const radioOptions = document.querySelectorAll('.radio-option');
+            radioOptions.forEach(option => option.classList.remove('selected'));
+            
+            event.currentTarget.classList.add('selected');
+            
+            const priceGroup = document.getElementById('priceGroup');
+            const priceInput = document.querySelector('input[name="price"]');
+            
+            if (type === 'paid') {
+                priceGroup.style.display = 'block';
+                priceInput.required = true;
+                
+                // Show warning for paid courses
+                let warning = document.querySelector('.alert-warning');
+                if (!warning) {
+                    warning = document.createElement('div');
+                    warning.className = 'alert alert-warning';
+                    warning.innerHTML = `
+                        <strong>⚠️ Atenção:</strong> Cursos pagos só podem ser publicados por empresas com planos ativos. 
+                        Se você não possui um plano empresarial, seu curso será rejeitado automaticamente.
+                    `;
+                    document.querySelector('.form-container').insertBefore(warning, document.querySelector('.form-section'));
+                }
+            } else {
+                priceGroup.style.display = 'none';
+                priceInput.required = false;
+                priceInput.value = '';
+                
+                // Remove warning
+                const warning = document.querySelector('.alert-warning');
+                if (warning) {
+                    warning.remove();
+                }
+            }
+        }
+
+        function submitCourse(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const courseData = Object.fromEntries(formData.entries());
+            
+            // Simular envio
+            const submitBtn = event.target.querySelector('.btn-submit');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '⏳ Enviando...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                // Mostrar sucesso
+                const successAlert = document.createElement('div');
+                successAlert.className = 'alert alert-success';
+                successAlert.innerHTML = `
+                    <strong>✅ Sucesso!</strong> Seu curso foi enviado para aprovação. 
+                    Você receberá um email quando ele for analisado pelo nosso time.
+                    ${courseData.priceType === 'free' ? 'Cursos gratuitos geralmente são aprovados em até 24 horas.' : ''}
+                `;
+                
+                const form = document.getElementById('courseForm');
+                form.parentNode.insertBefore(successAlert, form);
+                
+                // Reset form
+                form.reset();
+                document.querySelectorAll('.radio-option').forEach(option => option.classList.remove('selected'));
+                document.getElementById('priceGroup').style.display = 'none';
+                
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                
+                // Clear saved data
+                clearSavedData();
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+            }, 2000);
+        }
+
+        function cancelForm() {
+            if (confirm('Tem certeza que deseja cancelar? Todos os dados preenchidos serão perdidos.')) {
+                clearSavedData();
+                window.location.href = 'index.html';
+            }
+        }
+
+        function showTerms() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+                backdrop-filter: blur(5px);
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 20px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h2 style="color: #6B46C1; margin: 0;">Termos de Uso - Cadastro de Cursos</h2>
+                        <button onclick="closeTermsModal(this)" 
+                                style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #6B7280;">
+                            ×
+                        </button>
+                    </div>
+                    
+                    <div style="color: #374151; line-height: 1.6;">
+                        <h4>1. Responsabilidade do Conteúdo</h4>
+                        <p>Você é responsável pela qualidade, veracidade e legalidade do conteúdo do curso.</p>
+                        
+                        <h4>2. Processo de Aprovação</h4>
+                        <p>Todos os cursos passam por análise antes da publicação.</p>
+                        
+                        <h4>3. Prazo de Publicação</h4>
+                        <p>Cursos aprovados ficam ativos por tempo indeterminado, podendo ser removidos mediante solicitação.</p>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function closeTermsModal(button) {
+            const modal = button.closest('div').parentElement;
+            modal.remove();
+        }
+
+        // Auto-save form data
+        const form = document.getElementById('courseForm');
+        const inputs = form.querySelectorAll('input, select, textarea');
+        
+        inputs.forEach(input => {
+            input.addEventListener('input', () => {
+                localStorage.setItem(`courseForm_${input.name}`, input.value);
+            });
+            
+            // Restore saved data
+            const savedValue = localStorage.getItem(`courseForm_${input.name}`);
+            if (savedValue && input.type !== 'radio') {
+                input.value = savedValue;
+                if (input.type === 'checkbox') {
+                    input.checked = savedValue === 'on';
+                }
+            }
+        });
+
+        // Clear saved data
+        function clearSavedData() {
+            inputs.forEach(input => {
+                localStorage.removeItem(`courseForm_${input.name}`);
+            });
+        }
+
+        // Restore radio selection
+        window.addEventListener('load', () => {
+            const savedPriceType = localStorage.getItem('courseForm_priceType');
+            if (savedPriceType) {
+                const radioOption = document.querySelector(`input[value="${savedPriceType}"]`);
+                if (radioOption) {
+                    radioOption.checked = true;
+                    selectPrice(savedPriceType);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

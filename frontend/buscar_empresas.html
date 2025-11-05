@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Empresas - ClaunNetworking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6, #A855F7);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B46C1;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .back-link {
+            color: #6B46C1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: background 0.3s;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            background: rgba(107, 70, 193, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .search-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-input, .filter-select {
+            padding: 0.75rem;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .filter-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: #6B46C1;
+            box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.1);
+        }
+
+        .search-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(107, 70, 193, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.8);
+            color: #374151;
+            border: 2px solid #E5E7EB;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            border-color: #6B46C1;
+        }
+
+        .results-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #E5E7EB;
+        }
+
+        .results-count {
+            font-size: 1.1rem;
+            color: #6B7280;
+            font-weight: 600;
+        }
+
+        .sort-select {
+            padding: 0.5rem 1rem;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .companies-grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .company-card {
+            border: 2px solid #E5E7EB;
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: white;
+        }
+
+        .company-card:hover {
+            border-color: #6B46C1;
+            box-shadow: 0 10px 30px rgba(107, 70, 193, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .company-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .company-info {
+            flex: 1;
+        }
+
+        .company-logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .company-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .company-sector {
+            color: #6B46C1;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .company-location {
+            color: #6B7280;
+            font-size: 0.9rem;
+        }
+
+        .company-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.75rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .btn-view {
+            background: #EBF8FF;
+            color: #3182CE;
+        }
+
+        .btn-view:hover {
+            background: #BEE3F8;
+            transform: scale(1.1);
+        }
+
+        .btn-follow {
+            background: #F0FDF4;
+            color: #16A34A;
+        }
+
+        .btn-follow:hover {
+            background: #DCFCE7;
+            transform: scale(1.1);
+        }
+
+        .btn-apply {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+
+        .btn-apply:hover {
+            background: #FDE68A;
+            transform: scale(1.1);
+        }
+
+        .company-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #6B7280;
+        }
+
+        .company-description {
+            color: #4B5563;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .company-stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B46C1;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #6B7280;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .company-benefits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .benefit-tag {
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            color: #6B7280;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-actions {
+                flex-direction: column;
+            }
+
+            .company-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .company-actions {
+                align-self: flex-start;
+            }
+
+            .company-stats {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="assets/logo_transparent.png" alt="ClaunNetworking">
+                ClaunNetworking
+            </div>
+            <a href="candidato_painel.html" class="back-link">
+                ← Voltar ao Painel
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">🏢 Buscar Empresas</h1>
+            <p class="page-subtitle">Encontre as melhores oportunidades de carreira</p>
+        </div>
+
+        <div class="search-section">
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Setor</label>
+                    <select class="filter-select" id="sectorFilter">
+                        <option value="">Todos os setores</option>
+                        <option value="tecnologia">Tecnologia</option>
+                        <option value="financeiro">Financeiro</option>
+                        <option value="saude">Saúde</option>
+                        <option value="educacao">Educação</option>
+                        <option value="varejo">Varejo</option>
+                        <option value="industrial">Industrial</option>
+                        <option value="servicos">Serviços</option>
+                        <option value="consultoria">Consultoria</option>
+                        <option value="energia">Energia</option>
+                        <option value="telecomunicacoes">Telecomunicações</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Porte da Empresa</label>
+                    <select class="filter-select" id="sizeFilter">
+                        <option value="">Qualquer porte</option>
+                        <option value="startup">Startup (até 50)</option>
+                        <option value="pequena">Pequena (51-200)</option>
+                        <option value="media">Média (201-1000)</option>
+                        <option value="grande">Grande (1000+)</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Localização</label>
+                    <input type="text" class="filter-input" id="locationFilter" placeholder="Cidade, Estado">
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Modalidade de Trabalho</label>
+                    <select class="filter-select" id="workModeFilter">
+                        <option value="">Qualquer modalidade</option>
+                        <option value="presencial">Presencial</option>
+                        <option value="remoto">Remoto</option>
+                        <option value="hibrido">Híbrido</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Cultura Empresarial</label>
+                    <select class="filter-select" id="cultureFilter">
+                        <option value="">Qualquer cultura</option>
+                        <option value="inovadora">Inovadora</option>
+                        <option value="colaborativa">Colaborativa</option>
+                        <option value="dinamica">Dinâmica</option>
+                        <option value="tradicional">Tradicional</option>
+                        <option value="familiar">Familiar</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Benefícios</label>
+                    <select class="filter-select" id="benefitsFilter">
+                        <option value="">Qualquer benefício</option>
+                        <option value="plano_saude">Plano de Saúde</option>
+                        <option value="vale_refeicao">Vale Refeição</option>
+                        <option value="home_office">Home Office</option>
+                        <option value="plr">Participação nos Lucros</option>
+                        <option value="capacitacao">Capacitação</option>
+                        <option value="gympass">Gympass</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Com Vagas Abertas</label>
+                    <select class="filter-select" id="jobsFilter">
+                        <option value="">Todas as empresas</option>
+                        <option value="com_vagas">Apenas com vagas abertas</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Palavra-chave</label>
+                    <input type="text" class="filter-input" id="keywordFilter" placeholder="Nome da empresa, área...">
+                </div>
+            </div>
+
+            <div class="search-actions">
+                <button class="btn btn-secondary" onclick="clearFilters()">
+                    🗑️ Limpar Filtros
+                </button>
+                <button class="btn btn-primary" onclick="searchCompanies()">
+                    🔍 Buscar Empresas
+                </button>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <div class="results-header">
+                <div class="results-count" id="resultsCount">
+                    Encontradas 0 empresas
+                </div>
+                <select class="sort-select" id="sortSelect" onchange="sortResults()">
+                    <option value="relevance">Mais relevantes</option>
+                    <option value="size">Maior porte</option>
+                    <option value="jobs">Mais vagas</option>
+                    <option value="recent">Mais recentes</option>
+                </select>
+            </div>
+
+            <div class="companies-grid" id="companiesGrid">
+                <div class="empty-state">
+                    <h3>🏢 Pronto para encontrar sua próxima oportunidade?</h3>
+                    <p>Use os filtros acima para buscar empresas que se alinhem com seus objetivos de carreira.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados simulados de empresas
+        const mockCompanies = [
+            {
+                id: 1,
+                name: "TechCorp Brasil",
+                sector: "tecnologia",
+                size: "grande",
+                location: "São Paulo, SP",
+                workMode: "hibrido",
+                culture: "inovadora",
+                description: "Líder em soluções tecnológicas inovadoras, transformando negócios através da tecnologia.",
+                employees: 2500,
+                openJobs: 15,
+                founded: 2010,
+                benefits: ["plano_saude", "vale_refeicao", "home_office", "plr", "capacitacao"],
+                logo: "T"
+            },
+            {
+                id: 2,
+                name: "FinanceMax",
+                sector: "financeiro",
+                size: "media",
+                location: "Rio de Janeiro, RJ",
+                workMode: "presencial",
+                culture: "tradicional",
+                description: "Instituição financeira sólida com mais de 20 anos de mercado, oferecendo soluções completas.",
+                employees: 800,
+                openJobs: 8,
+                founded: 2003,
+                benefits: ["plano_saude", "vale_refeicao", "plr"],
+                logo: "F"
+            },
+            {
+                id: 3,
+                name: "HealthTech Solutions",
+                sector: "saude",
+                size: "pequena",
+                location: "Belo Horizonte, MG",
+                workMode: "remoto",
+                culture: "colaborativa",
+                description: "Startup focada em tecnologia para saúde, desenvolvendo soluções que salvam vidas.",
+                employees: 150,
+                openJobs: 12,
+                founded: 2018,
+                benefits: ["plano_saude", "home_office", "capacitacao", "gympass"],
+                logo: "H"
+            },
+            {
+                id: 4,
+                name: "EduFuture",
+                sector: "educacao",
+                size: "media",
+                location: "Curitiba, PR",
+                workMode: "hibrido",
+                culture: "familiar",
+                description: "Plataforma educacional que revoluciona o aprendizado com tecnologia de ponta.",
+                employees: 450,
+                openJobs: 6,
+                founded: 2015,
+                benefits: ["plano_saude", "vale_refeicao", "capacitacao"],
+                logo: "E"
+            },
+            {
+                id: 5,
+                name: "RetailPro",
+                sector: "varejo",
+                size: "grande",
+                location: "Porto Alegre, RS",
+                workMode: "presencial",
+                culture: "dinamica",
+                description: "Rede de varejo líder no Sul do Brasil, sempre em busca de talentos excepcionais.",
+                employees: 3200,
+                openJobs: 20,
+                founded: 1995,
+                benefits: ["plano_saude", "vale_refeicao", "plr", "gympass"],
+                logo: "R"
+            },
+            {
+                id: 6,
+                name: "InnovateLab",
+                sector: "tecnologia",
+                size: "startup",
+                location: "Florianópolis, SC",
+                workMode: "remoto",
+                culture: "inovadora",
+                description: "Laboratório de inovação focado em IA e machine learning para diversos setores.",
+                employees: 35,
+                openJobs: 4,
+                founded: 2021,
+                benefits: ["home_office", "capacitacao", "plr"],
+                logo: "I"
+            }
+        ];
+
+        let filteredCompanies = [];
+
+        function searchCompanies() {
+            const filters = {
+                sector: document.getElementById('sectorFilter').value,
+                size: document.getElementById('sizeFilter').value,
+                location: document.getElementById('locationFilter').value.toLowerCase(),
+                workMode: document.getElementById('workModeFilter').value,
+                culture: document.getElementById('cultureFilter').value,
+                benefits: document.getElementById('benefitsFilter').value,
+                jobs: document.getElementById('jobsFilter').value,
+                keyword: document.getElementById('keywordFilter').value.toLowerCase()
+            };
+
+            filteredCompanies = mockCompanies.filter(company => {
+                // Filtros específicos
+                if (filters.sector && company.sector !== filters.sector) return false;
+                if (filters.size && company.size !== filters.size) return false;
+                if (filters.workMode && company.workMode !== filters.workMode) return false;
+                if (filters.culture && company.culture !== filters.culture) return false;
+                if (filters.jobs === 'com_vagas' && company.openJobs === 0) return false;
+                
+                // Filtro de localização
+                if (filters.location && !company.location.toLowerCase().includes(filters.location)) return false;
+                
+                // Filtro de benefícios
+                if (filters.benefits && !company.benefits.includes(filters.benefits)) return false;
+                
+                // Filtro de palavra-chave
+                if (filters.keyword) {
+                    const searchText = `${company.name} ${company.description} ${company.sector}`.toLowerCase();
+                    if (!searchText.includes(filters.keyword)) return false;
+                }
+
+                return true;
+            });
+
+            displayResults();
+        }
+
+        function displayResults() {
+            const grid = document.getElementById('companiesGrid');
+            const count = document.getElementById('resultsCount');
+            
+            count.textContent = `Encontradas ${filteredCompanies.length} empresas`;
+
+            if (filteredCompanies.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <h3>😔 Nenhuma empresa encontrada</h3>
+                        <p>Tente ajustar os filtros para encontrar mais empresas.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filteredCompanies.map(company => `
+                <div class="company-card" onclick="viewCompany(${company.id})">
+                    <div class="company-header">
+                        <div class="company-info">
+                            <div class="company-logo">${company.logo}</div>
+                            <div class="company-name">${company.name}</div>
+                            <div class="company-sector">${getSectorLabel(company.sector)}</div>
+                            <div class="company-location">📍 ${company.location}</div>
+                        </div>
+                        <div class="company-actions">
+                            <button class="action-btn btn-view" onclick="event.stopPropagation(); viewCompany(${company.id})" title="Ver empresa">
+                                👁️
+                            </button>
+                            <button class="action-btn btn-follow" onclick="event.stopPropagation(); followCompany(${company.id})" title="Seguir">
+                                ❤️
+                            </button>
+                            <button class="action-btn btn-apply" onclick="event.stopPropagation(); viewJobs(${company.id})" title="Ver vagas">
+                                💼
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="company-description">${company.description}</div>
+                    
+                    <div class="company-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">${company.employees.toLocaleString()}</div>
+                            <div class="stat-label">Funcionários</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">${company.openJobs}</div>
+                            <div class="stat-label">Vagas Abertas</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">${new Date().getFullYear() - company.founded}</div>
+                            <div class="stat-label">Anos no Mercado</div>
+                        </div>
+                    </div>
+                    
+                    <div class="company-details">
+                        <div class="detail-item">
+                            <span>🏢</span>
+                            <span>${getSizeLabel(company.size)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>🌐</span>
+                            <span>${getWorkModeLabel(company.workMode)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>🎯</span>
+                            <span>${getCultureLabel(company.culture)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>📅</span>
+                            <span>Fundada em ${company.founded}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="company-benefits">
+                        ${company.benefits.slice(0, 4).map(benefit => `<span class="benefit-tag">${getBenefitLabel(benefit)}</span>`).join('')}
+                        ${company.benefits.length > 4 ? `<span class="benefit-tag">+${company.benefits.length - 4} mais</span>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function clearFilters() {
+            document.getElementById('sectorFilter').value = '';
+            document.getElementById('sizeFilter').value = '';
+            document.getElementById('locationFilter').value = '';
+            document.getElementById('workModeFilter').value = '';
+            document.getElementById('cultureFilter').value = '';
+            document.getElementById('benefitsFilter').value = '';
+            document.getElementById('jobsFilter').value = '';
+            document.getElementById('keywordFilter').value = '';
+            
+            filteredCompanies = [];
+            document.getElementById('companiesGrid').innerHTML = `
+                <div class="empty-state">
+                    <h3>🏢 Pronto para encontrar sua próxima oportunidade?</h3>
+                    <p>Use os filtros acima para buscar empresas que se alinhem com seus objetivos de carreira.</p>
+                </div>
+            `;
+            document.getElementById('resultsCount').textContent = 'Encontradas 0 empresas';
+        }
+
+        function sortResults() {
+            const sortBy = document.getElementById('sortSelect').value;
+            
+            filteredCompanies.sort((a, b) => {
+                switch (sortBy) {
+                    case 'size':
+                        const sizeOrder = ['startup', 'pequena', 'media', 'grande'];
+                        return sizeOrder.indexOf(b.size) - sizeOrder.indexOf(a.size);
+                    case 'jobs':
+                        return b.openJobs - a.openJobs;
+                    case 'recent':
+                        return b.founded - a.founded;
+                    default: // relevance
+                        return b.openJobs - a.openJobs; // Por enquanto, usar vagas como relevância
+                }
+            });
+            
+            displayResults();
+        }
+
+        function viewCompany(companyId) {
+            const company = mockCompanies.find(c => c.id === companyId);
+            if (company) {
+                // Redirecionar para a página de perfil da empresa
+                window.location.href = `empresa_perfil.html?id=${companyId}`;
+            }
+        }
+
+        function followCompany(companyId) {
+            const company = mockCompanies.find(c => c.id === companyId);
+            if (company) {
+                alert(`Você agora está seguindo ${company.name}!\n\nVocê receberá notificações sobre:\n• Novas vagas publicadas\n• Atualizações da empresa\n• Eventos e novidades\n\nAcesse "Empresas Seguidas" no seu painel para gerenciar.`);
+            }
+        }
+
+        function viewJobs(companyId) {
+            const company = mockCompanies.find(c => c.id === companyId);
+            if (company) {
+                if (company.openJobs > 0) {
+                    alert(`${company.name} tem ${company.openJobs} vagas abertas!\n\nEsta funcionalidade redirecionará você para a página de vagas da empresa onde poderá:\n• Ver detalhes das vagas\n• Candidatar-se diretamente\n• Salvar vagas de interesse`);
+                } else {
+                    alert(`${company.name} não possui vagas abertas no momento.\n\nQue tal seguir a empresa para ser notificado quando novas oportunidades surgirem?`);
+                }
+            }
+        }
+
+        // Funções auxiliares para labels
+        function getSectorLabel(sector) {
+            const labels = {
+                'tecnologia': 'Tecnologia',
+                'financeiro': 'Financeiro',
+                'saude': 'Saúde',
+                'educacao': 'Educação',
+                'varejo': 'Varejo',
+                'industrial': 'Industrial',
+                'servicos': 'Serviços',
+                'consultoria': 'Consultoria',
+                'energia': 'Energia',
+                'telecomunicacoes': 'Telecomunicações'
+            };
+            return labels[sector] || sector;
+        }
+
+        function getSizeLabel(size) {
+            const labels = {
+                'startup': 'Startup (até 50)',
+                'pequena': 'Pequena (51-200)',
+                'media': 'Média (201-1000)',
+                'grande': 'Grande (1000+)'
+            };
+            return labels[size] || size;
+        }
+
+        function getWorkModeLabel(mode) {
+            const labels = {
+                'presencial': 'Presencial',
+                'remoto': 'Remoto',
+                'hibrido': 'Híbrido'
+            };
+            return labels[mode] || mode;
+        }
+
+        function getCultureLabel(culture) {
+            const labels = {
+                'inovadora': 'Inovadora',
+                'colaborativa': 'Colaborativa',
+                'dinamica': 'Dinâmica',
+                'tradicional': 'Tradicional',
+                'familiar': 'Familiar'
+            };
+            return labels[culture] || culture;
+        }
+
+        function getBenefitLabel(benefit) {
+            const labels = {
+                'plano_saude': 'Plano de Saúde',
+                'vale_refeicao': 'VR/VA',
+                'home_office': 'Home Office',
+                'plr': 'PLR',
+                'capacitacao': 'Capacitação',
+                'gympass': 'Gympass'
+            };
+            return labels[benefit] || benefit;
+        }
+    </script>
+</body>
+</html>

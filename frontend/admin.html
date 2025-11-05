@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Claunnetworking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#00DE71',
+                        'secondary': '#7F32E2',
+                        'accent': '#9A58F6',
+                        'dark': '#8322C7',
+                        'light': '#FFFFFF'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #9A58F6 0%, #7F32E2 50%, #8322C7 100%);
+        }
+        .btn-primary {
+            background: #00DE71;
+            color: #8322C7;
+            border-radius: 1.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg py-6 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center">
+                        <span class="text-dark font-bold text-xl">CN</span>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-white">Painel Administrativo</h1>
+                        <p class="text-white opacity-90">Claunnetworking</p>
+                    </div>
+                </div>
+                <a href="/" class="btn-primary">Voltar ao Site</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-8 px-4">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-2xl p-6 shadow-lg border border-accent">
+                <h3 class="text-lg font-semibold text-dark mb-2">Total de Vagas</h3>
+                <p class="text-3xl font-bold text-primary">45</p>
+                <p class="text-sm text-gray-600">+5 esta semana</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 shadow-lg border border-accent">
+                <h3 class="text-lg font-semibold text-dark mb-2">Total de Cursos</h3>
+                <p class="text-3xl font-bold text-primary">32</p>
+                <p class="text-sm text-gray-600">+3 esta semana</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 shadow-lg border border-accent">
+                <h3 class="text-lg font-semibold text-dark mb-2">Usuários Ativos</h3>
+                <p class="text-3xl font-bold text-primary">1,250</p>
+                <p class="text-sm text-gray-600">+120 este mês</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 shadow-lg border border-accent">
+                <h3 class="text-lg font-semibold text-dark mb-2">Empresas</h3>
+                <p class="text-3xl font-bold text-primary">28</p>
+                <p class="text-sm text-gray-600">+4 este mês</p>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="bg-white rounded-2xl shadow-lg border border-accent mb-8">
+            <div class="flex border-b border-gray-200">
+                <button class="px-6 py-4 text-primary border-b-2 border-primary font-semibold" onclick="showTab('vagas')">Vagas</button>
+                <button class="px-6 py-4 text-gray-600 hover:text-primary" onclick="showTab('cursos')">Cursos</button>
+                <button class="px-6 py-4 text-gray-600 hover:text-primary" onclick="showTab('usuarios')">Usuários</button>
+                <button class="px-6 py-4 text-gray-600 hover:text-primary" onclick="showTab('empresas')">Empresas</button>
+            </div>
+
+            <!-- Vagas Tab -->
+            <div id="vagas-tab" class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-dark">Gerenciar Vagas</h2>
+                    <button class="btn-primary">Adicionar Vaga</button>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-200">
+                                <th class="text-left py-3 px-4 font-semibold text-dark">Título</th>
+                                <th class="text-left py-3 px-4 font-semibold text-dark">Empresa</th>
+                                <th class="text-left py-3 px-4 font-semibold text-dark">Área</th>
+                                <th class="text-left py-3 px-4 font-semibold text-dark">Status</th>
+                                <th class="text-left py-3 px-4 font-semibold text-dark">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-gray-100">
+                                <td class="py-3 px-4">Desenvolvedor Frontend React</td>
+                                <td class="py-3 px-4">TechCorp Brasil</td>
+                                <td class="py-3 px-4">Tecnologia</td>
+                                <td class="py-3 px-4">
+                                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">Ativa</span>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <button class="text-primary hover:underline mr-2">Editar</button>
+                                    <button class="text-red-600 hover:underline">Excluir</button>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-gray-100">
+                                <td class="py-3 px-4">Analista de Marketing Digital</td>
+                                <td class="py-3 px-4">Marketing Pro</td>
+                                <td class="py-3 px-4">Marketing</td>
+                                <td class="py-3 px-4">
+                                    <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">Pendente</span>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <button class="text-primary hover:underline mr-2">Aprovar</button>
+                                    <button class="text-red-600 hover:underline">Rejeitar</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Cursos Tab -->
+            <div id="cursos-tab" class="p-6 hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-dark">Gerenciar Cursos</h2>
+                    <button class="btn-primary">Adicionar Curso</button>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-200">
+                                <th class="text-left py-3 px-4 font-semibold text-dark">Título</th>
+                                <th class="text-left py-3 px-4 font-semibold text-dark">Instituição</th>
+                                <th class="text-left py-3 px-4 font-semibold text-dark">Área</th>
+                                <th class="text-left py-3 px-4 font-semibold text-dark">Status</th>
+                                <th class="text-left py-3 px-4 font-semibold text-dark">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-gray-100">
+                                <td class="py-3 px-4">Curso Completo de Python</td>
+                                <td class="py-3 px-4">Instituto de Tecnologia</td>
+                                <td class="py-3 px-4">Tecnologia</td>
+                                <td class="py-3 px-4">
+                                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">Ativo</span>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <button class="text-primary hover:underline mr-2">Editar</button>
+                                    <button class="text-red-600 hover:underline">Excluir</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Usuários Tab -->
+            <div id="usuarios-tab" class="p-6 hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-dark">Gerenciar Usuários</h2>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-200">
+                                <th class="text-left py-3 px-4 font-semibold text-dark">Nome</th>
+                                <th class="text-left py-3 px-4 font-semibold text-dark">Email</th>
+                                <th class="text-left py-3 px-4 font-semibold text-dark">Tipo</th>
+                                <th class="text-left py-3 px-4 font-semibold text-dark">Data de Cadastro</th>
+                                <th class="text-left py-3 px-4 font-semibold text-dark">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-gray-100">
+                                <td class="py-3 px-4">João Silva</td>
+                                <td class="py-3 px-4">joao@email.com</td>
+                                <td class="py-3 px-4">Usuário</td>
+                                <td class="py-3 px-4">15/01/2024</td>
+                                <td class="py-3 px-4">
+                                    <button class="text-primary hover:underline mr-2">Ver Perfil</button>
+                                    <button class="text-red-600 hover:underline">Suspender</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Empresas Tab -->
+            <div id="empresas-tab" class="p-6 hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-dark">Gerenciar Empresas</h2>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-200">
+                                <th class="text-left py-3 px-4 font-semibold text-dark">Razão Social</th>
+                                <th class="text-left py-3 px-4 font-semibold text-dark">CNPJ</th>
+                                <th class="text-left py-3 px-4 font-semibold text-dark">Plano</th>
+                                <th class="text-left py-3 px-4 font-semibold text-dark">Status</th>
+                                <th class="text-left py-3 px-4 font-semibold text-dark">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-gray-100">
+                                <td class="py-3 px-4">TechCorp Brasil Ltda</td>
+                                <td class="py-3 px-4">12.345.678/0001-90</td>
+                                <td class="py-3 px-4">Profissional</td>
+                                <td class="py-3 px-4">
+                                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">Ativa</span>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <button class="text-primary hover:underline mr-2">Ver Detalhes</button>
+                                    <button class="text-red-600 hover:underline">Suspender</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tabs
+            const tabs = ['vagas', 'cursos', 'usuarios', 'empresas'];
+            tabs.forEach(tab => {
+                document.getElementById(tab + '-tab').classList.add('hidden');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.remove('hidden');
+            
+            // Update button styles
+            const buttons = document.querySelectorAll('button[onclick^="showTab"]');
+            buttons.forEach(button => {
+                button.className = 'px-6 py-4 text-gray-600 hover:text-primary';
+            });
+            
+            // Highlight active button
+            event.target.className = 'px-6 py-4 text-primary border-b-2 border-primary font-semibold';
+        }
+    </script>
+</body>
+</html>
+

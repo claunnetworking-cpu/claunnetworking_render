@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil do Candidato - ClaunNetworking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6, #A855F7);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B46C1;
+            text-decoration: none;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .back-btn {
+            background: #6B46C1;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #553C9A;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .profile-header {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-info {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .profile-details {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-title {
+            font-size: 1.2rem;
+            color: #6B46C1;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-location {
+            color: #6B7280;
+            margin-bottom: 1rem;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B46C1;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6B7280;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #6B46C1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #553C9A;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #E5E7EB;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #D1D5DB;
+        }
+
+        .btn-success {
+            background: #10B981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 1rem;
+        }
+
+        .summary {
+            color: #4B5563;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: #EDE9FE;
+            color: #6B46C1;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .experience-item {
+            border-left: 3px solid #6B46C1;
+            padding-left: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .experience-item::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: #6B46C1;
+            border-radius: 50%;
+            position: absolute;
+            left: -7.5px;
+            top: 0;
+        }
+
+        .experience-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .experience-company {
+            color: #6B46C1;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .experience-period {
+            color: #6B7280;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .experience-description {
+            color: #4B5563;
+            line-height: 1.5;
+        }
+
+        .education-item {
+            border: 1px solid #E5E7EB;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .education-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .education-institution {
+            color: #6B46C1;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .education-period {
+            color: #6B7280;
+            font-size: 0.9rem;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #F3F4F6;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #6B7280;
+            font-weight: 500;
+        }
+
+        .info-value {
+            color: #1F2937;
+            font-weight: 600;
+        }
+
+        .privacy-notice {
+            background: #FEF3C7;
+            border: 1px solid #F59E0B;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            color: #92400E;
+        }
+
+        .private-profile {
+            text-align: center;
+            padding: 3rem;
+            color: #6B7280;
+        }
+
+        .private-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-stats {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <img src="assets/logo_clean.png" alt="ClaunNetworking">
+                ClaunNetworking
+            </a>
+            <button class="back-btn" onclick="history.back()">← Voltar</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="profileContent">
+            <!-- Conteúdo será carregado aqui -->
+        </div>
+    </div>
+
+    <script>
+        // Dados mock do candidato
+        const candidateData = {
+            id: 1,
+            name: "João Silva",
+            title: "Desenvolvedor Full Stack",
+            location: "São Paulo, SP",
+            avatar: "JS",
+            isPublic: true, // Controla se o perfil é público
+            summary: "Desenvolvedor Full Stack com 5 anos de experiência em React, Node.js e Python. Apaixonado por criar soluções inovadoras e trabalhar em equipes colaborativas. Experiência em startups e empresas de grande porte.",
+            skills: ["JavaScript", "React", "Node.js", "Python", "PostgreSQL", "AWS", "Docker", "Git"],
+            experience: [
+                {
+                    title: "Desenvolvedor Full Stack Sênior",
+                    company: "TechCorp",
+                    period: "2022 - Presente",
+                    description: "Desenvolvimento de aplicações web escaláveis usando React e Node.js. Liderança técnica de equipe de 4 desenvolvedores."
+                },
+                {
+                    title: "Desenvolvedor Frontend",
+                    company: "StartupXYZ",
+                    period: "2020 - 2022",
+                    description: "Criação de interfaces modernas e responsivas. Implementação de testes automatizados e CI/CD."
+                }
+            ],
+            education: [
+                {
+                    title: "Bacharelado em Ciência da Computação",
+                    institution: "Universidade de São Paulo",
+                    period: "2016 - 2020"
+                }
+            ],
+            stats: {
+                experience: "5 anos",
+                projects: "25+",
+                connections: "150"
+            },
+            contact: {
+                email: "joao.silva@email.com",
+                phone: "(11) 99999-9999",
+                linkedin: "linkedin.com/in/joaosilva"
+            }
+        };
+
+        function loadCandidateProfile() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const candidateId = urlParams.get('id');
+            
+            // Aqui você carregaria os dados reais do candidato
+            // Por enquanto, usando dados mock
+            
+            const profileContent = document.getElementById('profileContent');
+            
+            if (!candidateData.isPublic) {
+                profileContent.innerHTML = `
+                    <div class="card">
+                        <div class="private-profile">
+                            <div class="private-icon">🔒</div>
+                            <h2>Perfil Privado</h2>
+                            <p>Este candidato optou por manter seu perfil privado. Entre em contato através da plataforma para solicitar acesso às informações.</p>
+                            <button class="btn btn-primary" onclick="requestAccess()" style="margin-top: 1rem;">
+                                📧 Solicitar Acesso
+                            </button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            profileContent.innerHTML = `
+                <div class="profile-header">
+                    <div class="profile-info">
+                        <div class="profile-avatar">${candidateData.avatar}</div>
+                        <div class="profile-details">
+                            <h1 class="profile-name">${candidateData.name}</h1>
+                            <p class="profile-title">${candidateData.title}</p>
+                            <p class="profile-location">📍 ${candidateData.location}</p>
+                            
+                            <div class="profile-stats">
+                                <div class="stat">
+                                    <div class="stat-number">${candidateData.stats.experience}</div>
+                                    <div class="stat-label">Experiência</div>
+                                </div>
+                                <div class="stat">
+                                    <div class="stat-number">${candidateData.stats.projects}</div>
+                                    <div class="stat-label">Projetos</div>
+                                </div>
+                                <div class="stat">
+                                    <div class="stat-number">${candidateData.stats.connections}</div>
+                                    <div class="stat-label">Conexões</div>
+                                </div>
+                            </div>
+
+                            <div class="action-buttons">
+                                <button class="btn btn-success" onclick="contactCandidate()">💬 Entrar em Contato</button>
+                                <button class="btn btn-primary" onclick="saveCandidate()">⭐ Salvar Candidato</button>
+                                <button class="btn btn-secondary" onclick="shareProfile()">📤 Compartilhar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-grid">
+                    <div class="main-content">
+                        <div class="card">
+                            <h2 class="card-title">Sobre</h2>
+                            <p class="summary">${candidateData.summary}</p>
+                            
+                            <h3 style="margin-bottom: 1rem; color: #1F2937;">Habilidades</h3>
+                            <div class="tags">
+                                ${candidateData.skills.map(skill => `<span class="tag">${skill}</span>`).join('')}
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2 class="card-title">Experiência Profissional</h2>
+                            ${candidateData.experience.map(exp => `
+                                <div class="experience-item">
+                                    <div class="experience-title">${exp.title}</div>
+                                    <div class="experience-company">${exp.company}</div>
+                                    <div class="experience-period">${exp.period}</div>
+                                    <div class="experience-description">${exp.description}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="card">
+                            <h2 class="card-title">Formação Acadêmica</h2>
+                            ${candidateData.education.map(edu => `
+                                <div class="education-item">
+                                    <div class="education-title">${edu.title}</div>
+                                    <div class="education-institution">${edu.institution}</div>
+                                    <div class="education-period">${edu.period}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="sidebar">
+                        <div class="card">
+                            <h2 class="card-title">Informações de Contato</h2>
+                            <div class="info-item">
+                                <span class="info-label">Email</span>
+                                <span class="info-value">${candidateData.contact.email}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Telefone</span>
+                                <span class="info-value">${candidateData.contact.phone}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">LinkedIn</span>
+                                <span class="info-value">
+                                    <a href="https://${candidateData.contact.linkedin}" target="_blank" style="color: #6B46C1;">
+                                        Ver perfil
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2 class="card-title">Disponibilidade</h2>
+                            <div class="info-item">
+                                <span class="info-label">Status</span>
+                                <span class="info-value" style="color: #10B981;">Disponível</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Modalidade</span>
+                                <span class="info-value">Híbrido/Remoto</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Pretensão</span>
+                                <span class="info-value">R$ 8.000 - R$ 12.000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function contactCandidate() {
+            alert(`Entrando em contato com ${candidateData.name}...\n\nVocê será redirecionado para o sistema de mensagens da plataforma onde poderá enviar uma mensagem direta para o candidato.`);
+        }
+
+        function saveCandidate() {
+            alert(`${candidateData.name} foi salvo na sua lista de candidatos favoritos!\n\nVocê pode acessar seus candidatos salvos no painel da empresa.`);
+        }
+
+        function shareProfile() {
+            if (navigator.share) {
+                navigator.share({
+                    title: `${candidateData.name} - ClaunNetworking`,
+                    text: `Confira o perfil de ${candidateData.name} na ClaunNetworking`,
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert('Link do perfil copiado para a área de transferência!');
+            }
+        }
+
+        function requestAccess() {
+            alert('Solicitação de acesso enviada!\n\nO candidato receberá uma notificação sobre sua solicitação e poderá escolher compartilhar as informações do perfil com você.');
+        }
+
+        // Carregar dados quando a página carregar
+        document.addEventListener('DOMContentLoaded', loadCandidateProfile);
+    </script>
+    
+    <!-- Scripts das melhorias implementadas -->
+    <script src="js/compatibility-system.js"></script>
+    <script src="js/portfolio-system.js"></script>
+    <script src="js/identity-verification.js"></script>
+    <script src="js/design-system.js"></script>
+    <script src="js/mobile-optimization.js"></script>
+    <script src="js/smart-personalization.js"></script>
+</body>
+</html>

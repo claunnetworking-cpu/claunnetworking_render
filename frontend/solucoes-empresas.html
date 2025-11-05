@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soluções para Empresas - ClaunNetworking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            
+            
+            
+            
+            text-decoration: none;
+        }
+
+        .logo-image {
+            height: 40px;
+            width: auto;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #6B46C1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #553C9A;
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #6B46C1 0%, #8B5CF6 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-cta {
+            background: #10B981;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .hero-cta:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Why Choose Section */
+        .why-choose {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .benefit-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-title {
+            font-size: 1.3rem;
+            
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .benefit-description {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        /* Plans Section */
+        .plans-section {
+            margin-bottom: 4rem;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .plan-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .plan-card.featured {
+            border: 3px solid #10B981;
+            transform: scale(1.05);
+        }
+
+        .plan-badge {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #10B981;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .plan-name {
+            
+            
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            color: #10B981;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .plan-period {
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .plan-features li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            
+        }
+
+        .plan-features li::before {
+            content: "✅";
+            font-size: 1.1rem;
+        }
+
+        .plan-cta {
+            width: 100%;
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .plan-cta:hover {
+            background: linear-gradient(135deg, #553C9A, #7C3AED);
+            transform: translateY(-2px);
+        }
+
+        .plan-cta.featured {
+            background: linear-gradient(135deg, #10B981, #059669);
+        }
+
+        .plan-cta.featured:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+
+        /* Custom Solutions */
+        .custom-solutions {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .custom-title {
+            font-size: 2rem;
+            
+            margin-bottom: 1rem;
+        }
+
+        .custom-description {
+            color: #64748b;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .custom-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .custom-feature {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #10B981;
+        }
+
+        .custom-feature-title {
+            font-weight: 600;
+            
+            margin-bottom: 0.5rem;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: linear-gradient(135deg, #6B46C1 0%, #8B5CF6 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .contact-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-description {
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .contact-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .contact-btn {
+            background: white;
+            
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .contact-btn:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .main-content {
+                padding: 2rem 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .plan-card.featured {
+                transform: none;
+            }
+
+            .contact-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <img src="assets/logo_clean.png" alt="ClaunNetworking" class="logo-image">
+                Claunnetworking
+            </a>
+            <a href="index.html" class="btn btn-primary">← Voltar ao Início</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <h1 class="hero-title">Soluções para Empresas</h1>
+            <p class="hero-subtitle">Encontre os melhores talentos e potencialize seu recrutamento com nossa plataforma especializada</p>
+            <a href="#plans" class="hero-cta">🚀 Escolher Plano</a>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Why Choose Section -->
+        <section class="why-choose">
+            <h2 class="section-title">Por que escolher a ClaunNetworking?</h2>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎯</div>
+                    <h3 class="benefit-title">Recrutamento Inteligente</h3>
+                    <p class="benefit-description">
+                        Sistema avançado de matching que conecta você aos candidatos mais qualificados 
+                        para suas vagas, economizando tempo e recursos.
+                    </p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">📊</div>
+                    <h3 class="benefit-title">Analytics Avançado</h3>
+                    <p class="benefit-description">
+                        Relatórios detalhados sobre performance das vagas, engajamento dos candidatos 
+                        e métricas de recrutamento para otimizar seus processos.
+                    </p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">🤝</div>
+                    <h3 class="benefit-title">Suporte Especializado</h3>
+                    <p class="benefit-description">
+                        Equipe dedicada para auxiliar em todo o processo de recrutamento, 
+                        desde a criação da vaga até a contratação do candidato ideal.
+                    </p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">⚡</div>
+                    <h3 class="benefit-title">Processo Ágil</h3>
+                    <p class="benefit-description">
+                        Reduza o tempo de contratação em até 60% com nossos processos 
+                        otimizados e ferramentas de automação inteligente.
+                    </p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔒</div>
+                    <h3 class="benefit-title">Segurança Total</h3>
+                    <p class="benefit-description">
+                        Proteção completa dos dados da sua empresa e candidatos, 
+                        com certificações de segurança e conformidade LGPD.
+                    </p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">💰</div>
+                    <h3 class="benefit-title">Custo-Benefício</h3>
+                    <p class="benefit-description">
+                        Reduza custos de recrutamento em até 40% comparado aos métodos tradicionais, 
+                        com maior eficiência e qualidade dos candidatos.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Plans Section -->
+        <section class="plans-section" id="plans">
+            <h2 class="section-title">Nossos Planos</h2>
+            
+            <div class="plans-grid">
+                <!-- Plano Starter -->
+                <div class="plan-card">
+                    <h3 class="plan-name">Starter</h3>
+                    <div class="plan-price">R$ 299</div>
+                    <div class="plan-period">por mês</div>
+                    
+                    <ul class="plan-features">
+                        <li>Até 5 vagas ativas</li>
+                        <li>Banco de candidatos básico</li>
+                        <li>Relatórios mensais</li>
+                        <li>Suporte por email</li>
+                        <li>Integração com redes sociais</li>
+                        <li>Dashboard básico</li>
+                    </ul>
+                    
+                    <button class="plan-cta" onclick="choosePlan('starter')">Escolher Starter</button>
+                </div>
+                
+                <!-- Plano Professional -->
+                <div class="plan-card featured">
+                    <div class="plan-badge">Mais Popular</div>
+                    <h3 class="plan-name">Professional</h3>
+                    <div class="plan-price">R$ 599</div>
+                    <div class="plan-period">por mês</div>
+                    
+                    <ul class="plan-features">
+                        <li>Até 15 vagas ativas</li>
+                        <li>Banco de candidatos avançado</li>
+                        <li>Relatórios semanais</li>
+                        <li>Suporte prioritário</li>
+                        <li>Integração com ATS</li>
+                        <li>Dashboard avançado</li>
+                        <li>Filtros inteligentes</li>
+                        <li>Branding personalizado</li>
+                    </ul>
+                    
+                    <button class="plan-cta featured" onclick="choosePlan('professional')">Escolher Professional</button>
+                </div>
+                
+                <!-- Plano Enterprise -->
+                <div class="plan-card">
+                    <h3 class="plan-name">Enterprise</h3>
+                    <div class="plan-price">R$ 1.299</div>
+                    <div class="plan-period">por mês</div>
+                    
+                    <ul class="plan-features">
+                        <li>Vagas ilimitadas</li>
+                        <li>Banco de candidatos premium</li>
+                        <li>Relatórios em tempo real</li>
+                        <li>Suporte 24/7</li>
+                        <li>API completa</li>
+                        <li>Dashboard executivo</li>
+                        <li>IA para matching</li>
+                        <li>Gerente de conta dedicado</li>
+                        <li>Treinamentos exclusivos</li>
+                        <li>SLA garantido</li>
+                    </ul>
+                    
+                    <button class="plan-cta" onclick="choosePlan('enterprise')">Escolher Enterprise</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Custom Solutions -->
+        <section class="custom-solutions">
+            <h2 class="custom-title">Soluções Personalizadas</h2>
+            <p class="custom-description">
+                Precisa de um plano diferente? Quer adicionar mais vagas ao seu plano atual? 
+                Ou gostaria de conhecer melhor nossos serviços? Entre em contato conosco!
+            </p>
+            
+            <div class="custom-features">
+                <div class="custom-feature">
+                    <div class="custom-feature-title">Planos Sob Medida</div>
+                    <p>Criamos planos específicos para suas necessidades</p>
+                </div>
+                
+                <div class="custom-feature">
+                    <div class="custom-feature-title">Expansão de Vagas</div>
+                    <p>Adicione mais vagas ao seu plano atual facilmente</p>
+                </div>
+                
+                <div class="custom-feature">
+                    <div class="custom-feature-title">Consultoria Especializada</div>
+                    <p>Conheça todos os nossos serviços em detalhes</p>
+                </div>
+                
+                <div class="custom-feature">
+                    <div class="custom-feature-title">Suporte Personalizado</div>
+                    <p>Atendimento dedicado para suas necessidades específicas</p>
+                </div>
+            </div>
+            
+
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact-section">
+            <h2 class="contact-title">Pronto para começar?</h2>
+            <p class="contact-description">
+                Entre em contato conosco e descubra como podemos transformar 
+                seu processo de recrutamento e seleção.
+            </p>
+            
+            <div class="contact-buttons">
+                <a href="mailto:vendas@claunnetworking.com" class="contact-btn">
+                    📧 vendas@claunnetworking.com
+                </a>
+                <a href="tel:+5511999999999" class="contact-btn">
+                    📱 (11) 99999-9999
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function choosePlan(planType) {
+            const plans = {
+                starter: {
+                    name: 'Starter',
+                    price: 'R$ 299/mês',
+                    features: ['5 vagas ativas', 'Banco básico', 'Relatórios mensais']
+                },
+                professional: {
+                    name: 'Professional',
+                    price: 'R$ 599/mês',
+                    features: ['15 vagas ativas', 'Banco avançado', 'Suporte prioritário']
+                },
+                enterprise: {
+                    name: 'Enterprise',
+                    price: 'R$ 1.299/mês',
+                    features: ['Vagas ilimitadas', 'IA para matching', 'Suporte 24/7']
+                }
+            };
+            
+            const plan = plans[planType];
+            
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+                backdrop-filter: blur(5px);
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 3rem; border-radius: 20px; max-width: 500px; width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                    <h2 style=" margin-bottom: 1rem;">Plano ${plan.name}</h2>
+                    <p style=" color: #10B981;  margin-bottom: 1rem;">${plan.price}</p>
+                    
+                    <div style="text-align: left; margin-bottom: 2rem;">
+                        <h4 style=" margin-bottom: 1rem;">Principais recursos:</h4>
+                        <ul style="color: #64748b;">
+                            ${plan.features.map(feature => `<li style="margin-bottom: 0.5rem;">✅ ${feature}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <p style="color: #64748b; margin-bottom: 2rem;">
+                        Para contratar este plano, entre em contato conosco. 
+                        Nossa equipe irá auxiliá-lo em todo o processo.
+                    </p>
+                    
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button onclick="this.closest('div').parentElement.remove()" 
+                                style="background: #6B7280; color: white; padding: 1rem 2rem; border: none; border-radius: 8px; cursor: pointer;">
+                            Fechar
+                        </button>
+                        <button onclick="contactSales('${planType}')" 
+                                style="background: #10B981; color: white; padding: 1rem 2rem; border: none; border-radius: 8px; cursor: pointer;">
+                            Entrar em Contato
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function contactSales(planType) {
+            const subject = `Interesse no Plano ${planType.charAt(0).toUpperCase() + planType.slice(1)}`;
+            const body = `Olá! Tenho interesse no plano ${planType} da ClaunNetworking. Gostaria de mais informações sobre contratação e implementação.`;
+            
+            window.open(`mailto:vendas@claunnetworking.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+            
+            // Close modal
+            document.querySelector('div[style*="position: fixed"]').remove();
+        }
+
+        function requestCustomSolution() {
+            const subject = 'Solicitação de Proposta Personalizada';
+            const body = `Olá! Tenho interesse em uma solução personalizada da ClaunNetworking para minha empresa. Gostaria de agendar uma reunião para discutir nossas necessidades específicas.`;
+            
+            window.open(`mailto:vendas@claunnetworking.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+        }
+
+        function scheduleDemo() {
+            const subject = 'Agendamento de Demonstração';
+            const body = `Olá! Gostaria de agendar uma demonstração da plataforma ClaunNetworking para conhecer melhor as funcionalidades e como pode ajudar nossa empresa.`;
+            
+            window.open(`mailto:vendas@claunnetworking.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.benefit-card, .plan-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

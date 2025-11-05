@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensagens - ClaunNetworking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6, #A855F7);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B46C1;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .back-link {
+            color: #6B46C1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: background 0.3s;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            background: rgba(107, 70, 193, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 2rem;
+            height: calc(100vh - 120px);
+        }
+
+        .conversations-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #E5E7EB;
+        }
+
+        .panel-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1F2937;
+        }
+
+        .new-message-btn {
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .new-message-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(107, 70, 193, 0.3);
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #6B46C1;
+            box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6B7280;
+        }
+
+        .conversations-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .conversation-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 0.5rem;
+            border: 2px solid transparent;
+        }
+
+        .conversation-item:hover {
+            background: rgba(107, 70, 193, 0.05);
+        }
+
+        .conversation-item.active {
+            background: linear-gradient(135deg, #EDE9FE, #F3E8FF);
+            border-color: #6B46C1;
+        }
+
+        .conversation-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .conversation-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .conversation-name {
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .conversation-preview {
+            font-size: 0.85rem;
+            color: #6B7280;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conversation-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.25rem;
+        }
+
+        .conversation-time {
+            font-size: 0.75rem;
+            color: #9CA3AF;
+        }
+
+        .unread-badge {
+            background: #EF4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .chat-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 1.5rem;
+            border-bottom: 2px solid #E5E7EB;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .chat-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .chat-info h3 {
+            color: #1F2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .chat-status {
+            font-size: 0.85rem;
+            color: #6B7280;
+        }
+
+        .chat-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(107, 70, 193, 0.1);
+            color: #6B46C1;
+        }
+
+        .action-btn:hover {
+            background: rgba(107, 70, 193, 0.2);
+            transform: scale(1.1);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            display: flex;
+            gap: 0.75rem;
+            max-width: 70%;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-bubble {
+            padding: 0.75rem 1rem;
+            border-radius: 18px;
+            margin-bottom: 0.25rem;
+        }
+
+        .message.received .message-bubble {
+            background: #F3F4F6;
+            color: #1F2937;
+            border-bottom-left-radius: 6px;
+        }
+
+        .message.sent .message-bubble {
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            color: white;
+            border-bottom-right-radius: 6px;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            color: #9CA3AF;
+            padding: 0 0.5rem;
+        }
+
+        .message.sent .message-time {
+            text-align: right;
+        }
+
+        .chat-input-area {
+            padding: 1.5rem;
+            border-top: 2px solid #E5E7EB;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .input-container {
+            flex: 1;
+            position: relative;
+        }
+
+        .message-input {
+            width: 100%;
+            padding: 0.75rem 3rem 0.75rem 1rem;
+            border: 2px solid #E5E7EB;
+            border-radius: 25px;
+            font-size: 1rem;
+            resize: none;
+            min-height: 45px;
+            max-height: 120px;
+            transition: all 0.3s;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: #6B46C1;
+            box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.1);
+        }
+
+        .attachment-btn {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #6B7280;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .attachment-btn:hover {
+            color: #6B46C1;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(107, 70, 193, 0.3);
+        }
+
+        .empty-chat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #6B7280;
+            text-align: center;
+        }
+
+        .empty-chat h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: #F3F4F6;
+            border-radius: 18px;
+            border-bottom-left-radius: 6px;
+            margin-bottom: 0.25rem;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #6B7280;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .conversations-panel {
+                display: none;
+            }
+
+            .chat-panel {
+                border-radius: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="assets/logo_transparent.png" alt="ClaunNetworking">
+                ClaunNetworking
+            </div>
+            <a href="javascript:history.back()" class="back-link">
+                ← Voltar
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="conversations-panel">
+            <div class="panel-header">
+                <h2 class="panel-title">💬 Mensagens</h2>
+                <button class="new-message-btn" onclick="newMessage()">
+                    ✉️ Nova
+                </button>
+            </div>
+
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Buscar conversas..." onkeyup="searchConversations(this.value)">
+            </div>
+
+            <div class="conversations-list" id="conversationsList">
+                <!-- Conversas serão carregadas aqui -->
+            </div>
+        </div>
+
+        <div class="chat-panel">
+            <div id="emptyChat" class="empty-chat">
+                <h3>💬 Bem-vindo às Mensagens</h3>
+                <p>Selecione uma conversa para começar ou inicie uma nova mensagem.</p>
+            </div>
+
+            <div id="activeChat" class="chat-content" style="display: none; height: 100%; flex-direction: column;">
+                <div class="chat-header">
+                    <div class="chat-avatar" id="chatAvatar">TC</div>
+                    <div class="chat-info">
+                        <h3 id="chatName">TechCorp Brasil</h3>
+                        <div class="chat-status" id="chatStatus">Online há 5 min</div>
+                    </div>
+                    <div class="chat-actions">
+                        <button class="action-btn" onclick="videoCall()" title="Videochamada">
+                            📹
+                        </button>
+                        <button class="action-btn" onclick="audioCall()" title="Chamada">
+                            📞
+                        </button>
+                        <button class="action-btn" onclick="moreOptions()" title="Mais opções">
+                            ⋯
+                        </button>
+                    </div>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Mensagens serão carregadas aqui -->
+                </div>
+
+                <div class="chat-input-area">
+                    <div class="input-container">
+                        <textarea class="message-input" id="messageInput" placeholder="Digite sua mensagem..." onkeypress="handleKeyPress(event)"></textarea>
+                        <button class="attachment-btn" onclick="attachFile()" title="Anexar arquivo">
+                            📎
+                        </button>
+                    </div>
+                    <button class="send-btn" onclick="sendMessage()" title="Enviar">
+                        ➤
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados simulados de conversas
+        const mockConversations = [
+            {
+                id: 1,
+                name: "TechCorp Brasil",
+                type: "empresa",
+                avatar: "TC",
+                lastMessage: "Obrigado pelo interesse na nossa vaga de desenvolvedor!",
+                time: "14:30",
+                unread: 2,
+                online: true
+            },
+            {
+                id: 2,
+                name: "Universidade Tecnológica",
+                type: "instituicao",
+                avatar: "UT",
+                lastMessage: "Temos uma bolsa de estudos que pode interessar você.",
+                time: "13:45",
+                unread: 0,
+                online: false
+            },
+            {
+                id: 3,
+                name: "Ana Silva",
+                type: "candidato",
+                avatar: "AS",
+                lastMessage: "Podemos conversar sobre a oportunidade de estágio?",
+                time: "12:20",
+                unread: 1,
+                online: true
+            },
+            {
+                id: 4,
+                name: "FinanceMax",
+                type: "empresa",
+                avatar: "FM",
+                lastMessage: "Seu perfil chamou nossa atenção. Vamos conversar?",
+                time: "11:15",
+                unread: 0,
+                online: false
+            },
+            {
+                id: 5,
+                name: "Carlos Oliveira",
+                type: "candidato",
+                avatar: "CO",
+                lastMessage: "Obrigado pela oportunidade!",
+                time: "10:30",
+                unread: 0,
+                online: true
+            }
+        ];
+
+        // Dados simulados de mensagens
+        const mockMessages = {
+            1: [
+                {
+                    id: 1,
+                    sender: "empresa",
+                    content: "Olá! Vimos seu perfil e ficamos interessados em conversar sobre uma oportunidade em nossa empresa.",
+                    time: "14:25",
+                    avatar: "TC"
+                },
+                {
+                    id: 2,
+                    sender: "user",
+                    content: "Olá! Fico muito interessado em saber mais sobre a oportunidade. Podem me contar mais detalhes?",
+                    time: "14:27",
+                    avatar: "EU"
+                },
+                {
+                    id: 3,
+                    sender: "empresa",
+                    content: "Claro! Estamos buscando um desenvolvedor React sênior para nosso time de produtos. A vaga é para trabalho híbrido em São Paulo.",
+                    time: "14:28",
+                    avatar: "TC"
+                },
+                {
+                    id: 4,
+                    sender: "empresa",
+                    content: "Obrigado pelo interesse na nossa vaga de desenvolvedor!",
+                    time: "14:30",
+                    avatar: "TC"
+                }
+            ]
+        };
+
+        let activeConversationId = null;
+
+        // Carregar conversas
+        function loadConversations() {
+            const list = document.getElementById('conversationsList');
+            list.innerHTML = mockConversations.map(conv => `
+                <div class="conversation-item" onclick="openConversation(${conv.id})" data-id="${conv.id}">
+                    <div class="conversation-avatar">${conv.avatar}</div>
+                    <div class="conversation-info">
+                        <div class="conversation-name">${conv.name}</div>
+                        <div class="conversation-preview">${conv.lastMessage}</div>
+                    </div>
+                    <div class="conversation-meta">
+                        <div class="conversation-time">${conv.time}</div>
+                        ${conv.unread > 0 ? `<div class="unread-badge">${conv.unread}</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Abrir conversa
+        function openConversation(conversationId) {
+            activeConversationId = conversationId;
+            const conversation = mockConversations.find(c => c.id === conversationId);
+            
+            // Atualizar interface
+            document.getElementById('emptyChat').style.display = 'none';
+            document.getElementById('activeChat').style.display = 'flex';
+            
+            // Atualizar cabeçalho do chat
+            document.getElementById('chatAvatar').textContent = conversation.avatar;
+            document.getElementById('chatName').textContent = conversation.name;
+            document.getElementById('chatStatus').textContent = conversation.online ? 'Online agora' : 'Offline';
+            
+            // Marcar como ativa
+            document.querySelectorAll('.conversation-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-id="${conversationId}"]`).classList.add('active');
+            
+            // Carregar mensagens
+            loadMessages(conversationId);
+            
+            // Marcar como lida
+            conversation.unread = 0;
+            loadConversations();
+        }
+
+        // Carregar mensagens
+        function loadMessages(conversationId) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messages = mockMessages[conversationId] || [];
+            
+            messagesContainer.innerHTML = messages.map(msg => `
+                <div class="message ${msg.sender === 'user' ? 'sent' : 'received'}">
+                    <div class="message-avatar">${msg.avatar}</div>
+                    <div class="message-content">
+                        <div class="message-bubble">${msg.content}</div>
+                        <div class="message-time">${msg.time}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Scroll para o final
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Enviar mensagem
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const content = input.value.trim();
+            
+            if (!content || !activeConversationId) return;
+            
+            // Adicionar mensagem às mensagens simuladas
+            if (!mockMessages[activeConversationId]) {
+                mockMessages[activeConversationId] = [];
+            }
+            
+            const newMessage = {
+                id: Date.now(),
+                sender: 'user',
+                content: content,
+                time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+                avatar: 'EU'
+            };
+            
+            mockMessages[activeConversationId].push(newMessage);
+            
+            // Atualizar conversa
+            const conversation = mockConversations.find(c => c.id === activeConversationId);
+            conversation.lastMessage = content;
+            conversation.time = newMessage.time;
+            
+            // Recarregar interface
+            loadMessages(activeConversationId);
+            loadConversations();
+            
+            // Limpar input
+            input.value = '';
+            
+            // Simular resposta automática
+            setTimeout(() => {
+                simulateResponse();
+            }, 2000);
+        }
+
+        // Simular resposta
+        function simulateResponse() {
+            if (!activeConversationId) return;
+            
+            const responses = [
+                "Obrigado pela mensagem! Vamos analisar e retornar em breve.",
+                "Interessante! Podemos agendar uma conversa para discutir melhor?",
+                "Perfeito! Vou encaminhar para nossa equipe responsável.",
+                "Ótimo! Que tal marcarmos uma reunião para a próxima semana?"
+            ];
+            
+            const conversation = mockConversations.find(c => c.id === activeConversationId);
+            const response = {
+                id: Date.now(),
+                sender: conversation.type,
+                content: responses[Math.floor(Math.random() * responses.length)],
+                time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+                avatar: conversation.avatar
+            };
+            
+            mockMessages[activeConversationId].push(response);
+            conversation.lastMessage = response.content;
+            conversation.time = response.time;
+            
+            loadMessages(activeConversationId);
+            loadConversations();
+        }
+
+        // Buscar conversas
+        function searchConversations(query) {
+            const items = document.querySelectorAll('.conversation-item');
+            items.forEach(item => {
+                const name = item.querySelector('.conversation-name').textContent.toLowerCase();
+                const preview = item.querySelector('.conversation-preview').textContent.toLowerCase();
+                const match = name.includes(query.toLowerCase()) || preview.includes(query.toLowerCase());
+                item.style.display = match ? 'flex' : 'none';
+            });
+        }
+
+        // Manipular tecla Enter
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        // Funções de ação
+        function newMessage() {
+            alert('Funcionalidade de nova mensagem será implementada!\n\nVocê poderá:\n• Buscar usuários por nome ou empresa\n• Iniciar conversas com candidatos, empresas ou instituições\n• Enviar convites personalizados');
+        }
+
+        function videoCall() {
+            alert('Iniciando videochamada...\n\nEsta funcionalidade integrará com:\n• Google Meet\n• Microsoft Teams\n• Zoom\n• WhatsApp Business');
+        }
+
+        function audioCall() {
+            alert('Iniciando chamada de áudio...\n\nEsta funcionalidade permitirá:\n• Chamadas diretas pelo app\n• Integração com WhatsApp\n• Agendamento de chamadas');
+        }
+
+        function attachFile() {
+            alert('Anexar arquivo\n\nVocê poderá enviar:\n• Documentos (PDF, DOC, etc.)\n• Imagens\n• Currículos\n• Portfólios\n• Links de projetos');
+        }
+
+        function moreOptions() {
+            alert('Mais opções:\n\n• Arquivar conversa\n• Silenciar notificações\n• Bloquear usuário\n• Denunciar\n• Exportar conversa\n• Agendar reunião');
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            loadConversations();
+        });
+    </script>
+</body>
+</html>

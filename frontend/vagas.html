@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vagas Disponíveis - ClaunNetworking</title>
+    <script src="js/auth-system.js"></script>
+    <script src="js/job-engagement.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            
+            
+            
+            
+            text-decoration: none;
+        }
+
+        .logo-image {
+            height: 40px;
+            width: auto;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #6B46C1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #553C9A;
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: #64748b;
+        }
+
+        /* Filtros */
+        .filters-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .filters-title {
+            
+            
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .filter-select, .filter-input {
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            border-
+        }
+
+        .filters-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn-filter {
+            background: #6B46C1;
+            color: white;
+        }
+
+        .btn-clear {
+            background: #6B7280;
+            color: white;
+        }
+
+        /* Cards de Vagas */
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .job-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+            position: relative;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .job-card.featured {
+            border-left: 4px solid #10B981;
+        }
+
+        .job-card.featured::before {
+            content: "DESTAQUE";
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #10B981;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .job-header {
+            margin-bottom: 1rem;
+        }
+
+        .job-title {
+            
+            font-weight: 700;
+            
+            margin-bottom: 0.5rem;
+        }
+
+        .job-company {
+            color: #10B981;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .job-description {
+            color: #64748b;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .job-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .job-detail {
+            display: flex;
+            align-items: center;
+            
+            color: #374151;
+            font-size: 0.9rem;
+        }
+
+        .job-tags {
+            display: flex;
+            flex-wrap: wrap;
+            
+            margin-bottom: 1.5rem;
+        }
+
+        .job-tag {
+            background: #F3F4F6;
+            color: #374151;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .job-engagement {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .engagement-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: #6B7280;
+            font-size: 0.9rem;
+        }
+
+        .job-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-details {
+            flex: 1;
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-details:hover {
+            background: linear-gradient(135deg, #553C9A, #7C3AED);
+            transform: translateY(-2px);
+        }
+
+        .btn-share {
+            background: #F3F4F6;
+            color: #374151;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-share:hover {
+            background: #E5E7EB;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .jobs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .job-details {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <img src="assets/logo_clean.png" alt="ClaunNetworking" class="logo-image">
+                Claunnetworking
+            </a>
+            <a href="index.html" class="btn btn-primary">← Voltar ao Início</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Vagas Disponíveis</h1>
+            <p class="page-subtitle">Encontre sua próxima oportunidade profissional</p>
+        </div>
+
+        <!-- Filtros -->
+        <section class="filters-section">
+            <h2 class="filters-title">
+                🔍 Filtros de Busca
+            </h2>
+            
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Busca Geral</label>
+                    <input type="text" class="filter-input" placeholder="Título, empresa ou palavra-chave" id="searchGeneral">
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Área</label>
+                    <select class="filter-select" id="filterArea">
+                        <option value="">Todas</option>
+                        <option value="administracao">Administração</option>
+                        <option value="agricultura">Agricultura</option>
+                        <option value="arquitetura">Arquitetura</option>
+                        <option value="auditoria">Auditoria</option>
+                        <option value="comercial">Comercial</option>
+                        <option value="comunicacao">Comunicação</option>
+                        <option value="consultoria">Consultoria</option>
+                        <option value="contabilidade">Contabilidade</option>
+                        <option value="design">Design</option>
+                        <option value="direito">Direito</option>
+                        <option value="educacao">Educação</option>
+                        <option value="engenharia">Engenharia</option>
+                        <option value="financeiro">Financeiro</option>
+                        <option value="industrial">Industrial</option>
+                        <option value="logistica">Logística</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="medicina">Medicina</option>
+                        <option value="operacoes">Operações</option>
+                        <option value="producao">Produção</option>
+                        <option value="projetos">Projetos</option>
+                        <option value="qualidade">Qualidade</option>
+                        <option value="rh">Recursos Humanos</option>
+                        <option value="saude">Saúde</option>
+                        <option value="seguranca">Segurança</option>
+                        <option value="tecnologia">Tecnologia</option>
+                        <option value="telecomunicacoes">Telecomunicações</option>
+                        <option value="turismo">Turismo</option>
+                        <option value="vendas">Vendas</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Modelo</label>
+                    <select class="filter-select" id="filterModel">
+                        <option value="">Todos</option>
+                        <option value="remoto">Remoto</option>
+                        <option value="hibrido">Híbrido</option>
+                        <option value="presencial">Presencial</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Cidade</label>
+                    <input type="text" class="filter-input" placeholder="Digite a cidade" id="filterCity">
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Nível</label>
+                    <select class="filter-select" id="filterLevel">
+                        <option value="">Todos</option>
+                        <option value="junior">Júnior</option>
+                        <option value="pleno">Pleno</option>
+                        <option value="senior">Sênior</option>
+                        <option value="estagio">Estágio</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Faixa Salarial</label>
+                    <select class="filter-select" id="filterSalary">
+                        <option value="">Todas</option>
+                        <option value="1000-3000">R$ 1.000 - R$ 3.000</option>
+                        <option value="3000-6000">R$ 3.000 - R$ 6.000</option>
+                        <option value="6000-10000">R$ 6.000 - R$ 10.000</option>
+                        <option value="10000+">R$ 10.000+</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="filters-actions">
+                <button class="btn btn-filter" onclick="applyFilters()">🔍 Buscar</button>
+                <button class="btn btn-clear" onclick="clearFilters()">🗑️ Limpar Filtros</button>
+            </div>
+        </section>
+
+        <!-- Lista de Vagas -->
+        <section class="jobs-grid" id="jobsGrid">
+            <!-- Vagas serão carregadas aqui via JavaScript -->
+        </section>
+    </main>
+
+    <script>
+        // Dados de exemplo das vagas
+        const jobsData = [
+            {
+                id: 1,
+                title: "Desenvolvedor Frontend React",
+                company: "TechCorp",
+                description: "Buscamos desenvolvedor React com experiência em TypeScript e Next.js para integrar nossa equipe de desenvolvimento.",
+                location: "São Paulo, SP",
+                salary: "R$ 8.000 - R$ 12.000",
+                model: "remoto",
+                level: "pleno",
+                area: "tecnologia",
+                publishDate: "2 dias atrás",
+                featured: true,
+                tags: ["React", "TypeScript", "Next.js"],
+                engagement: {
+                    likes: 24,
+                    views: 156,
+                    shares: 8
+                }
+            },
+            {
+                id: 2,
+                title: "Analista de Marketing Digital",
+                company: "Marketing Pro",
+                description: "Oportunidade para analista de marketing digital com foco em campanhas de performance e análise de dados.",
+                location: "Rio de Janeiro, RJ",
+                salary: "R$ 4.500 - R$ 7.000",
+                model: "hibrido",
+                level: "junior",
+                area: "marketing",
+                publishDate: "1 dia atrás",
+                featured: false,
+                tags: ["Google Ads", "Facebook Ads", "Analytics"],
+                engagement: {
+                    likes: 18,
+                    views: 89,
+                    shares: 5
+                }
+            },
+            {
+                id: 3,
+                title: "Designer UX/UI Sênior",
+                company: "Design Studio",
+                description: "Procuramos designer sênior para liderar projetos de experiência do usuário em produtos digitais inovadores.",
+                location: "Belo Horizonte, MG",
+                salary: "R$ 9.000 - R$ 15.000",
+                model: "presencial",
+                level: "senior",
+                area: "design",
+                publishDate: "3 dias atrás",
+                featured: true,
+                tags: ["Figma", "Prototyping", "User Research"],
+                engagement: {
+                    likes: 32,
+                    views: 203,
+                    shares: 12
+                }
+            },
+            {
+                id: 4,
+                title: "Vendedor Interno",
+                company: "Sales Company",
+                description: "Vaga para vendedor interno com experiência em vendas B2B e relacionamento com clientes corporativos.",
+                location: "Porto Alegre, RS",
+                salary: "R$ 3.000 - R$ 5.000 + comissões",
+                model: "presencial",
+                level: "pleno",
+                area: "vendas",
+                publishDate: "5 dias atrás",
+                featured: false,
+                tags: ["Vendas B2B", "CRM", "Negociação"],
+                engagement: {
+                    likes: 15,
+                    views: 67,
+                    shares: 3
+                }
+            },
+            {
+                id: 5,
+                title: "Analista Financeiro",
+                company: "FinanceGroup",
+                description: "Oportunidade para analista financeiro com experiência em controladoria e análise de investimentos.",
+                location: "São Paulo, SP",
+                salary: "R$ 6.000 - R$ 9.000",
+                model: "hibrido",
+                level: "pleno",
+                area: "financeiro",
+                publishDate: "1 semana atrás",
+                featured: false,
+                tags: ["Excel Avançado", "Power BI", "Controladoria"],
+                engagement: {
+                    likes: 21,
+                    views: 134,
+                    shares: 7
+                }
+            },
+            {
+                id: 6,
+                title: "Especialista em Recrutamento",
+                company: "HR Solutions",
+                description: "Vaga para especialista em recrutamento e seleção com foco em vagas de tecnologia e inovação.",
+                location: "Remoto",
+                salary: "R$ 5.500 - R$ 8.500",
+                model: "remoto",
+                level: "pleno",
+                area: "rh",
+                publishDate: "4 dias atrás",
+                featured: true,
+                tags: ["Recrutamento", "LinkedIn", "Entrevistas"],
+                engagement: {
+                    likes: 28,
+                    views: 178,
+                    shares: 9
+                }
+            }
+        ];
+
+        let filteredJobs = [...jobsData];
+
+        function renderJobs(jobs) {
+            const jobsGrid = document.getElementById('jobsGrid');
+            
+            if (jobs.length === 0) {
+                jobsGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #6B7280;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+                        <h3>Nenhuma vaga encontrada</h3>
+                        <p>Tente ajustar os filtros para encontrar mais oportunidades.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            jobsGrid.innerHTML = jobs.map(job => `
+                <div class="job-card ${job.featured ? 'featured' : ''}">
+                    <div class="job-header">
+                        <h3 class="job-title">${job.title}</h3>
+                        <div class="job-company">${job.company}</div>
+                    </div>
+                    
+                    <p class="job-description">${job.description}</p>
+                    
+                    <div class="job-details">
+                        <div class="job-detail">
+                            <span>📍</span>
+                            <span>${job.location}</span>
+                        </div>
+                        <div class="job-detail">
+                            <span>💰</span>
+                            <span>${job.salary}</span>
+                        </div>
+                        <div class="job-detail">
+                            <span>🏠</span>
+                            <span>${job.model.charAt(0).toUpperCase() + job.model.slice(1)}</span>
+                        </div>
+                        <div class="job-detail">
+                            <span>⏰</span>
+                            <span>${job.publishDate}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="job-tags">
+                        ${job.tags.map(tag => `<span class="job-tag">${tag}</span>`).join('')}
+                    </div>
+                    
+                    <div class="job-engagement">
+                        <div class="engagement-item">
+                            <span>❤️</span>
+                            <span>${job.engagement.likes}</span>
+                        </div>
+                        <div class="engagement-item">
+                            <span>👁️</span>
+                            <span>${job.engagement.views} visualizações</span>
+                        </div>
+                        <div class="engagement-item">
+                            <span>🔗</span>
+                            <span>${job.engagement.shares}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="job-actions">
+                        <button class="btn-details" onclick="viewJobDetails(${job.id})">Ver Detalhes</button>
+                        <button class="btn-share" onclick="shareJob(${job.id})">🔗</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function applyFilters() {
+            const searchGeneral = document.getElementById('searchGeneral').value.toLowerCase();
+            const filterArea = document.getElementById('filterArea').value;
+            const filterModel = document.getElementById('filterModel').value;
+            const filterCity = document.getElementById('filterCity').value.toLowerCase();
+            const filterLevel = document.getElementById('filterLevel').value;
+            const filterSalary = document.getElementById('filterSalary').value;
+
+            filteredJobs = jobsData.filter(job => {
+                const matchesSearch = !searchGeneral || 
+                    job.title.toLowerCase().includes(searchGeneral) ||
+                    job.company.toLowerCase().includes(searchGeneral) ||
+                    job.description.toLowerCase().includes(searchGeneral);
+                
+                const matchesArea = !filterArea || job.area === filterArea;
+                const matchesModel = !filterModel || job.model === filterModel;
+                const matchesCity = !filterCity || job.location.toLowerCase().includes(filterCity);
+                const matchesLevel = !filterLevel || job.level === filterLevel;
+                
+                // Filtro de salário simplificado
+                const matchesSalary = !filterSalary || true; // Implementar lógica de salário se necessário
+
+                return matchesSearch && matchesArea && matchesModel && matchesCity && matchesLevel && matchesSalary;
+            });
+
+            // Ordenar: vagas em destaque primeiro, depois por data
+            filteredJobs.sort((a, b) => {
+                if (a.featured && !b.featured) return -1;
+                if (!a.featured && b.featured) return 1;
+                return 0; // Manter ordem original para mesma prioridade
+            });
+
+            renderJobs(filteredJobs);
+        }
+
+        function clearFilters() {
+            document.getElementById('searchGeneral').value = '';
+            document.getElementById('filterArea').value = '';
+            document.getElementById('filterModel').value = '';
+            document.getElementById('filterCity').value = '';
+            document.getElementById('filterLevel').value = '';
+            document.getElementById('filterSalary').value = '';
+            
+            filteredJobs = [...jobsData];
+            renderJobs(filteredJobs);
+        }
+
+        function viewJobDetails(jobId) {
+            const job = jobsData.find(j => j.id === jobId);
+            alert(`Visualizando detalhes da vaga: ${job.title}\n\nEm breve: página completa com detalhes da vaga e formulário de candidatura.`);
+        }
+
+        function shareJob(jobId) {
+            const job = jobsData.find(j => j.id === jobId);
+            if (navigator.share) {
+                navigator.share({
+                    title: job.title,
+                    text: `Confira esta vaga: ${job.title} na ${job.company}`,
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert('Link copiado para a área de transferência!');
+            }
+        }
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            renderJobs(filteredJobs);
+        });
+    </script>
+</body>
+</html>

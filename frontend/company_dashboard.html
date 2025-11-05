@@ -1,0 +1,2807 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel da Empresa - ClaunNetworking</title>
+    <script src="js/responsibility-alert.js"></script>
+    <script src="js/navigation-fix.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #8B5CF6 0%, #06D6A0 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .logo-icon {
+            width: 35px;
+            height: 35px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8B5CF6;
+            font-weight: bold;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Layout */
+        .dashboard-layout {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            padding: 2rem 0;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-right: 3px solid transparent;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: #f8f9fa;
+            color: #8B5CF6;
+            border-right-color: #8B5CF6;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: #8B5CF6;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #666;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #8B5CF6 0%, #06D6A0 100%);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #8B5CF6;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .stat-change {
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        .stat-change.positive {
+            color: #06D6A0;
+        }
+
+        .stat-change.negative {
+            color: #ef4444;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: #8B5CF6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #7C3AED;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #06D6A0;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #05B890;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #8B5CF6;
+        }
+
+        /* Charts */
+        .chart-container {
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border-radius: 8px;
+            color: #666;
+        }
+
+        /* Status badges */
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-badge.active {
+            background: #D1FAE5;
+            color: #06D6A0;
+        }
+
+        .status-badge.pending {
+            background: #FEF3C7;
+            color: #F59E0B;
+        }
+
+        .status-badge.rejected {
+            background: #FEE2E2;
+            color: #EF4444;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 2% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #8B5CF6;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 1rem 0;
+            }
+
+            .sidebar-menu {
+                display: flex;
+                overflow-x: auto;
+                padding: 0 1rem;
+            }
+
+            .sidebar-menu li {
+                margin-right: 1rem;
+                margin-bottom: 0;
+                white-space: nowrap;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Hide sections */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Candidates Management Styles */
+        .filters-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+
+        .filter-select {
+            padding: 0.5rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            background: white;
+            min-width: 150px;
+        }
+
+        .candidate-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .candidate-name {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .candidate-email {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-new {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-screening {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-interview {
+            background: #e0e7ff;
+            color: #5b21b6;
+        }
+
+        .status-approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .adherence-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .adherence-high {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .adherence-medium {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .adherence-low {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: #f3f4f6;
+        }
+
+        .automation-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+
+        .automation-section h3 {
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+
+        .automation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .automation-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .automation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .automation-header h4 {
+            margin: 0;
+            color: #1f2937;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #10b981;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .automation-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .candidate-checkbox {
+            margin: 0;
+        }
+
+        #selectAll {
+            margin: 0;
+        }
+
+        /* Premium Tabs */
+        .premium-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #E5E7EB;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #6B7280;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: #8B5CF6;
+            border-bottom-color: #8B5CF6;
+        }
+
+        .tab-btn:hover {
+            color: #8B5CF6;
+        }
+
+        .premium-tab-content {
+            display: none;
+        }
+
+        .premium-tab-content.active {
+            display: block;
+        }
+
+        /* Courses Grid */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .course-card {
+            background: #F8F9FA;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #E5E7EB;
+            transition: all 0.3s ease;
+        }
+
+        .course-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .course-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .course-logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #8B5CF6, #A855F7);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .course-info {
+            flex: 1;
+        }
+
+        .course-info h4 {
+            margin: 0 0 0.25rem 0;
+            color: #1F2937;
+            font-size: 1.1rem;
+        }
+
+        .course-institution {
+            color: #6B7280;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .course-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #10B981;
+        }
+
+        .course-description {
+            color: #4B5563;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .course-details {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .course-details span {
+            background: #E5E7EB;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #374151;
+        }
+
+        .courses-cta {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #F3E8FF, #E0E7FF);
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .courses-cta h3 {
+            color: #6B46C1;
+            margin-bottom: 0.5rem;
+        }
+
+        .courses-cta p {
+            color: #6B7280;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="assets/logo_clean.png" alt="ClaunNetworking" style="height: 50px; width: auto;">
+                <div style="margin-left: 10px;">
+                    <div>Painel da Empresa</div>
+                    <div style="font-size: 0.8rem; opacity: 0.9;">ClaunNetworking</div>
+                </div>
+            </div>
+            
+            <div class="user-info">
+                <div>
+                    <div style="font-weight: bold;">TechCorp Brasil</div>
+                    <div style="font-size: 0.8rem; opacity: 0.9;">Plano Profissional</div>
+                </div>
+                <div class="user-avatar">T</div>
+                <button onclick="window.location.href='index.html'" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; margin-left: 1rem; font-size: 0.9rem;">Voltar ao Site</button>
+                <button onclick="logout()" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; margin-left: 0.5rem; font-size: 0.9rem;">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#" class="menu-item active" data-section="dashboard">📊 Dashboard</a></li>
+                <li><a href="#" class="menu-item" data-section="jobs">💼 Minhas Vagas</a></li>
+                <li><a href="#" class="menu-item" data-section="candidates">👥 Gestão de Candidatos</a></li>
+                <li><a href="#" class="menu-item" data-section="publish">➕ Publicar Vaga</a></li>
+                <li><a href="buscar_candidatos.html" class="menu-item">🔍 Buscar Candidatos</a></li>
+                <li><a href="#" class="menu-item" data-section="metrics">📈 Métricas</a></li>
+                <li><a href="#" class="menu-item" data-section="reports">📋 Relatórios</a></li>
+                <li><a href="#" class="menu-item" data-section="plan">💳 Meu Plano</a></li>
+                <li><a href="#" class="menu-item" data-section="financial">💰 Financeiro</a></li>
+                <li><a href="#" class="menu-item" data-section="premium">👑 Serviços Premium</a></li>
+                <li><a href="#" class="menu-item" data-section="profile">⚙️ Perfil</a></li>
+                <li><a href="index.html">🏠 Voltar ao Site</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <div class="page-header">
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle">Visão geral das suas publicações e métricas</p>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">💼</div>
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Vagas Publicadas</div>
+                        <div class="stat-change positive">+2 este mês</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👁️</div>
+                        <div class="stat-number">2,340</div>
+                        <div class="stat-label">Total de Visualizações</div>
+                        <div class="stat-change positive">+18% este mês</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">❤️</div>
+                        <div class="stat-number">156</div>
+                        <div class="stat-label">Total de Curtidas</div>
+                        <div class="stat-change positive">+12% este mês</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📤</div>
+                        <div class="stat-number">47</div>
+                        <div class="stat-label">Compartilhamentos</div>
+                        <div class="stat-change positive">+8% este mês</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-number">15</div>
+                        <div class="stat-label">Saldo de Publicações</div>
+                        <div class="stat-change">Plano Profissional</div>
+                    </div>
+
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Atividade Recente</h3>
+                        <button class="btn btn-primary btn-small">Ver Todas</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Ação</th>
+                                    <th>Vaga</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>14/09/2024</td>
+                                    <td>Vaga aprovada</td>
+                                    <td>Desenvolvedor Frontend React</td>
+                                    <td><span class="status-badge active">Ativa</span></td>
+                                </tr>
+                                <tr>
+                                    <td>13/09/2024</td>
+                                    <td>Nova publicação</td>
+                                    <td>Analista de Dados</td>
+                                    <td><span class="status-badge pending">Pendente</span></td>
+                                </tr>
+                                <tr>
+                                    <td>12/09/2024</td>
+                                    <td>Vaga editada</td>
+                                    <td>Designer UX/UI</td>
+                                    <td><span class="status-badge active">Ativa</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Performance Chart -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Performance das Vagas (Últimos 30 dias)</h3>
+                    </div>
+                    <div class="chart-container">
+                        📊 Gráfico de visualizações, curtidas e compartilhamentos por vaga
+                    </div>
+                </div>
+            </section>
+
+            <!-- Jobs Section -->
+            <section id="jobs" class="section">
+                <div class="page-header">
+                    <h1 class="page-title">Minhas Vagas</h1>
+                    <p class="page-subtitle">Gerencie todas as suas vagas publicadas</p>
+                </div>
+
+                <!-- Filters -->
+                <div class="card">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Buscar</label>
+                            <input type="text" placeholder="Buscar por título...">
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select>
+                                <option value="">Todos</option>
+                                <option value="active">Ativas</option>
+                                <option value="pending">Pendentes</option>
+                                <option value="rejected">Rejeitadas</option>
+                                <option value="expired">Expiradas</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Área</label>
+                            <select>
+                                <option value="">Todas</option>
+                                <option value="tecnologia">Tecnologia</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="design">Design</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="align-self: end;">
+                            <button class="btn btn-primary">Filtrar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Jobs List -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Vagas Publicadas (8)</h3>
+                        <button class="btn btn-primary" onclick="showSection('publish')">➕ Nova Vaga</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Título</th>
+                                    <th>Área</th>
+                                    <th>Status</th>
+                                    <th>Publicado em</th>
+                                    <th>👁️ Views</th>
+                                    <th>❤️ Likes</th>
+                                    <th>📤 Shares</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Desenvolvedor Frontend React</strong></td>
+                                    <td>Tecnologia</td>
+                                    <td><span class="status-badge active">Ativa</span></td>
+                                    <td>01/09/2024</td>
+                                    <td>156</td>
+                                    <td>12</td>
+                                    <td>8</td>
+                                    <td>
+                                        <button class="btn btn-secondary btn-small" onclick="editJob(1)">✏️ Editar</button>
+                                        <button class="btn btn-danger btn-small" onclick="deleteJob(1)">🗑️ Excluir</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Designer UX/UI</strong></td>
+                                    <td>Design</td>
+                                    <td><span class="status-badge active">Ativa</span></td>
+                                    <td>28/08/2024</td>
+                                    <td>89</td>
+                                    <td>7</td>
+                                    <td>3</td>
+                                    <td>
+                                        <button class="btn btn-secondary btn-small" onclick="editJob(2)">✏️ Editar</button>
+                                        <button class="btn btn-danger btn-small" onclick="deleteJob(2)">🗑️ Excluir</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Analista de Dados</strong></td>
+                                    <td>Tecnologia</td>
+                                    <td><span class="status-badge pending">Pendente</span></td>
+                                    <td>13/09/2024</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>
+                                        <button class="btn btn-secondary btn-small" onclick="editJob(3)">✏️ Editar</button>
+                                        <button class="btn btn-danger btn-small" onclick="deleteJob(3)">🗑️ Excluir</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Publish Section -->
+            <section id="publish" class="section">
+                <div class="page-header">
+                    <h1 class="page-title">Publicar Nova Vaga</h1>
+                    <p class="page-subtitle">Preencha os dados da vaga para publicação</p>
+                </div>
+
+                <div class="card">
+                    <form id="jobForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Título da Vaga *</label>
+                                <input type="text" required placeholder="Ex: Desenvolvedor Frontend React">
+                            </div>
+                            <div class="form-group">
+                                <label>Área *</label>
+                                <select required>
+                                    <option value="">Selecione uma área</option>
+                                    <option value="tecnologia">Tecnologia</option>
+                                    <option value="marketing">Marketing</option>
+                                    <option value="design">Design</option>
+                                    <option value="vendas">Vendas</option>
+                                    <option value="rh">Recursos Humanos</option>
+                                    <option value="financas">Finanças</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Nível *</label>
+                                <select required>
+                                    <option value="">Selecione o nível</option>
+                                    <option value="estagio">Estágio</option>
+                                    <option value="junior">Júnior</option>
+                                    <option value="pleno">Pleno</option>
+                                    <option value="senior">Sênior</option>
+                                    <option value="especialista">Especialista</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Tipo de Contrato *</label>
+                                <select required>
+                                    <option value="">Selecione o tipo</option>
+                                    <option value="clt">CLT</option>
+                                    <option value="pj">PJ</option>
+                                    <option value="estagio">Estágio</option>
+                                    <option value="freelancer">Freelancer</option>
+                                    <option value="temporario">Temporário</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Localização *</label>
+                                <input type="text" required placeholder="Ex: São Paulo, SP">
+                            </div>
+                            <div class="form-group">
+                                <label>Modalidade *</label>
+                                <select required>
+                                    <option value="">Selecione a modalidade</option>
+                                    <option value="presencial">Presencial</option>
+                                    <option value="remoto">Remoto</option>
+                                    <option value="hibrido">Híbrido</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Faixa Salarial</label>
+                                <input type="text" placeholder="Ex: R$ 5.000 - R$ 8.000">
+                            </div>
+                            <div class="form-group">
+                                <label>Data de Expiração</label>
+                                <input type="date">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Descrição da Vaga *</label>
+                            <textarea rows="6" required placeholder="Descreva as responsabilidades, requisitos e benefícios da vaga..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Requisitos</label>
+                            <textarea rows="4" placeholder="Liste os requisitos necessários para a vaga..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Benefícios</label>
+                            <textarea rows="3" placeholder="Descreva os benefícios oferecidos..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Link para Candidatura *</label>
+                            <input type="url" required placeholder="https://...">
+                        </div>
+
+                        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                            <button type="submit" class="btn btn-primary">📤 Publicar Vaga</button>
+                            <button type="button" class="btn btn-secondary" onclick="showSection('jobs')">❌ Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Candidates Management Section -->
+            <section id="candidates" class="section">
+                <div class="page-header">
+                    <h1 class="page-title">Gestão de Candidatos</h1>
+                    <p class="page-subtitle">Gerencie candidatos e acompanhe o processo seletivo</p>
+                </div>
+
+                <!-- Filters -->
+                <div class="filters-container">
+                    <div class="filter-group">
+                        <label>Vaga:</label>
+                        <select class="filter-select">
+                            <option value="">Todas as vagas</option>
+                            <option value="dev-react">Desenvolvedor Frontend React</option>
+                            <option value="designer-ux">Designer UX/UI</option>
+                            <option value="analista-dados">Analista de Dados</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Status:</label>
+                        <select class="filter-select">
+                            <option value="">Todos os status</option>
+                            <option value="novo">Novo</option>
+                            <option value="triagem">Em Triagem</option>
+                            <option value="entrevista">Entrevista</option>
+                            <option value="aprovado">Aprovado</option>
+                            <option value="rejeitado">Rejeitado</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Aderência:</label>
+                        <select class="filter-select">
+                            <option value="">Todas</option>
+                            <option value="alta">🟢 Alta</option>
+                            <option value="media">🟡 Média</option>
+                            <option value="baixa">🔴 Baixa</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Candidates Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-number">47</div>
+                        <div class="stat-label">Total de Candidatos</div>
+                        <div class="stat-change positive">+12 esta semana</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏳</div>
+                        <div class="stat-number">23</div>
+                        <div class="stat-label">Em Processo</div>
+                        <div class="stat-change neutral">8 aguardando triagem</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Aprovados</div>
+                        <div class="stat-change positive">+3 este mês</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-number">68%</div>
+                        <div class="stat-label">Taxa de Aderência</div>
+                        <div class="stat-change positive">+5% vs mês anterior</div>
+                    </div>
+                </div>
+
+                <!-- Candidates Table -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3 class="table-title">Lista de Candidatos</h3>
+                        <div class="table-actions">
+                            <button class="btn btn-secondary" onclick="exportCandidates()">📊 Exportar</button>
+                            <button class="btn btn-primary" onclick="sendBulkMessage()">📧 Mensagem em Massa</button>
+                        </div>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAll"></th>
+                                <th>Candidato</th>
+                                <th>Vaga</th>
+                                <th>Data Aplicação</th>
+                                <th>Status</th>
+                                <th>Aderência</th>
+                                <th>Última Interação</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox" class="candidate-checkbox"></td>
+                                <td>
+                                    <div class="candidate-info">
+                                        <div class="candidate-name">João Silva</div>
+                                        <div class="candidate-email">joao.silva@email.com</div>
+                                    </div>
+                                </td>
+                                <td>Desenvolvedor Frontend React</td>
+                                <td>12/09/2024</td>
+                                <td><span class="status-badge status-interview">Entrevista</span></td>
+                                <td><span class="adherence-badge adherence-high">🟢 Alta (92%)</span></td>
+                                <td>14/09/2024 - Entrevista agendada</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-icon" onclick="viewCandidate(1)" title="Ver Perfil">👁️</button>
+                                        <button class="btn-icon" onclick="sendMessage(1)" title="Enviar Mensagem">💬</button>
+                                        <button class="btn-icon" onclick="updateStatus(1)" title="Atualizar Status">📝</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="candidate-checkbox"></td>
+                                <td>
+                                    <div class="candidate-info">
+                                        <div class="candidate-name">Maria Santos</div>
+                                        <div class="candidate-email">maria.santos@email.com</div>
+                                    </div>
+                                </td>
+                                <td>Designer UX/UI</td>
+                                <td>10/09/2024</td>
+                                <td><span class="status-badge status-screening">Em Triagem</span></td>
+                                <td><span class="adherence-badge adherence-medium">🟡 Média (75%)</span></td>
+                                <td>11/09/2024 - Currículo analisado</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-icon" onclick="viewCandidate(2)" title="Ver Perfil">👁️</button>
+                                        <button class="btn-icon" onclick="sendMessage(2)" title="Enviar Mensagem">💬</button>
+                                        <button class="btn-icon" onclick="updateStatus(2)" title="Atualizar Status">📝</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="candidate-checkbox"></td>
+                                <td>
+                                    <div class="candidate-info">
+                                        <div class="candidate-name">Pedro Oliveira</div>
+                                        <div class="candidate-email">pedro.oliveira@email.com</div>
+                                    </div>
+                                </td>
+                                <td>Analista de Dados</td>
+                                <td>08/09/2024</td>
+                                <td><span class="status-badge status-approved">Aprovado</span></td>
+                                <td><span class="adherence-badge adherence-high">🟢 Alta (88%)</span></td>
+                                <td>13/09/2024 - Proposta enviada</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-icon" onclick="viewCandidate(3)" title="Ver Perfil">👁️</button>
+                                        <button class="btn-icon" onclick="sendMessage(3)" title="Enviar Mensagem">💬</button>
+                                        <button class="btn-icon" onclick="updateStatus(3)" title="Atualizar Status">📝</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="candidate-checkbox"></td>
+                                <td>
+                                    <div class="candidate-info">
+                                        <div class="candidate-name">Ana Costa</div>
+                                        <div class="candidate-email">ana.costa@email.com</div>
+                                    </div>
+                                </td>
+                                <td>Desenvolvedor Frontend React</td>
+                                <td>05/09/2024</td>
+                                <td><span class="status-badge status-new">Novo</span></td>
+                                <td><span class="adherence-badge adherence-low">🔴 Baixa (45%)</span></td>
+                                <td>05/09/2024 - Candidatura recebida</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-icon" onclick="viewCandidate(4)" title="Ver Perfil">👁️</button>
+                                        <button class="btn-icon" onclick="sendMessage(4)" title="Enviar Mensagem">💬</button>
+                                        <button class="btn-icon" onclick="updateStatus(4)" title="Atualizar Status">📝</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Automated Messages Section -->
+                <div class="automation-section">
+                    <h3>Mensagens Automáticas</h3>
+                    <div class="automation-grid">
+                        <div class="automation-card">
+                            <div class="automation-header">
+                                <h4>Confirmação de Candidatura</h4>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <p>Enviada automaticamente quando um candidato se inscreve</p>
+                            <div class="automation-stats">
+                                <span>📧 47 enviadas este mês</span>
+                                <span>📈 95% taxa de entrega</span>
+                            </div>
+                        </div>
+                        <div class="automation-card">
+                            <div class="automation-header">
+                                <h4>Lembrete de Entrevista</h4>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <p>Enviada 24h antes da entrevista agendada</p>
+                            <div class="automation-stats">
+                                <span>📧 12 enviadas este mês</span>
+                                <span>📈 100% taxa de entrega</span>
+                            </div>
+                        </div>
+                        <div class="automation-card">
+                            <div class="automation-header">
+                                <h4>Feedback de Processo</h4>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <p>Enviada quando o status do candidato é atualizado</p>
+                            <div class="automation-stats">
+                                <span>📧 8 enviadas este mês</span>
+                                <span>📈 92% taxa de entrega</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Metrics Section -->
+            <section id="metrics" class="section">
+                <div class="page-header">
+                    <h1 class="page-title">Métricas Detalhadas</h1>
+                    <p class="page-subtitle">Análise completa do desempenho das suas vagas</p>
+                </div>
+
+                <!-- Period Filter -->
+                <div class="card">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Período</label>
+                            <select>
+                                <option value="7">Últimos 7 dias</option>
+                                <option value="30" selected>Últimos 30 dias</option>
+                                <option value="90">Últimos 90 dias</option>
+                                <option value="365">Último ano</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Vaga</label>
+                            <select>
+                                <option value="">Todas as vagas</option>
+                                <option value="1">Desenvolvedor Frontend React</option>
+                                <option value="2">Designer UX/UI</option>
+                                <option value="3">Analista de Dados</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="align-self: end;">
+                            <button class="btn btn-primary">Atualizar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metrics Charts -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Engajamento por Vaga</h3>
+                    </div>
+                    <div class="chart-container">
+                        📊 Gráfico de barras - Visualizações, curtidas e compartilhamentos por vaga
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Tendência de Visualizações</h3>
+                    </div>
+                    <div class="chart-container">
+                        📈 Gráfico de linha - Evolução das visualizações ao longo do tempo
+                    </div>
+                </div>
+
+                <!-- Top Performing Jobs -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Vagas com Melhor Performance</h3>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Posição</th>
+                                    <th>Vaga</th>
+                                    <th>Taxa de Engajamento</th>
+                                    <th>Visualizações</th>
+                                    <th>Curtidas</th>
+                                    <th>Compartilhamentos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>🥇 1º</td>
+                                    <td>Desenvolvedor Frontend React</td>
+                                    <td>12.8%</td>
+                                    <td>156</td>
+                                    <td>12</td>
+                                    <td>8</td>
+                                </tr>
+                                <tr>
+                                    <td>🥈 2º</td>
+                                    <td>Designer UX/UI</td>
+                                    <td>11.2%</td>
+                                    <td>89</td>
+                                    <td>7</td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <td>🥉 3º</td>
+                                    <td>Analista de Marketing</td>
+                                    <td>9.5%</td>
+                                    <td>74</td>
+                                    <td>5</td>
+                                    <td>2</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="section">
+                <div class="page-header">
+                    <h1 class="page-title">Relatórios</h1>
+                    <p class="page-subtitle">Exporte dados e gere relatórios personalizados</p>
+                </div>
+
+                <!-- Export Options -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Exportar Dados</h3>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Tipo de Relatório</label>
+                            <select id="reportType">
+                                <option value="jobs">Relatório de Vagas</option>
+                                <option value="metrics">Relatório de Métricas</option>
+                                <option value="engagement">Relatório de Engajamento</option>
+                                <option value="summary">Resumo Executivo</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Período</label>
+                            <select id="reportPeriod">
+                                <option value="7">Últimos 7 dias</option>
+                                <option value="30">Últimos 30 dias</option>
+                                <option value="90">Últimos 90 dias</option>
+                                <option value="365">Último ano</option>
+                                <option value="custom">Período personalizado</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Formato</label>
+                            <select id="reportFormat">
+                                <option value="pdf">PDF</option>
+                                <option value="excel">Excel (XLSX)</option>
+                                <option value="csv">CSV</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="align-self: end;">
+                            <button class="btn btn-primary" onclick="generateReport()">📥 Gerar Relatório</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Reports -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Relatórios Recentes</h3>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Tipo</th>
+                                    <th>Período</th>
+                                    <th>Formato</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>14/09/2024</td>
+                                    <td>Relatório de Métricas</td>
+                                    <td>Últimos 30 dias</td>
+                                    <td>PDF</td>
+                                    <td><span class="status-badge active">Pronto</span></td>
+                                    <td><button class="btn btn-success btn-small">📥 Download</button></td>
+                                </tr>
+                                <tr>
+                                    <td>10/09/2024</td>
+                                    <td>Resumo Executivo</td>
+                                    <td>Últimos 90 dias</td>
+                                    <td>Excel</td>
+                                    <td><span class="status-badge active">Pronto</span></td>
+                                    <td><button class="btn btn-success btn-small">📥 Download</button></td>
+                                </tr>
+                                <tr>
+                                    <td>05/09/2024</td>
+                                    <td>Relatório de Vagas</td>
+                                    <td>Último ano</td>
+                                    <td>CSV</td>
+                                    <td><span class="status-badge active">Pronto</span></td>
+                                    <td><button class="btn btn-success btn-small">📥 Download</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Plan Section -->
+            <section id="plan" class="section">
+                <div class="page-header">
+                    <h1 class="page-title">Meu Plano</h1>
+                    <p class="page-subtitle">Gerencie sua assinatura e saldo de publicações</p>
+                </div>
+
+                <!-- Current Plan -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Plano Atual</h3>
+                        <span class="status-badge active">Ativo</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; align-items: center;">
+                        <div>
+                            <h2 style="color: #8B5CF6; margin-bottom: 0.5rem;">Profissional</h2>
+                            <p style="font-size: 2rem; font-weight: bold; color: #333; margin-bottom: 0.5rem;">R$ 199,00</p>
+                            <p style="color: #666;">por mês</p>
+                            <p style="margin-top: 1rem; color: #666;">Próxima cobrança: 15/10/2024</p>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 1rem;">Recursos inclusos:</h4>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="padding: 0.25rem 0; color: #666;">✓ Até 20 vagas por mês</li>
+                                <li style="padding: 0.25rem 0; color: #666;">✓ Relatórios detalhados</li>
+                                <li style="padding: 0.25rem 0; color: #666;">✓ Destaque de vagas</li>
+                                <li style="padding: 0.25rem 0; color: #666;">✓ Suporte prioritário</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                        <button class="btn btn-primary">🔄 Alterar Plano</button>
+                        <button class="btn btn-secondary">📄 Ver Faturas</button>
+                    </div>
+                </div>
+
+                <!-- Usage Stats -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Uso do Plano (Setembro 2024)</h3>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-number">8/20</div>
+                            <div class="stat-label">Vagas Publicadas</div>
+                            <div class="stat-change">12 restantes</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">⭐</div>
+                            <div class="stat-number">3</div>
+                            <div class="stat-label">Vagas em Destaque</div>
+                            <div class="stat-change">Ilimitado</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📈</div>
+                            <div class="stat-number">15</div>
+                            <div class="stat-label">Relatórios Gerados</div>
+                            <div class="stat-change">Ilimitado</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plan Comparison -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Comparar Planos</h3>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Recurso</th>
+                                    <th>Básico (R$ 99)</th>
+                                    <th>Profissional (R$ 199) ⭐</th>
+                                    <th>Premium (R$ 399)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Vagas por mês</td>
+                                    <td>10</td>
+                                    <td><strong>20</strong></td>
+                                    <td>50</td>
+                                </tr>
+                                <tr>
+                                    <td>Relatórios</td>
+                                    <td>Simples</td>
+                                    <td><strong>Detalhados</strong></td>
+                                    <td>Avançados</td>
+                                </tr>
+                                <tr>
+                                    <td>Destaque de vagas</td>
+                                    <td>❌</td>
+                                    <td><strong>✅</strong></td>
+                                    <td>✅ Premium</td>
+                                </tr>
+                                <tr>
+                                    <td>Suporte</td>
+                                    <td>Email</td>
+                                    <td><strong>Prioritário</strong></td>
+                                    <td>24/7 + Gerente</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Financial Section -->
+            <section id="financial" class="section">
+                <div class="page-header">
+                    <h1 class="page-title">💰 Financeiro</h1>
+                    <p class="page-subtitle">Gerencie pagamentos, faturas e histórico financeiro</p>
+                </div>
+
+                <!-- Plan Status Card -->
+                <div class="card" style="margin-bottom: 2rem;">
+                    <div class="card-header">
+                        <h3 class="card-title">Status do Plano</h3>
+                        <span class="status-badge active">✅ Em Dia</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                            <div class="stat-item">
+                                <div class="stat-label">Plano Atual</div>
+                                <div class="stat-value">Profissional</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Valor Mensal</div>
+                                <div class="stat-value">R$ 599,00</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Próximo Vencimento</div>
+                                <div class="stat-value">30/09/2024</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Situação</div>
+                                <div class="stat-value" style="color: #10B981;">Ativo</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment History -->
+                <div class="card" style="margin-bottom: 2rem;">
+                    <div class="card-header">
+                        <h3 class="card-title">Histórico de Pagamentos</h3>
+                        <button class="btn btn-secondary" onclick="downloadPaymentHistory()">📊 Baixar Histórico</button>
+                    </div>
+                    <div class="card-content">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Descrição</th>
+                                        <th>Valor</th>
+                                        <th>Status</th>
+                                        <th>Método</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>15/09/2024</td>
+                                        <td>Plano Profissional - Setembro</td>
+                                        <td>R$ 599,00</td>
+                                        <td><span class="status-badge active">✅ Pago</span></td>
+                                        <td>Cartão **** 1234</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-secondary" onclick="downloadReceipt('PAY001')">📄 Recibo</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>15/08/2024</td>
+                                        <td>Plano Profissional - Agosto</td>
+                                        <td>R$ 599,00</td>
+                                        <td><span class="status-badge active">✅ Pago</span></td>
+                                        <td>Cartão **** 1234</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-secondary" onclick="downloadReceipt('PAY002')">📄 Recibo</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>15/07/2024</td>
+                                        <td>Plano Profissional - Julho</td>
+                                        <td>R$ 599,00</td>
+                                        <td><span class="status-badge active">✅ Pago</span></td>
+                                        <td>PIX</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-secondary" onclick="downloadReceipt('PAY003')">📄 Recibo</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Invoices -->
+                <div class="card" style="margin-bottom: 2rem;">
+                    <div class="card-header">
+                        <h3 class="card-title">Faturas Disponíveis</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Número</th>
+                                        <th>Descrição</th>
+                                        <th>Valor</th>
+                                        <th>Vencimento</th>
+                                        <th>Status</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>INV-2024-001</td>
+                                        <td>Plano Profissional - Outubro</td>
+                                        <td>R$ 599,00</td>
+                                        <td>30/10/2024</td>
+                                        <td><span class="status-badge pending">⏳ Pendente</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary" onclick="payInvoice('INV-2024-001')">💳 Pagar</button>
+                                            <button class="btn btn-sm btn-secondary" onclick="downloadInvoicePDF('INV-2024-001')">📄 PDF</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Ações de Pagamento</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="action-buttons" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <button class="btn btn-primary" onclick="regularizePlan()">
+                                🔄 Regularizar Plano
+                            </button>
+                            <button class="btn btn-secondary" onclick="updatePaymentMethod()">
+                                💳 Atualizar Método de Pagamento
+                            </button>
+                            <button class="btn btn-secondary" onclick="requestInvoice()">
+                                📄 Solicitar Fatura
+                            </button>
+                        </div>
+                        
+                        <div class="payment-info" style="margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                            <h4 style="color: #6B46C1; margin-bottom: 1rem;">💡 Informações Importantes</h4>
+                            <ul style="margin: 0; padding-left: 1.5rem; color: #666;">
+                                <li>Pagamentos são processados automaticamente no vencimento</li>
+                                <li>Faturas ficam disponíveis 5 dias antes do vencimento</li>
+                                <li>Em caso de inadimplência, o acesso pode ser suspenso</li>
+                                <li>Recibos e comprovantes ficam disponíveis por 12 meses</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Premium Services Section -->
+            <section id="premium" class="section">
+                <div class="page-header">
+                    <h1 class="page-title">👑 Serviços Premium</h1>
+                    <p class="page-subtitle">Potencialize seu recrutamento com nossos serviços especializados</p>
+                </div>
+
+                <!-- Tabs para Serviços Premium -->
+                <div class="premium-tabs">
+                    <button class="tab-btn active" onclick="showPremiumTab('services')">Serviços de Recrutamento</button>
+                    <button class="tab-btn" onclick="showPremiumTab('courses')">Cursos para Funcionários</button>
+                </div>
+
+                <!-- Aba Serviços de Recrutamento -->
+                <div id="premium-services" class="premium-tab-content active">
+                    <div id="company-premium-services-container" class="content-grid">
+                        <!-- Serviços serão carregados dinamicamente aqui -->
+                    </div>
+                </div>
+
+                <!-- Aba Cursos para Funcionários -->
+                <div id="premium-courses" class="premium-tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">🎓 Cursos para Capacitação de Funcionários</h3>
+                            <p>Invista no desenvolvimento da sua equipe com cursos especializados</p>
+                        </div>
+                        
+                        <div class="courses-grid">
+                            <div class="course-card">
+                                <div class="course-header">
+                                    <div class="course-logo">💻</div>
+                                    <div class="course-info">
+                                        <h4>Desenvolvimento Full Stack</h4>
+                                        <p class="course-institution">TechUniversity</p>
+                                    </div>
+                                    <div class="course-price">R$ 2.500</div>
+                                </div>
+                                <p class="course-description">Curso completo de desenvolvimento web com React, Node.js e banco de dados.</p>
+                                <div class="course-details">
+                                    <span class="course-duration">⏱️ 120h</span>
+                                    <span class="course-level">📊 Intermediário</span>
+                                    <span class="course-format">🌐 Online</span>
+                                </div>
+                                <button class="btn-primary" onclick="contractCourse('fullstack')">Contratar para Equipe</button>
+                            </div>
+
+                            <div class="course-card">
+                                <div class="course-header">
+                                    <div class="course-logo">📊</div>
+                                    <div class="course-info">
+                                        <h4>Data Science e Analytics</h4>
+                                        <p class="course-institution">DataInstitute</p>
+                                    </div>
+                                    <div class="course-price">R$ 3.200</div>
+                                </div>
+                                <p class="course-description">Análise de dados, machine learning e visualização para tomada de decisões.</p>
+                                <div class="course-details">
+                                    <span class="course-duration">⏱️ 80h</span>
+                                    <span class="course-level">📊 Avançado</span>
+                                    <span class="course-format">🌐 Online</span>
+                                </div>
+                                <button class="btn-primary" onclick="contractCourse('datascience')">Contratar para Equipe</button>
+                            </div>
+
+                            <div class="course-card">
+                                <div class="course-header">
+                                    <div class="course-logo">🔒</div>
+                                    <div class="course-info">
+                                        <h4>Cybersecurity Essentials</h4>
+                                        <p class="course-institution">SecureAcademy</p>
+                                    </div>
+                                    <div class="course-price">R$ 1.800</div>
+                                </div>
+                                <p class="course-description">Fundamentos de segurança digital e proteção de dados empresariais.</p>
+                                <div class="course-details">
+                                    <span class="course-duration">⏱️ 60h</span>
+                                    <span class="course-level">📊 Básico</span>
+                                    <span class="course-format">🌐 Online</span>
+                                </div>
+                                <button class="btn-primary" onclick="contractCourse('cybersecurity')">Contratar para Equipe</button>
+                            </div>
+
+                            <div class="course-card">
+                                <div class="course-header">
+                                    <div class="course-logo">💼</div>
+                                    <div class="course-info">
+                                        <h4>Gestão de Projetos Ágeis</h4>
+                                        <p class="course-institution">AgileInstitute</p>
+                                    </div>
+                                    <div class="course-price">R$ 1.500</div>
+                                </div>
+                                <p class="course-description">Metodologias ágeis, Scrum e Kanban para gestão eficiente de projetos.</p>
+                                <div class="course-details">
+                                    <span class="course-duration">⏱️ 40h</span>
+                                    <span class="course-level">📊 Intermediário</span>
+                                    <span class="course-format">🌐 Online</span>
+                                </div>
+                                <button class="btn-primary" onclick="contractCourse('agile')">Contratar para Equipe</button>
+                            </div>
+
+                            <div class="course-card">
+                                <div class="course-header">
+                                    <div class="course-logo">🎨</div>
+                                    <div class="course-info">
+                                        <h4>UX/UI Design</h4>
+                                        <p class="course-institution">DesignSchool</p>
+                                    </div>
+                                    <div class="course-price">R$ 2.200</div>
+                                </div>
+                                <p class="course-description">Design de experiência do usuário e interfaces digitais modernas.</p>
+                                <div class="course-details">
+                                    <span class="course-duration">⏱️ 90h</span>
+                                    <span class="course-level">📊 Intermediário</span>
+                                    <span class="course-format">🌐 Online</span>
+                                </div>
+                                <button class="btn-primary" onclick="contractCourse('uxui')">Contratar para Equipe</button>
+                            </div>
+
+                            <div class="course-card">
+                                <div class="course-header">
+                                    <div class="course-logo">📈</div>
+                                    <div class="course-info">
+                                        <h4>Marketing Digital</h4>
+                                        <p class="course-institution">MarketingPro</p>
+                                    </div>
+                                    <div class="course-price">R$ 1.900</div>
+                                </div>
+                                <p class="course-description">Estratégias de marketing digital, SEO, redes sociais e analytics.</p>
+                                <div class="course-details">
+                                    <span class="course-duration">⏱️ 70h</span>
+                                    <span class="course-level">📊 Básico</span>
+                                    <span class="course-format">🌐 Online</span>
+                                </div>
+                                <button class="btn-primary" onclick="contractCourse('marketing')">Contratar para Equipe</button>
+                            </div>
+                        </div>
+
+                        <div class="courses-cta">
+                            <h3>Precisa de um curso específico?</h3>
+                            <p>Entre em contato conosco para cursos personalizados para sua empresa</p>
+                            <button class="btn-secondary" onclick="requestCustomCourse()">Solicitar Curso Personalizado</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile Section -->
+            <section id="profile" class="section">
+                <div class="page-header">
+                    <h1 class="page-title">Perfil da Empresa</h1>
+                    <p class="page-subtitle">Gerencie as informações da sua empresa</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Informações da Empresa</h3>
+                    </div>
+                    <form>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Razão Social</label>
+                                <input type="text" value="TechCorp Brasil Ltda" required>
+                            </div>
+                            <div class="form-group">
+                                <label>CNPJ</label>
+                                <input type="text" value="12.345.678/0001-90" required>
+                            </div>
+                            <div class="form-group">
+                                <label>E-mail Corporativo</label>
+                                <input type="email" value="contato@techcorp.com.br" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Telefone</label>
+                                <input type="tel" value="(11) 9999-9999" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Site</label>
+                                <input type="url" value="https://techcorp.com.br">
+                            </div>
+                            <div class="form-group">
+                                <label>Setor</label>
+                                <select required>
+                                    <option value="tecnologia" selected>Tecnologia</option>
+                                    <option value="marketing">Marketing</option>
+                                    <option value="saude">Saúde</option>
+                                    <option value="educacao">Educação</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Endereço Completo</label>
+                            <input type="text" value="Av. Paulista, 1000 - São Paulo, SP" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Descrição da Empresa</label>
+                            <textarea rows="4">Empresa de tecnologia focada em desenvolvimento de software e soluções digitais inovadoras.</textarea>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Responsável</label>
+                                <input type="text" value="João Silva" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Cargo</label>
+                                <input type="text" value="Gerente de RH" required>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 2rem;">
+                            <button type="submit" class="btn btn-primary">💾 Salvar Alterações</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Edit Job Modal -->
+    <div id="editJobModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Editar Vaga</h2>
+                <span class="close" onclick="closeModal('editJobModal')">&times;</span>
+            </div>
+            <form>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Título da Vaga</label>
+                        <input type="text" value="Desenvolvedor Frontend React" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Área</label>
+                        <select required>
+                            <option value="tecnologia" selected>Tecnologia</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="design">Design</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <textarea rows="4">Oportunidade para desenvolvedor React com experiência em TypeScript...</textarea>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="submit" class="btn btn-primary">💾 Salvar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editJobModal')">❌ Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all menu items
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to corresponding menu item
+            document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+        }
+
+        // Menu click handlers
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const section = this.getAttribute('data-section');
+                if (section) {
+                    showSection(section);
+                }
+            });
+        });
+
+        // Modal functions
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function editJob(jobId) {
+            document.getElementById('editJobModal').style.display = 'block';
+        }
+
+        function deleteJob(jobId) {
+            if (confirm('Tem certeza que deseja excluir esta vaga?')) {
+                alert(`Vaga ${jobId} excluída com sucesso!`);
+            }
+        }
+
+        function generateReport() {
+            const type = document.getElementById('reportType').value;
+            const period = document.getElementById('reportPeriod').value;
+            const format = document.getElementById('reportFormat').value;
+            
+            alert(`Gerando relatório: ${type} - ${period} dias - ${format.toUpperCase()}`);
+        }
+
+        // Form submissions
+        document.getElementById('jobForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Vaga publicada com sucesso! Aguarde aprovação.');
+            showSection('jobs');
+        });
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+        
+        // Função de logout
+        function logout() {
+            if (confirm('Tem certeza que deseja sair?')) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Função para contratar serviços premium da empresa
+        function contractCompanyService(serviceName, partnerUrl) {
+            if (confirm(`Você será redirecionado para o site do parceiro para contratar o serviço "${serviceName}". Deseja continuar?`)) {
+                window.open(partnerUrl, '_blank');
+            }
+        }
+
+        // ===== SISTEMA DE CARREGAMENTO DINÂMICO DE SERVIÇOS EMPRESARIAIS =====
+        
+        // Carregar serviços premium para empresas dinamicamente
+        function loadCompanyPremiumServices() {
+            const container = document.getElementById('company-premium-services-container');
+            if (!container) return;
+            
+            // Carregar script do services manager se não estiver carregado
+            if (typeof window.servicesManager === 'undefined') {
+                loadServicesManagerScript(() => {
+                    renderCompanyPremiumServices();
+                });
+            } else {
+                renderCompanyPremiumServices();
+            }
+        }
+
+        function loadServicesManagerScript(callback) {
+            const script = document.createElement('script');
+            script.src = 'js/services-manager.js';
+            script.onload = callback;
+            script.onerror = () => {
+                console.warn('Services manager não disponível, usando serviços padrão');
+                renderDefaultCompanyServices();
+            };
+            document.head.appendChild(script);
+        }
+
+        function renderCompanyPremiumServices() {
+            const container = document.getElementById('company-premium-services-container');
+            if (!container) return;
+            
+            if (window.servicesManager) {
+                const allServices = window.servicesManager.getAllServices();
+                const companyServices = allServices.company.filter(service => service.active);
+                
+                if (companyServices.length > 0) {
+                    container.innerHTML = companyServices.map(service => createCompanyServiceCard(service)).join('');
+                } else {
+                    container.innerHTML = createCompanyEmptyState();
+                }
+                
+                // Adicionar listener para atualizações automáticas
+                if (window.servicesManager.addListener) {
+                    window.servicesManager.addListener(() => {
+                        renderCompanyPremiumServices();
+                    });
+                }
+            } else {
+                renderDefaultCompanyServices();
+            }
+        }
+
+        function renderDefaultCompanyServices() {
+            const container = document.getElementById('company-premium-services-container');
+            if (!container) return;
+            
+            const defaultServices = [
+                {
+                    title: '🎯 Divulgação Premium de Vagas',
+                    description: 'Destaque suas vagas no topo da plataforma e alcance mais candidatos qualificados.',
+                    price: 299.90,
+                    features: ['Posição de destaque por 30 dias', 'Alcance 5x maior', 'Badge "Vaga Premium"', 'Relatório de performance'],
+                    partnerUrl: 'https://parceiro.com.br/divulgacao-premium'
+                },
+                {
+                    title: '📊 Análise de Perfil de Candidatos',
+                    description: 'Receba análises detalhadas dos perfis dos candidatos com scoring automático.',
+                    price: 199.90,
+                    features: ['Scoring automático de candidatos', 'Análise de compatibilidade', 'Relatório de soft skills', 'Recomendações de contratação'],
+                    partnerUrl: 'https://parceiro.com.br/analise-candidatos'
+                },
+                {
+                    title: '🤝 Consultoria em Recrutamento',
+                    description: 'Consultoria especializada para otimizar seus processos de recrutamento e seleção.',
+                    price: 499.90,
+                    features: ['Sessão de 2h com especialista', 'Análise do processo atual', 'Plano de melhoria personalizado', 'Suporte por 30 dias'],
+                    partnerUrl: 'https://parceiro.com.br/consultoria-rh'
+                },
+                {
+                    title: '🎥 Entrevistas por Vídeo',
+                    description: 'Plataforma integrada para realizar entrevistas por vídeo com candidatos.',
+                    price: 149.90,
+                    features: ['Sala de entrevista virtual', 'Gravação das entrevistas', 'Compartilhamento com equipe', 'Agendamento automático'],
+                    partnerUrl: 'https://parceiro.com.br/entrevistas-video'
+                }
+            ];
+            
+            container.innerHTML = defaultServices.map(service => createCompanyServiceCard(service)).join('');
+        }
+
+        function createCompanyServiceCard(service) {
+            return `
+                <div class="card">
+                    <div class="card-header">
+                        <h3>${service.title}</h3>
+                        <span class="price">R$ ${service.price.toFixed(2)}</span>
+                    </div>
+                    <div class="card-content">
+                        <p>${service.description}</p>
+                        ${service.features && service.features.length > 0 ? `
+                            <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                                ${service.features.map(feature => `<li>${feature}</li>`).join('')}
+                            </ul>
+                        ` : ''}
+                        <div style="margin-top: 1rem;">
+                            <span style="background: #FEF3C7; color: #D97706; padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.8rem; margin-right: 0.5rem;">⭐ Premium</span>
+                            <span style="background: #DBEAFE; color: #1D4ED8; padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.8rem;">Qualidade garantida</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn-primary" onclick="contractCompanyService('${service.title}', '${service.partnerUrl}')">
+                            Contratar Serviço
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createCompanyEmptyState() {
+            return `
+                <div style="text-align: center; padding: 3rem 1rem; color: #6B7280; grid-column: 1 / -1;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">👑</div>
+                    <h4 style="color: #1F2937; margin-bottom: 0.5rem;">Nenhum serviço premium disponível</h4>
+                    <p>Novos serviços empresariais serão adicionados em breve!</p>
+                    <p style="font-size: 0.9rem; margin-top: 1rem;">
+                        Os serviços são gerenciados pelo administrador e aparecerão aqui automaticamente quando disponíveis.
+                    </p>
+                </div>
+            `;
+        }
+
+        // Carregar serviços quando a seção premium for exibida
+        document.addEventListener('DOMContentLoaded', function() {
+            // Carregar serviços premium na inicialização
+            loadCompanyPremiumServices();
+            
+            // Recarregar quando a seção premium for selecionada
+            const premiumMenuItem = document.querySelector('[onclick="showSection(\'premium\')"]');
+            if (premiumMenuItem) {
+                premiumMenuItem.addEventListener('click', function() {
+                    setTimeout(loadCompanyPremiumServices, 100); // Pequeno delay para garantir que a seção esteja visível
+                });
+            }
+        });
+
+        // Financial Functions for Company Panel
+        function downloadPaymentHistory() {
+            alert('Baixando histórico de pagamentos...');
+        }
+
+        function downloadReceipt(paymentId) {
+            alert(`Baixando recibo do pagamento ${paymentId}...`);
+        }
+
+        function payInvoice(invoiceId) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 500px; width: 90%;">
+                    <h3 style="color: #6B46C1; margin-bottom: 1.5rem;">💳 Pagar Fatura ${invoiceId}</h3>
+                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <p><strong>Valor:</strong> R$ 599,00</p>
+                        <p><strong>Vencimento:</strong> 30/10/2024</p>
+                        <p><strong>Descrição:</strong> Plano Profissional - Outubro</p>
+                    </div>
+                    <form onsubmit="processPayment(event, '${invoiceId}')" style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div>
+                            <label>Método de Pagamento:</label>
+                            <select required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                                <option value="">Selecione o método</option>
+                                <option value="credit">Cartão de Crédito</option>
+                                <option value="pix">PIX</option>
+                                <option value="boleto">Boleto Bancário</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                            <button type="submit" style="flex: 1; padding: 0.75rem; background: #10B981; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                                Pagar Agora
+                            </button>
+                            <button type="button" onclick="document.body.removeChild(this.closest('div').parentElement)" style="flex: 1; padding: 0.75rem; background: #6B7280; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function processPayment(event, invoiceId) {
+            event.preventDefault();
+            alert(`Pagamento da fatura ${invoiceId} processado com sucesso!`);
+            document.body.removeChild(event.target.closest('div').parentElement);
+            location.reload();
+        }
+
+        function downloadInvoicePDF(invoiceId) {
+            alert(`Baixando PDF da fatura ${invoiceId}...`);
+        }
+
+        function regularizePlan() {
+            // Redirecionar para checkout do Mercado Pago
+            alert('Redirecionando para regularização do plano via Mercado Pago...');
+        }
+
+        function updatePaymentMethod() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 500px; width: 90%;">
+                    <h3 style="color: #6B46C1; margin-bottom: 1.5rem;">💳 Atualizar Método de Pagamento</h3>
+                    <form onsubmit="processPaymentMethodUpdate(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div>
+                            <label>Novo Método:</label>
+                            <select required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                                <option value="">Selecione o método</option>
+                                <option value="credit">Cartão de Crédito</option>
+                                <option value="pix">PIX Automático</option>
+                                <option value="boleto">Boleto Bancário</option>
+                            </select>
+                        </div>
+                        <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; border-left: 4px solid #3B82F6;">
+                            <p style="margin: 0; color: #1E40AF; font-size: 0.9rem;">
+                                💡 A alteração será aplicada a partir da próxima cobrança
+                            </p>
+                        </div>
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                            <button type="submit" style="flex: 1; padding: 0.75rem; background: #6B46C1; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                                Atualizar
+                            </button>
+                            <button type="button" onclick="document.body.removeChild(this.closest('div').parentElement)" style="flex: 1; padding: 0.75rem; background: #6B7280; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function processPaymentMethodUpdate(event) {
+            event.preventDefault();
+            alert('Método de pagamento atualizado com sucesso!');
+            document.body.removeChild(event.target.closest('div').parentElement);
+        }
+
+        function requestInvoice() {
+            alert('Solicitação de fatura enviada! Você receberá por email em até 24 horas.');
+        }
+
+        // ===== FUNÇÕES DE EXPORTAÇÃO E MENSAGENS =====
+        
+        function exportCandidates() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 500px; width: 90%;">
+                    <h3 style="color: #6B46C1; margin-bottom: 1.5rem;">📊 Exportar Candidatos</h3>
+                    <form onsubmit="processExport(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; color: #374151; font-weight: 600;">Formato de Exportação:</label>
+                            <select name="format" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                                <option value="excel">Excel (.xlsx)</option>
+                                <option value="csv">CSV (.csv)</option>
+                                <option value="pdf">PDF (.pdf)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; color: #374151; font-weight: 600;">Filtrar por Vaga:</label>
+                            <select name="job" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                                <option value="">Todas as vagas</option>
+                                <option value="1">Desenvolvedor Frontend React</option>
+                                <option value="2">Designer UX/UI</option>
+                                <option value="3">Analista de Dados</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; color: #374151; font-weight: 600;">Status:</label>
+                            <select name="status" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                                <option value="">Todos os status</option>
+                                <option value="pendente">Pendente</option>
+                                <option value="em_analise">Em Análise</option>
+                                <option value="aprovado">Aprovado</option>
+                                <option value="rejeitado">Rejeitado</option>
+                            </select>
+                        </div>
+                        <div style="background: #F0F9FF; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                            <p style="margin: 0; color: #1E40AF; font-size: 0.9rem;">
+                                💡 O arquivo será gerado com: Nome, Email, Telefone, Vaga, Status, Data de Candidatura e Pontuação.
+                            </p>
+                        </div>
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                            <button type="submit" style="flex: 1; padding: 0.75rem; background: #10B981; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                                Exportar
+                            </button>
+                            <button type="button" onclick="document.body.removeChild(this.closest('div').parentElement)" 
+                                    style="flex: 1; padding: 0.75rem; background: #6B7280; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function processExport(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const format = formData.get('format');
+            const job = formData.get('job');
+            const status = formData.get('status');
+            
+            let fileName = `candidatos_${new Date().toISOString().split('T')[0]}`;
+            if (job) fileName += `_vaga_${job}`;
+            if (status) fileName += `_${status}`;
+            fileName += `.${format === 'excel' ? 'xlsx' : format}`;
+            
+            alert(`Exportação iniciada!\n\nArquivo: ${fileName}\nFormato: ${format.toUpperCase()}\n\nO download começará em alguns segundos...`);
+            
+            // Simular download
+            setTimeout(() => {
+                alert('Download concluído! Arquivo salvo na pasta Downloads.');
+            }, 2000);
+            
+            document.body.removeChild(event.target.closest('div').parentElement);
+        }
+
+        function sendBulkMessage() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
+                    <h3 style="color: #6B46C1; margin-bottom: 1.5rem;">📧 Mensagem em Massa</h3>
+                    <form onsubmit="processBulkMessage(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; color: #374151; font-weight: 600;">Destinatários:</label>
+                            <select name="recipients" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                                <option value="">Selecione os destinatários</option>
+                                <option value="all">Todos os candidatos (47)</option>
+                                <option value="pending">Candidatos pendentes (23)</option>
+                                <option value="approved">Candidatos aprovados (8)</option>
+                                <option value="job_1">Candidatos - Desenvolvedor Frontend (15)</option>
+                                <option value="job_2">Candidatos - Designer UX/UI (12)</option>
+                                <option value="job_3">Candidatos - Analista de Dados (20)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; color: #374151; font-weight: 600;">Tipo de Mensagem:</label>
+                            <select name="messageType" onchange="updateMessageTemplate(this.value)" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                                <option value="custom">Mensagem Personalizada</option>
+                                <option value="interview">Convite para Entrevista</option>
+                                <option value="feedback">Feedback do Processo</option>
+                                <option value="update">Atualização de Status</option>
+                                <option value="thanks">Agradecimento</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; color: #374151; font-weight: 600;">Assunto:</label>
+                            <input type="text" name="subject" required placeholder="Digite o assunto da mensagem" 
+                                   style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; color: #374151; font-weight: 600;">Mensagem:</label>
+                            <textarea name="message" rows="8" required placeholder="Digite sua mensagem..." 
+                                      style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; resize: vertical;"></textarea>
+                        </div>
+                        <div style="background: #FEF3C7; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                            <p style="margin: 0; color: #92400E; font-size: 0.9rem;">
+                                ⚠️ <strong>Importante:</strong> As mensagens serão enviadas individualmente para cada candidato. Você pode usar variáveis como {nome} e {vaga} que serão substituídas automaticamente.
+                            </p>
+                        </div>
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                            <button type="submit" style="flex: 1; padding: 0.75rem; background: #10B981; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                                Enviar Mensagens
+                            </button>
+                            <button type="button" onclick="document.body.removeChild(this.closest('div').parentElement)" 
+                                    style="flex: 1; padding: 0.75rem; background: #6B7280; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function updateMessageTemplate(type) {
+            const subjectField = document.querySelector('input[name="subject"]');
+            const messageField = document.querySelector('textarea[name="message"]');
+            
+            const templates = {
+                interview: {
+                    subject: 'Convite para Entrevista - {vaga}',
+                    message: `Olá {nome}!
+
+Esperamos que esteja bem. Ficamos impressionados com seu perfil e gostaríamos de convidá-lo(a) para uma entrevista para a vaga de {vaga}.
+
+Detalhes da entrevista:
+- Data: [Inserir data]
+- Horário: [Inserir horário]
+- Local/Link: [Inserir informações]
+
+Por favor, confirme sua disponibilidade respondendo a este email.
+
+Atenciosamente,
+Equipe de Recrutamento`
+                },
+                feedback: {
+                    subject: 'Feedback sobre sua candidatura - {vaga}',
+                    message: `Olá {nome}!
+
+Agradecemos seu interesse na vaga de {vaga} em nossa empresa.
+
+[Inserir feedback específico sobre o processo seletivo]
+
+Desejamos sucesso em sua jornada profissional!
+
+Atenciosamente,
+Equipe de Recrutamento`
+                },
+                update: {
+                    subject: 'Atualização do processo seletivo - {vaga}',
+                    message: `Olá {nome}!
+
+Gostaríamos de informar sobre uma atualização em seu processo seletivo para a vaga de {vaga}.
+
+[Inserir informações sobre a atualização]
+
+Em caso de dúvidas, não hesite em entrar em contato.
+
+Atenciosamente,
+Equipe de Recrutamento`
+                },
+                thanks: {
+                    subject: 'Obrigado por seu interesse - {vaga}',
+                    message: `Olá {nome}!
+
+Muito obrigado por se candidatar à vaga de {vaga} em nossa empresa.
+
+Recebemos sua candidatura e ela está sendo analisada por nossa equipe. Entraremos em contato em breve com os próximos passos.
+
+Atenciosamente,
+Equipe de Recrutamento`
+                }
+            };
+            
+            if (templates[type]) {
+                subjectField.value = templates[type].subject;
+                messageField.value = templates[type].message;
+            } else {
+                subjectField.value = '';
+                messageField.value = '';
+            }
+        }
+
+        function processBulkMessage(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const recipients = formData.get('recipients');
+            const subject = formData.get('subject');
+            const message = formData.get('message');
+            
+            const recipientCounts = {
+                'all': 47,
+                'pending': 23,
+                'approved': 8,
+                'job_1': 15,
+                'job_2': 12,
+                'job_3': 20
+            };
+            
+            const count = recipientCounts[recipients] || 0;
+            
+            if (confirm(`Confirma o envio de "${subject}" para ${count} candidatos?\n\nEsta ação não pode ser desfeita.`)) {
+                alert(`Mensagens enviadas com sucesso!\n\n✅ ${count} emails enviados\n📧 Assunto: ${subject}\n\nOs candidatos receberão as mensagens em seus emails cadastrados.`);
+                document.body.removeChild(event.target.closest('div').parentElement);
+            }
+        }
+
+        // Funções para Tabs de Serviços Premium
+        function showPremiumTab(tabName) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.premium-tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            document.getElementById(`premium-${tabName}`).classList.add('active');
+        }
+
+        // Funções para Contratação de Cursos
+        function contractCourse(courseType) {
+            const courses = {
+                'fullstack': {
+                    name: 'Desenvolvimento Full Stack',
+                    institution: 'TechUniversity',
+                    price: 'R$ 2.500',
+                    duration: '120h'
+                },
+                'datascience': {
+                    name: 'Data Science e Analytics',
+                    institution: 'DataInstitute',
+                    price: 'R$ 3.200',
+                    duration: '80h'
+                },
+                'cybersecurity': {
+                    name: 'Cybersecurity Essentials',
+                    institution: 'SecureAcademy',
+                    price: 'R$ 1.800',
+                    duration: '60h'
+                },
+                'agile': {
+                    name: 'Gestão de Projetos Ágeis',
+                    institution: 'AgileInstitute',
+                    price: 'R$ 1.500',
+                    duration: '40h'
+                },
+                'uxui': {
+                    name: 'UX/UI Design',
+                    institution: 'DesignSchool',
+                    price: 'R$ 2.200',
+                    duration: '90h'
+                },
+                'marketing': {
+                    name: 'Marketing Digital',
+                    institution: 'MarketingPro',
+                    price: 'R$ 1.900',
+                    duration: '70h'
+                }
+            };
+
+            const course = courses[courseType];
+            if (course) {
+                const employees = prompt(`Quantos funcionários participarão do curso "${course.name}"?\n\nValor por funcionário: ${course.price}\nDuração: ${course.duration}\nInstituição: ${course.institution}`);
+                
+                if (employees && employees > 0) {
+                    const totalPrice = parseFloat(course.price.replace('R$ ', '').replace('.', '')) * parseInt(employees);
+                    const formattedPrice = `R$ ${totalPrice.toLocaleString('pt-BR')}`;
+                    
+                    if (confirm(`Confirma a contratação do curso?\n\n📚 Curso: ${course.name}\n🏛️ Instituição: ${course.institution}\n👥 Funcionários: ${employees}\n💰 Valor Total: ${formattedPrice}\n⏱️ Duração: ${course.duration}\n\nApós a confirmação, você receberá as instruções de acesso por email.`)) {
+                        alert(`🎉 Curso contratado com sucesso!\n\n✅ ${course.name}\n👥 ${employees} funcionários\n💰 ${formattedPrice}\n\n📧 Você receberá um email com:\n• Link de acesso ao curso\n• Credenciais para os funcionários\n• Cronograma de atividades\n• Certificados de conclusão\n\nPrazo de liberação: até 24 horas`);
+                    }
+                }
+            }
+        }
+
+        function requestCustomCourse() {
+            const requirements = prompt(`Descreva suas necessidades para um curso personalizado:\n\n• Área de conhecimento\n• Número de funcionários\n• Duração desejada\n• Objetivos específicos\n• Orçamento estimado`);
+            
+            if (requirements && requirements.trim()) {
+                alert(`📝 Solicitação enviada com sucesso!\n\n✅ Sua solicitação foi registrada\n📧 Nossa equipe entrará em contato em até 48 horas\n🎯 Desenvolveremos uma proposta personalizada\n\nDetalhes enviados:\n${requirements.substring(0, 200)}${requirements.length > 200 ? '...' : ''}`);
+            }
+        }
+    </script>
+</body>
+</html>
+

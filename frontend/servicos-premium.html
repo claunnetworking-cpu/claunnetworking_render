@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviços Premium - ClaunNetworking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            
+            
+            
+            
+            text-decoration: none;
+        }
+
+        .logo-image {
+            height: 40px;
+            width: auto;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #6B46C1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #553C9A;
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: #64748b;
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #6B46C1, #10B981);
+        }
+
+        .service-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .service-title {
+            
+            font-weight: 700;
+            
+            margin-bottom: 0.5rem;
+        }
+
+        .service-provider {
+            color: #10B981;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .service-description {
+            color: #64748b;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .service-features {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-features li {
+            display: flex;
+            align-items: center;
+            
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+
+        .service-features li::before {
+            content: '✓';
+            color: #10B981;
+            
+        }
+
+        .service-price {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .price-value {
+            font-size: 2rem;
+            font-weight: 700;
+            
+        }
+
+        .price-period {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .service-actions {
+            text-align: center;
+        }
+
+        .btn-hire {
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-hire:hover {
+            background: linear-gradient(135deg, #553C9A, #7C3AED);
+            transform: translateY(-2px);
+        }
+
+        /* Categories Filter */
+        .categories-filter {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #6B46C1;
+            background: white;
+            
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .category-btn.active,
+        .category-btn:hover {
+            background: #6B46C1;
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .categories-filter {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <img src="assets/logo_clean.png" alt="ClaunNetworking" class="logo-image">
+                Claunnetworking
+            </a>
+            <a href="index.html" class="btn btn-primary">← Voltar ao Início</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Serviços Premium</h1>
+            <p class="page-subtitle">Acelere sua carreira com nossos serviços especializados</p>
+        </div>
+
+        <!-- Categories Filter -->
+        <div class="categories-filter">
+            <button class="category-btn active" onclick="filterServices('all')">Todos</button>
+            <button class="category-btn" onclick="filterServices('mentoria')">Mentorias</button>
+            <button class="category-btn" onclick="filterServices('consultoria')">Consultorias</button>
+            <button class="category-btn" onclick="filterServices('curso')">Cursos</button>
+        </div>
+
+        <!-- Services Grid -->
+        <section class="services-grid" id="servicesGrid">
+            <!-- Serviços serão carregados aqui via JavaScript -->
+        </section>
+    </main>
+
+    <script>
+        // Dados de exemplo dos serviços premium
+        const servicesData = [
+            {
+                id: 1,
+                title: "Mentoria em Carreira Tech",
+                provider: "João Silva - Tech Lead",
+                category: "mentoria",
+                description: "Mentoria personalizada para profissionais que querem acelerar sua carreira em tecnologia. Inclui revisão de currículo, preparação para entrevistas e planejamento de carreira.",
+                features: [
+                    "4 sessões de 1h por mês",
+                    "Revisão de currículo e LinkedIn",
+                    "Simulação de entrevistas",
+                    "Plano de carreira personalizado",
+                    "Suporte via WhatsApp"
+                ],
+                price: "R$ 497",
+                period: "por mês",
+                icon: "👨‍💼",
+                link: "https://exemplo.com/mentoria-tech"
+            },
+            {
+                id: 2,
+                title: "Consultoria em Marketing Digital",
+                provider: "Maria Santos - Marketing Expert",
+                category: "consultoria",
+                description: "Consultoria especializada para empresas que querem otimizar suas estratégias de marketing digital e aumentar conversões.",
+                features: [
+                    "Auditoria completa de marketing",
+                    "Estratégia de conteúdo",
+                    "Otimização de campanhas",
+                    "Relatórios mensais",
+                    "Suporte prioritário"
+                ],
+                price: "R$ 1.200",
+                period: "por projeto",
+                icon: "📈",
+                link: "https://exemplo.com/consultoria-marketing"
+            },
+            {
+                id: 3,
+                title: "Curso de UX/UI Design",
+                provider: "Design Academy",
+                category: "curso",
+                description: "Curso completo de UX/UI Design do básico ao avançado. Aprenda a criar interfaces incríveis e experiências memoráveis.",
+                features: [
+                    "40 horas de conteúdo",
+                    "Projetos práticos",
+                    "Mentoria individual",
+                    "Certificado reconhecido",
+                    "Acesso vitalício"
+                ],
+                price: "R$ 897",
+                period: "pagamento único",
+                icon: "🎨",
+                link: "https://exemplo.com/curso-ux-ui"
+            },
+            {
+                id: 4,
+                title: "Mentoria em Liderança",
+                provider: "Carlos Oliveira - CEO",
+                category: "mentoria",
+                description: "Desenvolva suas habilidades de liderança e gestão de equipes com um CEO experiente. Ideal para gestores e futuros líderes.",
+                features: [
+                    "6 sessões de 1h30 por mês",
+                    "Avaliação 360° de liderança",
+                    "Plano de desenvolvimento",
+                    "Ferramentas de gestão",
+                    "Networking exclusivo"
+                ],
+                price: "R$ 750",
+                period: "por mês",
+                icon: "👑",
+                link: "https://exemplo.com/mentoria-lideranca"
+            },
+            {
+                id: 5,
+                title: "Consultoria Financeira Empresarial",
+                provider: "Ana Costa - CFO",
+                category: "consultoria",
+                description: "Consultoria especializada em gestão financeira para pequenas e médias empresas. Otimize seus resultados financeiros.",
+                features: [
+                    "Análise financeira completa",
+                    "Planejamento estratégico",
+                    "Controles financeiros",
+                    "Projeções e cenários",
+                    "Acompanhamento mensal"
+                ],
+                price: "R$ 2.500",
+                period: "por projeto",
+                icon: "💰",
+                link: "https://exemplo.com/consultoria-financeira"
+            },
+            {
+                id: 6,
+                title: "Curso de Python para Data Science",
+                provider: "Data Academy",
+                category: "curso",
+                description: "Aprenda Python aplicado à ciência de dados. Do básico ao avançado com projetos reais e certificação reconhecida pelo mercado.",
+                features: [
+                    "60 horas de conteúdo",
+                    "Projetos com dados reais",
+                    "Suporte de instrutores",
+                    "Certificado internacional",
+                    "Comunidade exclusiva"
+                ],
+                price: "R$ 1.297",
+                period: "pagamento único",
+                icon: "🐍",
+                link: "https://exemplo.com/curso-python-data"
+            }
+        ];
+
+        let filteredServices = [...servicesData];
+        let currentCategory = 'all';
+
+        function renderServices(services) {
+            const servicesGrid = document.getElementById('servicesGrid');
+            
+            if (services.length === 0) {
+                servicesGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #6B7280;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+                        <h3>Nenhum serviço encontrado</h3>
+                        <p>Tente selecionar uma categoria diferente.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            servicesGrid.innerHTML = services.map(service => `
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">${service.icon}</div>
+                        <h3 class="service-title">${service.title}</h3>
+                        <div class="service-provider">${service.provider}</div>
+                    </div>
+                    
+                    <p class="service-description">${service.description}</p>
+                    
+                    <ul class="service-features">
+                        ${service.features.map(feature => `<li>${feature}</li>`).join('')}
+                    </ul>
+                    
+                    <div class="service-price">
+                        <div class="price-value">${service.price}</div>
+                        <div class="price-period">${service.period}</div>
+                    </div>
+                    
+                    <div class="service-actions">
+                        <button class="btn-hire" onclick="hireService(${service.id})">
+                            Contratar Agora
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterServices(category) {
+            currentCategory = category;
+            
+            // Atualizar botões ativos
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Filtrar serviços
+            if (category === 'all') {
+                filteredServices = [...servicesData];
+            } else {
+                filteredServices = servicesData.filter(service => service.category === category);
+            }
+            
+            renderServices(filteredServices);
+        }
+
+        function hireService(serviceId) {
+            const service = servicesData.find(s => s.id === serviceId);
+            
+            // Mostrar modal de redirecionamento
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+                backdrop-filter: blur(5px);
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 20px; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="text-align: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🔗</div>
+                        <h2 style=" margin-bottom: 1rem;">Redirecionamento Seguro</h2>
+                        <p style="color: #64748b; line-height: 1.6;">
+                            Você será redirecionado para a página do parceiro <strong>${service.provider}</strong> 
+                            para contratar o serviço <strong>${service.title}</strong>.
+                        </p>
+                    </div>
+                    
+                    <div style="background: #F3F4F6; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <h4 style="color: #374151; margin-bottom: 0.5rem;">🛡️ Informações de Segurança:</h4>
+                        <ul style="color: #6B7280; font-size: 0.9rem; margin-left: 1rem;">
+                            <li>Verifique sempre a autenticidade do site</li>
+                            <li>Confirme os dados do prestador de serviço</li>
+                            <li>Leia os termos antes de contratar</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem;">
+                        <button onclick="this.closest('div').parentElement.remove()" 
+                                style="flex: 1; padding: 1rem; background: #6B7280; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                            Cancelar
+                        </button>
+                        <button onclick="window.open('${service.link}', '_blank'); this.closest('div').parentElement.remove();" 
+                                style="flex: 1; padding: 1rem; background: #6B46C1; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                            Continuar
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            renderServices(filteredServices);
+        });
+    </script>
+</body>
+</html>

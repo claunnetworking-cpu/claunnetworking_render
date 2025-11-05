@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClaunNetworking - Sua rede de oportunidades</title>
+    <script src="js/auth-system.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo-image {
+            height: 50px;
+            width: auto;
+            max-width: 200px;
+            object-fit: contain; background: transparent !important; border: none !important; box-shadow: none !important;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .logo-text {
+            margin-left: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B46C1;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #10B981;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6B46C1;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #553C9A;
+            transform: translateY(-2px);
+        }
+
+        /* Search Section */
+        .search-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 3rem 0;
+        }
+
+        .search-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .search-form {
+            display: flex;
+            max-width: 600px;
+            margin: 2rem auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #10B981;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e9ecef;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #10B981, #6B46C1);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .card-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #6B46C1;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .card-description {
+            color: #64748b;
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .card-button {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .card-button:hover::before {
+            left: 100%;
+        }
+
+        .card-button:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .card-button:active {
+            transform: translateY(0);
+        }
+
+        /* Footer */
+        .footer {
+            background: #6B46C1;
+            color: white;
+            padding: 3rem 0 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: #10B981;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: #10B981;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Responsive Design */
+        
+        /* Mobile First - até 480px */
+        @media (max-width: 480px) {
+            .header-container {
+                padding: 0 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .logo-image {
+                height: 32px;
+            }
+
+            .header-buttons {
+                gap: 0.5rem;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .btn {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.9rem;
+                flex: 1;
+                max-width: 120px;
+            }
+
+            .search-section {
+                padding: 2rem 1rem;
+            }
+
+            .search-section h1 {
+                font-size: 1.8rem !important;
+                text-align: center;
+            }
+
+            .search-form {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .search-input {
+                font-size: 1rem;
+                padding: 1rem;
+            }
+
+            .main-content {
+                padding: 2rem 1rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+                text-align: center;
+            }
+
+            .card-title {
+                font-size: 1.4rem;
+            }
+
+            .card-description {
+                font-size: 0.95rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 2rem;
+            }
+        }
+
+        /* Tablets - 481px a 768px */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .header-container {
+                padding: 0 1.5rem;
+            }
+
+            .header-buttons {
+                gap: 0.75rem;
+            }
+
+            .btn {
+                padding: 0.75rem 1.25rem;
+                font-size: 0.95rem;
+            }
+
+            .search-section h1 {
+                font-size: 2.2rem !important;
+            }
+
+            .search-form {
+                flex-direction: row;
+                gap: 1rem;
+            }
+
+            .search-input {
+                flex: 1;
+            }
+
+            .main-content {
+                padding: 3rem 1.5rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+
+            .card {
+                padding: 2rem;
+            }
+
+            .card-title {
+                font-size: 1.6rem;
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        /* Desktop pequeno - 769px a 1024px */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .header-container {
+                padding: 0 2rem;
+            }
+
+            .search-section h1 {
+                font-size: 2.3rem !important;
+            }
+
+            .main-content {
+                padding: 4rem 2rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2.5rem;
+            }
+
+            .card {
+                padding: 2.5rem;
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Desktop grande - acima de 1024px */
+        @media (min-width: 1025px) {
+            .cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 3rem;
+            }
+
+            .card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="#" class="logo">
+                <img src="assets/logo_clean.png" alt="ClaunNetworking" class="logo-image">
+                <span class="logo-text">ClaunNetworking</span>
+            </a>
+            <div class="header-buttons">
+                <button class="btn btn-secondary" onclick="showRegisterOptions()">Cadastro</button>
+                <button class="btn btn-secondary" onclick="showLoginOptions()">Entrar</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="search-section">
+        <div class="search-container">
+            <h1 style="font-size: 2.5rem; margin-bottom: 2rem; color: #6B46C1; text-align: center;">Encontre sua próxima oportunidade</h1>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="cards-grid">
+            <!-- Card: Vagas -->
+            <div class="card">
+                <h2 class="card-title">Vagas</h2>
+                <p class="card-description">Encontre sua próxima oportunidade</p>
+                <button class="card-button" onclick="navigateToPage('vagas')">Ver vagas</button>
+            </div>
+
+            <!-- Card: Serviços Premium -->
+            <div class="card">
+                <h2 class="card-title">Serviços Premium</h2>
+                <p class="card-description">Explore cursos e mentorias</p>
+                <button class="card-button" onclick="navigateToPage('servicos-premium')">Explorar agora</button>
+            </div>
+
+            <!-- Card: Cadastro de Vaga -->
+            <div class="card">
+                <h2 class="card-title">Cadastro de vaga</h2>
+                <p class="card-description">Publique sua vaga e encontre o candidato ideal</p>
+                <button class="card-button" onclick="navigateToPage('cadastro-vaga')">Cadastrar vaga</button>
+            </div>
+
+            <!-- Card: Cadastro de Curso -->
+            <div class="card">
+                <h2 class="card-title">Cadastro de Curso</h2>
+                <p class="card-description">Adicione seu curso e atraia interessados</p>
+                <button class="card-button" onclick="navigateToPage('cadastro-curso')">Cadastrar curso</button>
+            </div>
+
+            <!-- Card: Soluções para empresas -->
+            <div class="card">
+                <h2 class="card-title">Soluções para empresas</h2>
+                <p class="card-description">Conheça nossas soluções personalizadas para empresas</p>
+                <button class="card-button" onclick="navigateToPage('solucoes-empresas')">Saiba mais</button>
+            </div>
+
+            <!-- Card: Cursos -->
+            <div class="card" onclick="window.location.href='cursos-gratuitos.html'">
+                <h2 class="card-title">Cursos</h2>
+                <p class="card-description">Explore cursos disponíveis e impulsione sua carreira</p>
+                <button class="card-button" onclick="navigateToPage('cursos-gratuitos')">Explorar</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>ClaunNetworking</h3>
+                <p>Sua rede de oportunidades</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Sobre nós</h3>
+                <ul>
+                    <li><a href="#" onclick="openModal('historyModal')">📖 Nossa História</a></li>
+                    <li><a href="mailto:claunnetw@gmail.com">📧 Contato - claunnetw@gmail.com</a></li>
+                    <li><a href="#" onclick="openModal('lgpdModal')">📋 LGPD</a></li>
+                    <li><a href="#" onclick="openModal('privacyModal')">🔒 Política de Privacidade</a></li>
+                    <li><a href="#" onclick="openModal('termsModal')">📋 Termos de Uso</a></li>
+                    <li><a href="#" onclick="showContentResponsibilityAlert()">⚠️ Termos de Responsabilidade</a></li>
+                    <li><a href="#" onclick="openModal('contactModal')">💬 Envie uma Mensagem</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 ClaunNetworking. Todos os direitos reservados.</p>
+            <p>🔒 Senhas criptografadas • 🌐 HTTPS ativo • 📋 Conformidade LGPD</p>
+        </div>
+        
+        <!-- WhatsApp Button -->
+        <a href="https://wa.me/5511972571520" target="_blank" style="position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; padding: 15px; border-radius: 50%; text-decoration: none; font-size: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 1000;" title="Fale conosco no WhatsApp">
+            💬
+        </a>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Sistema de navegação avançado
+        function navigateToPage(page) {
+            const pages = {
+                'vagas': 'vagas.html',
+                'servicos-premium': 'servicos-premium.html',
+                'cadastro-vaga': 'cadastro-vaga.html',
+                'cadastro-curso': 'cadastro-curso.html',
+                'solucoes-empresas': 'solucoes-selecao.html',
+                'cursos-gratuitos': 'cursos-gratuitos.html'
+            };
+
+            const url = pages[page];
+            if (url) {
+                window.location.href = url;
+            }
+        }
+
+
+
+        function showSuccessMessage(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #10B981, #059669);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+                z-index: 10000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            `;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.style.transform = 'translateX(0)', 100);
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Sistema de Login e Cadastro Integrado
+        function showLoginOptions() {
+            const options = `
+                <div style="text-align: center; padding: 1rem;">
+                    <h3 style="color: #6B46C1; margin-bottom: 1rem;">Como você quer entrar?</h3>
+                    <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 300px; margin: 0 auto;">
+                        <button onclick="loginAsCandidate()" style="padding: 1rem; background: linear-gradient(135deg, #6B46C1, #8B5CF6); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            👤 Candidato
+                        </button>
+                        <button onclick="loginAsCompany()" style="padding: 1rem; background: #10B981; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            🏢 Empresa
+                        </button>
+
+                        <button onclick="loginAsInstitution()" style="padding: 1rem; background: linear-gradient(135deg, #F59E0B, #EAB308); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            🎓 Instituição de Ensino
+                        </button>
+                        <button onclick="loginAsAdmin()" style="padding: 1rem; background: #EF4444; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            ⚙️ Administrador
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            showModal('Entrar na Plataforma', options);
+        }
+
+        function showRegisterOptions() {
+            const options = `
+                <div style="text-align: center; padding: 1rem;">
+                    <h3 style="color: #6B46C1; margin-bottom: 1rem;">Como você quer se cadastrar?</h3>
+                    <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 300px; margin: 0 auto;">
+                        <button onclick="registerAsCandidate()" style="padding: 1rem; background: linear-gradient(135deg, #6B46C1, #8B5CF6); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            👤 Candidato
+                        </button>
+                        <button onclick="registerAsCompany()" style="padding: 1rem; background: #10B981; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            🏢 Empresa
+                        </button>
+                        <button onclick="registerAsInstitution()" style="padding: 1rem; background: #F59E0B; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            🎓 Instituição de Ensino
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            showModal('Cadastrar na Plataforma', options);
+        }
+
+        function showModal(title, content) {
+            // Fechar qualquer modal existente primeiro
+            closeModal();
+            
+            const modal = document.createElement('div');
+            modal.id = 'currentModal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+                backdrop-filter: blur(5px);
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 20px; max-width: 400px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h2 style="color: #6B46C1; margin: 0;">${title}</h2>
+                        <button onclick="closeModal()" 
+                                style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #6B7280; padding: 0.25rem; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                            ×
+                        </button>
+                    </div>
+                    ${content}
+                </div>
+            `;
+            
+            // Fechar modal ao clicar fora
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+            
+            // Fechar modal com tecla ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+            
+            document.body.appendChild(modal);
+        }
+
+        function closeModal() {
+            // Remove modal específico por ID
+            const modal = document.getElementById('currentModal');
+            if (modal) {
+                modal.remove();
+                return;
+            }
+            
+            // Fallback: remove qualquer modal existente
+            const allModals = document.querySelectorAll('[style*="position: fixed"][style*="z-index: 10000"]');
+            allModals.forEach(m => m.remove());
+        }
+
+        // Funções de Login
+        function loginAsCandidate() {
+            const loginForm = `
+                <div style="padding: 1rem;">
+                    <h3 style="color: #6B46C1; margin-bottom: 1rem; text-align: center;">Login do Candidato</h3>
+                    <form onsubmit="processCandidateLogin(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+                        <input type="email" id="candidateEmail" placeholder="Email" required 
+                               style="padding: 0.75rem; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 1rem;">
+                        <input type="password" id="candidatePassword" placeholder="Senha" required 
+                               style="padding: 0.75rem; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 1rem;">
+                        <button type="submit" 
+                                style="padding: 0.75rem; background: linear-gradient(135deg, #6B46C1, #8B5CF6); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            Entrar
+                        </button>
+                    </form>
+                    <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: #6B7280;">
+                        Teste: candidato@teste.com / 123456
+                    </p>
+                </div>
+            `;
+            showModal('Login do Candidato', loginForm);
+        }
+
+        function processCandidateLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('candidateEmail').value;
+            const password = document.getElementById('candidatePassword').value;
+            
+            // Validar credenciais de teste
+            if (email === 'candidato@teste.com' && password === '123456') {
+                document.querySelector('div[style*="position: fixed"]').remove();
+                showSuccessMessage('Login realizado com sucesso!');
+                setTimeout(() => {
+                    window.location.href = 'candidato_painel.html';
+                }, 1500);
+            } else {
+                alert('Credenciais inválidas. Use: candidato@teste.com / 123456');
+            }
+        }
+
+        function loginAsCompany() {
+            const loginForm = `
+                <div style="padding: 1rem;">
+                    <h3 style="color: #6B46C1; margin-bottom: 1rem; text-align: center;">Login da Empresa</h3>
+                    <form onsubmit="processCompanyLogin(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+                        <input type="email" id="companyEmail" placeholder="Email" required 
+                               style="padding: 0.75rem; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 1rem;">
+                        <input type="password" id="companyPassword" placeholder="Senha" required 
+                               style="padding: 0.75rem; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 1rem;">
+                        <button type="submit" 
+                                style="padding: 0.75rem; background: #10B981; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            Entrar
+                        </button>
+                    </form>
+                    <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: #6B7280;">
+                        Teste: empresa@teste.com / 123456
+                    </p>
+                </div>
+            `;
+            showModal('Login da Empresa', loginForm);
+        }
+
+        function processCompanyLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('companyEmail').value;
+            const password = document.getElementById('companyPassword').value;
+            
+            // Validar credenciais de teste
+            if (email === 'empresa@teste.com' && password === '123456') {
+                document.querySelector('div[style*="position: fixed"]').remove();
+                showSuccessMessage('Login realizado com sucesso!');
+                setTimeout(() => {
+                    window.location.href = 'company_dashboard.html';
+                }, 1500);
+            } else {
+                alert('Credenciais inválidas. Use: empresa@teste.com / 123456');
+            }
+        }
+
+
+
+        function loginAsInstitution() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 400px; width: 90%;">
+                    <h3 style="color: #6B46C1; margin-bottom: 1.5rem; text-align: center;">🎓 Login Instituição de Ensino</h3>
+                    <form onsubmit="handleInstitutionLogin(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; color: #374151; font-weight: 600;">Email:</label>
+                            <input type="email" name="email" required placeholder="instituicao@teste.com" 
+                                   style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; color: #374151; font-weight: 600;">Senha:</label>
+                            <input type="password" name="password" required placeholder="123456" 
+                                   style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                        </div>
+                        <div style="background: #FEF3C7; padding: 1rem; border-radius: 8px; font-size: 0.9rem; color: #92400E;">
+                            <strong>Credenciais de Teste:</strong><br>
+                            Email: instituicao@teste.com<br>
+                            Senha: 123456
+                        </div>
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                            <button type="submit" style="flex: 1; padding: 0.75rem; background: linear-gradient(135deg, #F59E0B, #EAB308); color: white; border: none; border-radius: 8px; cursor: pointer;">
+                                Entrar
+                            </button>
+                            <button type="button" onclick="document.body.removeChild(this.closest('div').parentElement)" style="flex: 1; padding: 0.75rem; background: #6B7280; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function handleInstitutionLogin(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const email = formData.get('email');
+            const password = formData.get('password');
+            
+            const result = window.authSystem.login(email, password);
+            
+            if (result.success && result.user.type === 'institution') {
+                document.body.removeChild(event.target.closest('div').parentElement);
+                window.location.href = result.redirectUrl;
+            } else {
+                alert('Credenciais inválidas. Use uma das credenciais de teste fornecidas.');
+            }
+        }
+
+        function loginAsAdmin() {
+            window.location.href = 'admin_complete.html';
+        }
+
+        // Funções de Cadastro
+        function registerAsCandidate() {
+            window.location.href = 'candidato_cadastro.html';
+        }
+
+        function registerAsCompany() {
+            window.location.href = 'empresa_cadastro.html';
+        }
+
+        function registerAsInstitution() {
+            window.location.href = 'instituicao_cadastro.html';
+        }
+
+        function showContentResponsibilityAlert() {
+            const content = `
+                <div style="color: #374151; line-height: 1.6;">
+                    <div style="text-align: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🛡️</div>
+                    </div>
+                    
+                    <h4 style="color: #6B46C1; margin-bottom: 1rem;">Nosso Compromisso com a Segurança</h4>
+                    <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
+                        <li>Realizamos validação de conteúdo e verificações periódicas</li>
+                        <li>Monitoramos ativamente as publicações na plataforma</li>
+                        <li>Disponibilizamos canais de denúncia para irregularidades</li>
+                        <li>Mantemos equipe dedicada à moderação de conteúdo</li>
+                    </ul>
+                    
+                    <div style="background: #EBF8FF; padding: 1rem; border-radius: 8px; border-left: 4px solid #3B82F6; margin-bottom: 1.5rem;">
+                        <h5 style="color: #1E40AF; margin-bottom: 0.5rem;">🛡️ Dica de Segurança</h5>
+                        <p style="margin: 0; color: #1E3A8A;">Sempre verifique a autenticidade de ofertas de emprego e nunca forneça dados pessoais sensíveis sem confirmação da legitimidade da empresa.</p>
+                    </div>
+                    
+                    <p style="font-size: 0.9rem; color: #6B7280; text-align: center;">
+                        Ao continuar usando a plataforma, você concorda com estes termos e assume a responsabilidade por suas ações.
+                    </p>
+                </div>
+            `;
+            
+            showModal('Termos de Responsabilidade e Segurança', content);
+        }
+
+        // Sistema de pesquisa avançado
+        function initializeSearch() {
+            const searchInput = document.querySelector('.search-input');
+            const searchButton = document.querySelector('.search-form .btn-primary');
+            
+            function performSearch() {
+                const searchTerm = searchInput.value.trim();
+                if (searchTerm) {
+                    showLoadingOverlay();
+                    setTimeout(() => {
+                        hideLoadingOverlay();
+                        showSearchResults(searchTerm);
+                    }, 1500);
+                }
+            }
+            
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            searchButton.addEventListener('click', performSearch);
+        }
+
+        function showSearchResults(searchTerm) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+                backdrop-filter: blur(5px);
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 3rem; border-radius: 20px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
+                    <h2 style="color: #6B46C1; margin-bottom: 1rem;">Resultados da Pesquisa</h2>
+                    <p style="color: #64748b; margin-bottom: 2rem;">Pesquisando por: "<strong>${searchTerm}</strong>"</p>
+                    
+                    <div style="border: 2px dashed #E5E7EB; padding: 2rem; text-align: center; border-radius: 12px; margin-bottom: 2rem;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+                        <h3 style="color: #6B46C1; margin-bottom: 0.5rem;">Sistema de Busca em Desenvolvimento</h3>
+                        <p style="color: #64748b;">Em breve você poderá pesquisar por vagas, cursos e muito mais!</p>
+                    </div>
+                    
+                    <button onclick="this.closest('div').parentElement.remove()" 
+                            style="width: 100%; padding: 1rem; background: linear-gradient(135deg, #10B981, #059669); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600;">
+                        Fechar
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        // Animações e efeitos
+        function initializeAnimations() {
+            // Animação de entrada dos cards
+            const cards = document.querySelectorAll('.card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }, index * 150);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                observer.observe(card);
+            });
+
+            // Efeito parallax no header
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const searchSection = document.querySelector('.search-section');
+                if (searchSection) {
+                    searchSection.style.transform = `translateY(${scrolled * 0.5}px)`;
+                }
+            });
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSearch();
+            initializeAnimations();
+        });
+    </script>
+</body>
+</html>

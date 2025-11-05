@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soluções ClaunNetworking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6, #A855F7);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        h1 {
+            color: #1F2937;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            color: #6B7280;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .option-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 3px solid transparent;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: #6B46C1;
+        }
+
+        .option-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .empresa-icon {
+            background: linear-gradient(135deg, #10B981, #059669);
+        }
+
+        .instituicao-icon {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+        }
+
+        .option-title {
+            color: #1F2937;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .option-description {
+            color: #6B7280;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .option-features {
+            list-style: none;
+            text-align: left;
+        }
+
+        .option-features li {
+            color: #374151;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .option-features li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10B981;
+            font-weight: bold;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #6B46C1;
+            text-decoration: none;
+            margin-bottom: 2rem;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Voltar ao início</a>
+        
+        <div class="header">
+            <div class="logo">C</div>
+            <h1>Soluções ClaunNetworking</h1>
+            <p class="subtitle">Escolha o tipo de organização para ver as soluções específicas</p>
+        </div>
+
+        <div class="options-container">
+            <!-- Opção Empresa -->
+            <a href="solucoes-empresas.html" class="option-card">
+                <div class="option-icon empresa-icon">🏢</div>
+                <h2 class="option-title">Soluções para Empresas</h2>
+                <p class="option-description">
+                    Plataforma completa para recrutamento, seleção e gestão de talentos
+                </p>
+                <ul class="option-features">
+                    <li>Publicação de vagas ilimitadas</li>
+                    <li>Busca avançada de candidatos</li>
+                    <li>Painel de gestão completo</li>
+                    <li>Relatórios de performance</li>
+                    <li>Sistema de mensagens</li>
+                    <li>Integração com redes sociais</li>
+                </ul>
+            </a>
+
+            <!-- Opção Instituição -->
+            <a href="planos-instituicoes.html" class="option-card">
+                <div class="option-icon instituicao-icon">🎓</div>
+                <h2 class="option-title">Soluções para Instituições</h2>
+                <p class="option-description">
+                    Planos especializados para instituições de ensino promoverem seus cursos
+                </p>
+                <ul class="option-features">
+                    <li>Publicação de cursos</li>
+                    <li>Sistema de destaques</li>
+                    <li>Painel administrativo completo</li>
+                    <li>Relatórios de engajamento</li>
+                    <li>Métricas de performance</li>
+                    <li>Exportação de dados</li>
+                </ul>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

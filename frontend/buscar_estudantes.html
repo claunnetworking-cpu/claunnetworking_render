@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Estudantes - ClaunNetworking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6, #A855F7);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B46C1;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .back-link {
+            color: #6B46C1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: background 0.3s;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            background: rgba(107, 70, 193, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .search-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-input, .filter-select {
+            padding: 0.75rem;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .filter-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: #6B46C1;
+            box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.1);
+        }
+
+        .search-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(107, 70, 193, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.8);
+            color: #374151;
+            border: 2px solid #E5E7EB;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            border-color: #6B46C1;
+        }
+
+        .results-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #E5E7EB;
+        }
+
+        .results-count {
+            font-size: 1.1rem;
+            color: #6B7280;
+            font-weight: 600;
+        }
+
+        .sort-select {
+            padding: 0.5rem 1rem;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .students-grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .student-card {
+            border: 2px solid #E5E7EB;
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: white;
+        }
+
+        .student-card:hover {
+            border-color: #6B46C1;
+            box-shadow: 0 10px 30px rgba(107, 70, 193, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .student-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .student-info {
+            flex: 1;
+        }
+
+        .student-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .student-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .student-course {
+            color: #6B46C1;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .student-institution {
+            color: #6B7280;
+            font-size: 0.9rem;
+        }
+
+        .student-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.75rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .btn-view {
+            background: #EBF8FF;
+            color: #3182CE;
+        }
+
+        .btn-view:hover {
+            background: #BEE3F8;
+            transform: scale(1.1);
+        }
+
+        .btn-contact {
+            background: #F0FDF4;
+            color: #16A34A;
+        }
+
+        .btn-contact:hover {
+            background: #DCFCE7;
+            transform: scale(1.1);
+        }
+
+        .btn-invite {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+
+        .btn-invite:hover {
+            background: #FDE68A;
+            transform: scale(1.1);
+        }
+
+        .student-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #6B7280;
+        }
+
+        .student-bio {
+            color: #4B5563;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .student-stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6B46C1;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #6B7280;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .student-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            color: #6B7280;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-actions {
+                flex-direction: column;
+            }
+
+            .student-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .student-actions {
+                align-self: flex-start;
+            }
+
+            .student-stats {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="assets/logo_transparent.png" alt="ClaunNetworking">
+                ClaunNetworking
+            </div>
+            <a href="institution_dashboard.html" class="back-link">
+                ← Voltar ao Painel
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">🎓 Buscar Estudantes</h1>
+            <p class="page-subtitle">Encontre talentos promissores para sua instituição</p>
+        </div>
+
+        <div class="search-section">
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Área de Estudo</label>
+                    <select class="filter-select" id="areaFilter">
+                        <option value="">Todas as áreas</option>
+                        <option value="tecnologia">Tecnologia</option>
+                        <option value="administracao">Administração</option>
+                        <option value="engenharia">Engenharia</option>
+                        <option value="medicina">Medicina</option>
+                        <option value="direito">Direito</option>
+                        <option value="design">Design</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="psicologia">Psicologia</option>
+                        <option value="educacao">Educação</option>
+                        <option value="comunicacao">Comunicação</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Nível de Estudo</label>
+                    <select class="filter-select" id="levelFilter">
+                        <option value="">Qualquer nível</option>
+                        <option value="tecnico">Técnico</option>
+                        <option value="graduacao">Graduação</option>
+                        <option value="pos_graduacao">Pós-graduação</option>
+                        <option value="mestrado">Mestrado</option>
+                        <option value="doutorado">Doutorado</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Localização</label>
+                    <input type="text" class="filter-input" id="locationFilter" placeholder="Cidade, Estado">
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Modalidade Preferida</label>
+                    <select class="filter-select" id="modalityFilter">
+                        <option value="">Qualquer modalidade</option>
+                        <option value="presencial">Presencial</option>
+                        <option value="ead">EAD</option>
+                        <option value="hibrido">Híbrido</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Período de Estudo</label>
+                    <select class="filter-select" id="periodFilter">
+                        <option value="">Qualquer período</option>
+                        <option value="matutino">Matutino</option>
+                        <option value="vespertino">Vespertino</option>
+                        <option value="noturno">Noturno</option>
+                        <option value="integral">Integral</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Experiência</label>
+                    <select class="filter-select" id="experienceFilter">
+                        <option value="">Qualquer experiência</option>
+                        <option value="sem_experiencia">Sem experiência</option>
+                        <option value="estagio">Estágio</option>
+                        <option value="junior">Júnior (1-3 anos)</option>
+                        <option value="pleno">Pleno (3-5 anos)</option>
+                        <option value="senior">Sênior (5+ anos)</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Interesse em Bolsas</label>
+                    <select class="filter-select" id="scholarshipFilter">
+                        <option value="">Qualquer interesse</option>
+                        <option value="sim">Interessado em bolsas</option>
+                        <option value="nao">Não interessado</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Palavra-chave</label>
+                    <input type="text" class="filter-input" id="keywordFilter" placeholder="Nome, habilidade, curso...">
+                </div>
+            </div>
+
+            <div class="search-actions">
+                <button class="btn btn-secondary" onclick="clearFilters()">
+                    🗑️ Limpar Filtros
+                </button>
+                <button class="btn btn-primary" onclick="searchStudents()">
+                    🔍 Buscar Estudantes
+                </button>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <div class="results-header">
+                <div class="results-count" id="resultsCount">
+                    Encontrados 0 estudantes
+                </div>
+                <select class="sort-select" id="sortSelect" onchange="sortResults()">
+                    <option value="relevance">Mais relevantes</option>
+                    <option value="experience">Mais experientes</option>
+                    <option value="recent">Mais recentes</option>
+                    <option value="location">Por localização</option>
+                </select>
+            </div>
+
+            <div class="students-grid" id="studentsGrid">
+                <div class="empty-state">
+                    <h3>🎓 Pronto para encontrar novos talentos?</h3>
+                    <p>Use os filtros acima para buscar estudantes que se alinhem com os programas da sua instituição.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados simulados de estudantes
+        const mockStudents = [
+            {
+                id: 1,
+                name: "Ana Silva",
+                area: "tecnologia",
+                level: "graduacao",
+                course: "Ciência da Computação",
+                institution: "Universidade Federal de São Paulo",
+                location: "São Paulo, SP",
+                modality: "presencial",
+                period: "matutino",
+                experience: "estagio",
+                scholarship: "sim",
+                bio: "Estudante apaixonada por desenvolvimento web e inteligência artificial. Busco oportunidades para aplicar conhecimentos teóricos na prática.",
+                semester: 6,
+                gpa: 8.5,
+                projects: 12,
+                skills: ["JavaScript", "Python", "React", "Machine Learning"],
+                avatar: "A"
+            },
+            {
+                id: 2,
+                name: "Carlos Oliveira",
+                area: "administracao",
+                level: "pos_graduacao",
+                course: "MBA em Gestão Estratégica",
+                institution: "FGV",
+                location: "Rio de Janeiro, RJ",
+                modality: "hibrido",
+                period: "noturno",
+                experience: "pleno",
+                scholarship: "nao",
+                bio: "Profissional com experiência em gestão buscando especialização em estratégia empresarial e liderança.",
+                semester: 2,
+                gpa: 9.2,
+                projects: 8,
+                skills: ["Gestão", "Liderança", "Estratégia", "Finanças"],
+                avatar: "C"
+            },
+            {
+                id: 3,
+                name: "Mariana Costa",
+                area: "design",
+                level: "graduacao",
+                course: "Design Gráfico",
+                institution: "ESPM",
+                location: "São Paulo, SP",
+                modality: "presencial",
+                period: "vespertino",
+                experience: "junior",
+                scholarship: "sim",
+                bio: "Designer criativa com foco em branding e experiência do usuário. Sempre em busca de projetos desafiadores.",
+                semester: 4,
+                gpa: 8.8,
+                projects: 15,
+                skills: ["Photoshop", "Illustrator", "Figma", "Branding"],
+                avatar: "M"
+            },
+            {
+                id: 4,
+                name: "Pedro Santos",
+                area: "engenharia",
+                level: "mestrado",
+                course: "Engenharia de Software",
+                institution: "USP",
+                location: "São Paulo, SP",
+                modality: "presencial",
+                period: "integral",
+                experience: "senior",
+                scholarship: "nao",
+                bio: "Engenheiro experiente pesquisando arquiteturas de software escaláveis e metodologias ágeis.",
+                semester: 3,
+                gpa: 9.5,
+                projects: 20,
+                skills: ["Java", "Spring", "Microservices", "DevOps"],
+                avatar: "P"
+            },
+            {
+                id: 5,
+                name: "Julia Ferreira",
+                area: "psicologia",
+                level: "graduacao",
+                course: "Psicologia",
+                institution: "PUC-SP",
+                location: "São Paulo, SP",
+                modality: "presencial",
+                period: "matutino",
+                experience: "sem_experiencia",
+                scholarship: "sim",
+                bio: "Estudante interessada em psicologia organizacional e desenvolvimento humano. Busco estágios na área.",
+                semester: 3,
+                gpa: 8.0,
+                projects: 5,
+                skills: ["Avaliação Psicológica", "Terapia", "Pesquisa", "Estatística"],
+                avatar: "J"
+            },
+            {
+                id: 6,
+                name: "Rafael Lima",
+                area: "marketing",
+                level: "graduacao",
+                course: "Marketing Digital",
+                institution: "Anhembi Morumbi",
+                location: "São Paulo, SP",
+                modality: "ead",
+                period: "noturno",
+                experience: "junior",
+                scholarship: "sim",
+                bio: "Especialista em marketing digital com experiência em redes sociais e campanhas online.",
+                semester: 5,
+                gpa: 8.3,
+                projects: 10,
+                skills: ["Google Ads", "Facebook Ads", "SEO", "Analytics"],
+                avatar: "R"
+            }
+        ];
+
+        let filteredStudents = [];
+
+        function searchStudents() {
+            const filters = {
+                area: document.getElementById('areaFilter').value,
+                level: document.getElementById('levelFilter').value,
+                location: document.getElementById('locationFilter').value.toLowerCase(),
+                modality: document.getElementById('modalityFilter').value,
+                period: document.getElementById('periodFilter').value,
+                experience: document.getElementById('experienceFilter').value,
+                scholarship: document.getElementById('scholarshipFilter').value,
+                keyword: document.getElementById('keywordFilter').value.toLowerCase()
+            };
+
+            filteredStudents = mockStudents.filter(student => {
+                // Filtros específicos
+                if (filters.area && student.area !== filters.area) return false;
+                if (filters.level && student.level !== filters.level) return false;
+                if (filters.modality && student.modality !== filters.modality) return false;
+                if (filters.period && student.period !== filters.period) return false;
+                if (filters.experience && student.experience !== filters.experience) return false;
+                if (filters.scholarship && student.scholarship !== filters.scholarship) return false;
+                
+                // Filtro de localização
+                if (filters.location && !student.location.toLowerCase().includes(filters.location)) return false;
+                
+                // Filtro de palavra-chave
+                if (filters.keyword) {
+                    const searchText = `${student.name} ${student.course} ${student.bio} ${student.skills.join(' ')}`.toLowerCase();
+                    if (!searchText.includes(filters.keyword)) return false;
+                }
+
+                return true;
+            });
+
+            displayResults();
+        }
+
+        function displayResults() {
+            const grid = document.getElementById('studentsGrid');
+            const count = document.getElementById('resultsCount');
+            
+            count.textContent = `Encontrados ${filteredStudents.length} estudantes`;
+
+            if (filteredStudents.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <h3>😔 Nenhum estudante encontrado</h3>
+                        <p>Tente ajustar os filtros para encontrar mais estudantes.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filteredStudents.map(student => `
+                <div class="student-card" onclick="viewStudent(${student.id})">
+                    <div class="student-header">
+                        <div class="student-info">
+                            <div class="student-avatar">${student.avatar}</div>
+                            <div class="student-name">${student.name}</div>
+                            <div class="student-course">${student.course}</div>
+                            <div class="student-institution">🏫 ${student.institution}</div>
+                        </div>
+                        <div class="student-actions">
+                            <button class="action-btn btn-view" onclick="event.stopPropagation(); viewStudent(${student.id})" title="Ver perfil">
+                                👁️
+                            </button>
+                            <button class="action-btn btn-contact" onclick="event.stopPropagation(); contactStudent(${student.id})" title="Contatar">
+                                💬
+                            </button>
+                            <button class="action-btn btn-invite" onclick="event.stopPropagation(); inviteStudent(${student.id})" title="Convidar">
+                                📧
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="student-bio">${student.bio}</div>
+                    
+                    <div class="student-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">${student.semester}º</div>
+                            <div class="stat-label">Semestre</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">${student.gpa}</div>
+                            <div class="stat-label">Média</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">${student.projects}</div>
+                            <div class="stat-label">Projetos</div>
+                        </div>
+                    </div>
+                    
+                    <div class="student-details">
+                        <div class="detail-item">
+                            <span>📍</span>
+                            <span>${student.location}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>🎓</span>
+                            <span>${getLevelLabel(student.level)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>🌐</span>
+                            <span>${getModalityLabel(student.modality)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>⏰</span>
+                            <span>${getPeriodLabel(student.period)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>💼</span>
+                            <span>${getExperienceLabel(student.experience)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>🎯</span>
+                            <span>${student.scholarship === 'sim' ? 'Interesse em bolsas' : 'Sem interesse em bolsas'}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="student-skills">
+                        ${student.skills.slice(0, 4).map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                        ${student.skills.length > 4 ? `<span class="skill-tag">+${student.skills.length - 4} mais</span>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function clearFilters() {
+            document.getElementById('areaFilter').value = '';
+            document.getElementById('levelFilter').value = '';
+            document.getElementById('locationFilter').value = '';
+            document.getElementById('modalityFilter').value = '';
+            document.getElementById('periodFilter').value = '';
+            document.getElementById('experienceFilter').value = '';
+            document.getElementById('scholarshipFilter').value = '';
+            document.getElementById('keywordFilter').value = '';
+            
+            filteredStudents = [];
+            document.getElementById('studentsGrid').innerHTML = `
+                <div class="empty-state">
+                    <h3>🎓 Pronto para encontrar novos talentos?</h3>
+                    <p>Use os filtros acima para buscar estudantes que se alinhem com os programas da sua instituição.</p>
+                </div>
+            `;
+            document.getElementById('resultsCount').textContent = 'Encontrados 0 estudantes';
+        }
+
+        function sortResults() {
+            const sortBy = document.getElementById('sortSelect').value;
+            
+            filteredStudents.sort((a, b) => {
+                switch (sortBy) {
+                    case 'experience':
+                        const expOrder = ['sem_experiencia', 'estagio', 'junior', 'pleno', 'senior'];
+                        return expOrder.indexOf(b.experience) - expOrder.indexOf(a.experience);
+                    case 'recent':
+                        return b.semester - a.semester; // Mais avançados no curso
+                    case 'location':
+                        return a.location.localeCompare(b.location);
+                    default: // relevance
+                        return b.gpa - a.gpa; // Por enquanto, usar média como relevância
+                }
+            });
+            
+            displayResults();
+        }
+
+        function viewStudent(studentId) {
+            const student = mockStudents.find(s => s.id === studentId);
+            if (student) {
+                // Redirecionar para a página de perfil do candidato/estudante
+                window.location.href = `candidato_perfil.html?id=${studentId}&type=student`;
+            }
+        }
+
+        function contactStudent(studentId) {
+            const student = mockStudents.find(s => s.id === studentId);
+            if (student) {
+                alert(`Entrando em contato com ${student.name}\n\nEsta funcionalidade abrirá o sistema de mensagens para iniciar uma conversa com o estudante sobre:\n• Oportunidades de estudo\n• Programas de bolsas\n• Projetos de pesquisa\n• Parcerias acadêmicas`);
+            }
+        }
+
+        function inviteStudent(studentId) {
+            const student = mockStudents.find(s => s.id === studentId);
+            if (student) {
+                alert(`Convidando ${student.name}\n\nEsta funcionalidade permitirá enviar convites para:\n• Programas de graduação/pós-graduação\n• Bolsas de estudo\n• Projetos de pesquisa\n• Eventos acadêmicos\n• Programas de intercâmbio\n\nO convite será enviado diretamente para o estudante.`);
+            }
+        }
+
+        // Funções auxiliares para labels
+        function getLevelLabel(level) {
+            const labels = {
+                'tecnico': 'Técnico',
+                'graduacao': 'Graduação',
+                'pos_graduacao': 'Pós-graduação',
+                'mestrado': 'Mestrado',
+                'doutorado': 'Doutorado'
+            };
+            return labels[level] || level;
+        }
+
+        function getModalityLabel(modality) {
+            const labels = {
+                'presencial': 'Presencial',
+                'ead': 'EAD',
+                'hibrido': 'Híbrido'
+            };
+            return labels[modality] || modality;
+        }
+
+        function getPeriodLabel(period) {
+            const labels = {
+                'matutino': 'Matutino',
+                'vespertino': 'Vespertino',
+                'noturno': 'Noturno',
+                'integral': 'Integral'
+            };
+            return labels[period] || period;
+        }
+
+        function getExperienceLabel(experience) {
+            const labels = {
+                'sem_experiencia': 'Sem experiência',
+                'estagio': 'Estágio',
+                'junior': 'Júnior (1-3 anos)',
+                'pleno': 'Pleno (3-5 anos)',
+                'senior': 'Sênior (5+ anos)'
+            };
+            return labels[experience] || experience;
+        }
+    </script>
+</body>
+</html>

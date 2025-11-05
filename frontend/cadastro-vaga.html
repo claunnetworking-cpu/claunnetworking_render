@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Vaga - ClaunNetworking</title>
+    <script src="js/responsibility-alert.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            
+            
+            
+            
+            text-decoration: none;
+        }
+
+        .logo-image {
+            height: 40px;
+            width: auto;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #6B46C1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #553C9A;
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: #64748b;
+        }
+
+        /* Form Container */
+        .form-container {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .required {
+            color: #EF4444;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-
+            box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #6B46C1, #8B5CF6);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #553C9A, #7C3AED);
+            transform: translateY(-2px);
+        }
+
+        .btn-cancel {
+            background: #6B7280;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .btn-cancel:hover {
+            background: #4B5563;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background: #EBF8FF;
+            border-color: #3B82F6;
+            color: #1E40AF;
+        }
+
+        .alert-success {
+            background: #F0FDF4;
+            border-color: #10B981;
+            color: #065F46;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+
+            .form-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <img src="assets/logo_clean.png" alt="ClaunNetworking" class="logo-image">
+                Claunnetworking
+            </a>
+            <a href="index.html" class="btn btn-primary">← Voltar ao Início</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Cadastrar Vaga</h1>
+            <p class="page-subtitle">Publique sua vaga e encontre o candidato ideal</p>
+        </div>
+
+        <!-- Form Container -->
+        <div class="form-container">
+            <div class="alert alert-info">
+                <strong>📋 Importante:</strong> Todas as vagas cadastradas por usuários passam por aprovação do administrador antes de serem publicadas na plataforma.
+            </div>
+
+            <form id="jobForm" onsubmit="submitJob(event)">
+                <!-- Informações Básicas -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        📝 Informações Básicas
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Título da Vaga <span class="required">*</span></label>
+                        <input type="text" class="form-input" name="title" required placeholder="Ex: Desenvolvedor Frontend React">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Empresa <span class="required">*</span></label>
+                            <input type="text" class="form-input" name="company" required placeholder="Nome da empresa">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Área <span class="required">*</span></label>
+                            <select class="form-select" name="area" required>
+                                <option value="">Selecione a área</option>
+                                <option value="tecnologia">Tecnologia</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="vendas">Vendas</option>
+                                <option value="rh">Recursos Humanos</option>
+                                <option value="financeiro">Financeiro</option>
+                                <option value="design">Design</option>
+                                <option value="operacoes">Operações</option>
+                                <option value="juridico">Jurídico</option>
+                                <option value="outros">Outros</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Descrição da Vaga <span class="required">*</span></label>
+                        <textarea class="form-textarea" name="description" required placeholder="Descreva as responsabilidades, requisitos e benefícios da vaga..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Localização e Modelo -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        📍 Localização e Modelo de Trabalho
+                    </h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Cidade <span class="required">*</span></label>
+                            <input type="text" class="form-input" name="city" required placeholder="Ex: São Paulo, SP">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Modelo de Trabalho <span class="required">*</span></label>
+                            <select class="form-select" name="workModel" required>
+                                <option value="">Selecione o modelo</option>
+                                <option value="remoto">Remoto</option>
+                                <option value="hibrido">Híbrido</option>
+                                <option value="presencial">Presencial</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Requisitos -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        🎯 Requisitos e Nível
+                    </h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Nível <span class="required">*</span></label>
+                            <select class="form-select" name="level" required>
+                                <option value="">Selecione o nível</option>
+                                <option value="estagio">Estágio</option>
+                                <option value="junior">Júnior</option>
+                                <option value="pleno">Pleno</option>
+                                <option value="senior">Sênior</option>
+                                <option value="especialista">Especialista</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Faixa Salarial</label>
+                            <select class="form-select" name="salary">
+                                <option value="">Não informado</option>
+                                <option value="1000-3000">R$ 1.000 - R$ 3.000</option>
+                                <option value="3000-6000">R$ 3.000 - R$ 6.000</option>
+                                <option value="6000-10000">R$ 6.000 - R$ 10.000</option>
+                                <option value="10000-15000">R$ 10.000 - R$ 15.000</option>
+                                <option value="15000+">R$ 15.000+</option>
+                                <option value="a-combinar">A combinar</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Requisitos Técnicos</label>
+                        <textarea class="form-textarea" name="requirements" placeholder="Liste os conhecimentos técnicos necessários, experiências, certificações, etc."></textarea>
+                    </div>
+                </div>
+
+                <!-- Benefícios e Contato -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        🎁 Benefícios e Contato
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Benefícios</label>
+                        <textarea class="form-textarea" name="benefits" placeholder="Descreva os benefícios oferecidos (vale alimentação, plano de saúde, home office, etc.)"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Email para Contato <span class="required">*</span></label>
+                            <input type="email" class="form-input" name="contactEmail" required placeholder="contato@empresa.com">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Telefone</label>
+                            <input type="tel" class="form-input" name="phone" placeholder="(11) 99999-9999">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" id="linkField">
+                        <label class="form-label">Link para Candidatura</label>
+                        <input type="url" class="form-input" name="applicationLink" placeholder="https://empresa.com/vagas/candidatura">
+                        <div class="field-help" style="font-size: 0.85rem; color: #6B7280; margin-top: 0.5rem;">
+                            💡 <strong>Importante:</strong> Este campo é obrigatório apenas para vagas postadas pelo público e administradores. 
+                            Empresas com planos ativos recebem candidaturas diretamente pela plataforma.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Configurações -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        ⚙️ Configurações
+                    </h3>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="urgentJob" name="urgent">
+                        <label for="urgentJob">Vaga urgente (será destacada na listagem)</label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="acceptTerms" name="terms" required>
+                        <label for="acceptTerms">Aceito os <a href="#" onclick="showTerms()" style="">termos de uso</a> e confirmo que as informações são verdadeiras <span class="required">*</span></label>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="cancelForm()">Cancelar</button>
+                    <button type="submit" class="btn-submit">📤 Enviar para Aprovação</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        function submitJob(event) {
+            event.preventDefault();
+            
+            // Validar responsabilidade de conteúdo antes de prosseguir
+            if (typeof validateContentResponsibility === 'function') {
+                validateContentResponsibility(() => {
+                    processJobSubmission(event);
+                });
+            } else {
+                processJobSubmission(event);
+            }
+        }
+
+        function processJobSubmission(event) {
+            const formData = new FormData(event.target);
+            const jobData = Object.fromEntries(formData.entries());
+            
+            // Simular envio
+            const submitBtn = event.target.querySelector('.btn-submit');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '⏳ Enviando...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                // Mostrar sucesso
+                const successAlert = document.createElement('div');
+                successAlert.className = 'alert alert-success';
+                successAlert.innerHTML = `
+                    <strong>✅ Sucesso!</strong> Sua vaga foi enviada para aprovação. 
+                    Você receberá um email quando ela for analisada pelo nosso time.
+                `;
+                
+                const form = document.getElementById('jobForm');
+                form.parentNode.insertBefore(successAlert, form);
+                
+                // Reset form
+                form.reset();
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+            }, 2000);
+        }
+
+        function cancelForm() {
+            if (confirm('Tem certeza que deseja cancelar? Todos os dados preenchidos serão perdidos.')) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function showTerms() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+                backdrop-filter: blur(5px);
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 20px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h2 style=" margin: 0;">Termos de Uso - Cadastro de Vagas</h2>
+                        <button onclick="this.closest('div').parentElement.remove()" 
+                                style="background: none; border: none;  cursor: pointer; color: #6B7280;">
+                            ×
+                        </button>
+                    </div>
+                    
+                    <div style="color: #374151; line-height: 1.6;">
+                        <h4>1. Responsabilidade do Conteúdo</h4>
+                        <p>Você é responsável pela veracidade e legalidade das informações fornecidas na vaga.</p>
+                        
+                        <h4>2. Processo de Aprovação</h4>
+                        <p>Todas as vagas passam por análise antes da publicação. Reservamo-nos o direito de rejeitar conteúdo inadequado.</p>
+                        
+                        <h4>3. Dados de Contato</h4>
+                        <p>Os dados de contato fornecidos serão utilizados apenas para comunicação sobre a vaga.</p>
+                        
+                        <h4>4. Prazo de Publicação</h4>
+                        <p>Vagas aprovadas ficam ativas por 30 dias, podendo ser renovadas mediante solicitação.</p>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        // Auto-save form data
+        const form = document.getElementById('jobForm');
+        const inputs = form.querySelectorAll('input, select, textarea');
+        
+        inputs.forEach(input => {
+            input.addEventListener('input', () => {
+                localStorage.setItem(`jobForm_${input.name}`, input.value);
+            });
+            
+            // Restore saved data
+            const savedValue = localStorage.getItem(`jobForm_${input.name}`);
+            if (savedValue) {
+                input.value = savedValue;
+            }
+        });
+
+        // Clear saved data on successful submit
+        function clearSavedData() {
+            inputs.forEach(input => {
+                localStorage.removeItem(`jobForm_${input.name}`);
+            });
+        }
+
+        // Controlar exibição do campo de link baseado no tipo de usuário
+        function checkUserTypeAndToggleLinkField() {
+            // Verificar se o usuário é uma empresa com plano ativo
+            const userType = localStorage.getItem('claunnetworking_user_type') || 'public';
+            const hasActivePlan = localStorage.getItem('claunnetworking_active_plan') === 'true';
+            
+            const linkField = document.getElementById('linkField');
+            const linkInput = document.querySelector('input[name="applicationLink"]');
+            
+            if (userType === 'company' && hasActivePlan) {
+                // Empresa com plano ativo - campo não é obrigatório
+                linkField.style.display = 'none';
+                linkInput.removeAttribute('required');
+                
+                // Adicionar aviso sobre candidaturas via plataforma
+                const companyNotice = document.createElement('div');
+                companyNotice.className = 'alert alert-info';
+                companyNotice.innerHTML = `
+                    <strong>🎯 Candidaturas via Plataforma:</strong> Como você possui um plano ativo, 
+                    as candidaturas serão recebidas diretamente no seu painel da empresa, 
+                    sem necessidade de link externo.
+                `;
+                linkField.parentNode.insertBefore(companyNotice, linkField);
+            } else {
+                // Usuário público ou administrador - campo é obrigatório
+                linkInput.setAttribute('required', 'required');
+                const label = linkField.querySelector('.form-label');
+                if (!label.innerHTML.includes('<span class="required">*</span>')) {
+                    label.innerHTML += ' <span class="required">*</span>';
+                }
+            }
+        }
+
+        // Executar verificação quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            checkUserTypeAndToggleLinkField();
+        });
+    </script>
+</body>
+</html>
