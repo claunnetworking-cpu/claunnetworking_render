@@ -11,10 +11,10 @@ from dotenv import load_dotenv
 # Carregar variáveis de ambiente
 load_dotenv()
 
-from app import create_app
+from app import app
 
 # Criar aplicação Flask
-application = create_app()
+application = app
 
 # Configurações específicas para produção
 if os.environ.get('FLASK_ENV') == 'production':
