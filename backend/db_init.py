@@ -7,7 +7,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 try:
     # Importa a função init_database do app.py
-    from app import init_database
+    from app_final_final_v2 import init_database
     
     # A função init_database no app.py já contém a lógica para usar
     # PostgreSQL se DATABASE_URL estiver presente, ou SQLite caso contrário.
