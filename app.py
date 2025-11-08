@@ -494,18 +494,12 @@ def get_courses():
 
 # Rota para servir arquivos estáticos
 @app.route('/')
-def home():
-    return jsonify({
-        "message": "ClaunNetworking API", 
-        "status": "online",
-        "version": "1.0.0",
-        "endpoints": [
-            "/api/register",
-            "/api/login", 
-            "/api/jobs",
-            "/api/courses"
-        ]
-    })
+def serve_index():
+    return send_from_directory('../', 'index.html')
+
+@app.route('/<path:filename>')
+def serve_static(filename):
+    return send_from_directory('../', filename)
 
 # Inicializar banco de dados
 init_database()
