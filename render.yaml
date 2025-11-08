@@ -1,47 +1,55 @@
+# render.yaml
+# Configuração para o monorepo ClaunNetworking
+
 services:
-  # Backend API
+  # ----------------------------------------------------------------
+  # 1. Serviço de Backend (Web Service)
+  # ----------------------------------------------------------------
   - type: web
-    name: claunnet-api
+    name: claunnetworking-backend
     env: python
-    buildCommand: "cd backend && pip install -r requirements.txt"
-    startCommand: "cd backend && gunicorn --bind 0.0.0.0:$PORT wsgi:application"
+    
+    # Define a subpasta 'backend' como o diretório raiz para este serviço
+    # Assumindo que app.py, db_init.py e requirements.txt estão em 'backend/'
+    rootDir: backend
+    
+    # Comando de Build: Instala as dependências do requirements.txt dentro de 'backend'
+    buildCommand: pip install -r requirements.txt
+    
+    # Comando de Pré-Deploy: Ativa o ambiente virtual e executa o script de inicialização do DB
+    # Usa $VIRTUAL_ENV para garantir a ativação correta
+    preDeployCommand: source $VIRTUAL_ENV/bin/activate && python3 db_init.py
+    
+    # Comando de Inicialização: Inicia o servidor Gunicorn no ambiente virtual
+    startCommand: python3 -m gunicorn app:app
+    
+    # Variáveis de Ambiente (Substitua os valores pelos seus)
     envVars:
-      - key: FLASK_ENV
-        value: production
-      - key: ADMIN_PASSWORD
-        generateValue: true
-    healthCheckPath: /api/health
-
-  # Site Principal (claunnet.com.br)
+      - key: DATABASE_URL
+        # SUBSTITUA ESTE VALOR PELA URL DE CONEXÃO DO SEU POSTGRESQL
+        value: "postgresql://claunnetworking_user:SHZXzj6270IughZA7c5mLJYqPxe6bzNe@dpg-d3pcfr49c44c73budb40-a/claunnetworking" 
+      - key: SECRET_KEY
+        # SUBSTITUA ESTE VALOR PELA CHAVE SECRETA FORTE E ALEATÓRIA
+        value: "927d3e4f6a1b8c5d0e2f4a7b9c1d0e3f5a6b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f"
+      - key: PYTHON_VERSION
+        value: 3.11.0 # Versão recomendada para o Render
+        
+    # ----------------------------------------------------------------
+    # 2. Serviço de Frontend (Site Estático) - Exemplo
+    # ----------------------------------------------------------------
   - type: static
-    name: claunnet-main
-    staticPublishPath: ./main-site
-    buildCommand: "echo 'No build required for static site'"
-    headers:
-      - path: /*
-        name: X-Frame-Options
-        value: DENY
-      - path: /*
-        name: X-Content-Type-Options
-        value: nosniff
-    routes:
-      - type: redirect
-        source: /admin*
-        destination: https://admin.claunnet.com.br
-        status: 301
-
-  # Painel Administrativo (admin.claunnet.com.br)
-  - type: static
-    name: claunnet-admin
-    staticPublishPath: ./admin-site
-    buildCommand: "echo 'No build required for admin site'"
-    headers:
-      - path: /*
-        name: X-Frame-Options
-        value: DENY
-      - path: /*
-        name: X-Content-Type-Options
-        value: nosniff
-      - path: /*
-        name: Cache-Control
-        value: no-cache, no-store, must-revalidate
+    name: claunnetworking-main-site
+    
+    # Define a subpasta 'main-site' como o diretório raiz para este serviço
+    rootDir: main-site
+    
+    # O site é estático puro, então não há comando de build
+    buildCommand: ""
+    
+    # O Publish Directory é o próprio Root Directory (o ponto '.')
+    publishPath: .
+    
+    # Variável crucial para sites estáticos sem package.json
+    envVars:
+      - key: SKIP_INSTALL_DEPS
+        value: true
