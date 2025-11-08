@@ -17,10 +17,19 @@ services:
     buildCommand: pip install -r requirements.txt
     
     # Comando de Pré-Deploy: Ativa o ambiente virtual e executa o script de inicialização do DB
-    preDeployCommand: source $VIRTUAL_ENV/bin/activate && python3 db_init.py
+    # Nota: O log de erro anterior mostra que o Render executa o preDeployCommand no ambiente virtual.
+    preDeployCommand: python3 db_init.py
     
     # Comando de Inicialização: Inicia o servidor Gunicorn no ambiente virtual
-    startCommand: python3 -m gunicorn app:app
+    # CORREÇÃO: Removido 'python3 -m' e adicionado 'source $VIRTUAL_ENV/bin/activate &&'
+    # O Render já ativa o ambiente virtual para o startCommand, mas para garantir que o Gunicorn
+    # seja encontrado no PATH do ambiente virtual, o comando mais limpo é apenas 'gunicorn app:app'.
+    # Se o Render não estiver ativando o ambiente virtual corretamente, a forma mais robusta é:
+    # startCommand: source $VIRTUAL_ENV/bin/activate && gunicorn app:app
+    # No entanto, a documentação do Render sugere que apenas 'gunicorn app:app' é suficiente
+    # quando o buildCommand é 'pip install -r requirements.txt'.
+    # Vamos usar a forma mais limpa, que é a recomendada pelo Render para Python:
+    startCommand: gunicorn app:app
     
     # Variáveis de Ambiente (Com dados fornecidos pelo usuário)
     envVars:
