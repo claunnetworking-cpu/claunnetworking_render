@@ -262,7 +262,7 @@ else:
     # Se DATABASE_URL não existe, usa SQLite (para desenvolvimento local)
     print("Usando SQLite para desenvolvimento local.")
     import sqlite3
-    DATABASE_PATH = 'database/claunnetworking.db' # <-- CORRIGIDO PARA O NOME ORIGINAL
+    DATABASE_PATH = 'database/claunnetworking.db' # <-- CORRIGIDO PARA O NOME 'claunnetworking'
     
     def get_db_connection():
         return sqlite3.connect(DATABASE_PATH)
@@ -512,7 +512,9 @@ if not DATABASE_URL:
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Inicializa o banco de dados
-init_database()
+# NOTA: A chamada a init_database() foi removida daqui para ser executada
+# APENAS pelo db_init.py, garantindo que o Gunicorn não a chame duas vezes.
+# init_database() 
 
 # Rotas de autenticação
 @app.route('/api/register', methods=['POST'])
@@ -686,4 +688,7 @@ def uploaded_file(filename):
 
 # Inicialização
 if __name__ == '__main__':
+    # A chamada a init_database() foi removida daqui para ser executada
+    # APENAS pelo db_init.py, garantindo que o Gunicorn não a chame duas vezes.
+    # Se você rodar localmente sem o db_init.py, o banco de dados não será inicializado.
     app.run(debug=True)
