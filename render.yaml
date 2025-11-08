@@ -1,5 +1,5 @@
 # render.yaml
-# Configuração para o monorepo ClaunNetworking
+# Configuração final para o monorepo ClaunNetworking
 
 services:
   # ----------------------------------------------------------------
@@ -17,19 +17,18 @@ services:
     buildCommand: pip install -r requirements.txt
     
     # Comando de Pré-Deploy: Ativa o ambiente virtual e executa o script de inicialização do DB
-    # Usa $VIRTUAL_ENV para garantir a ativação correta
     preDeployCommand: source $VIRTUAL_ENV/bin/activate && python3 db_init.py
     
     # Comando de Inicialização: Inicia o servidor Gunicorn no ambiente virtual
     startCommand: python3 -m gunicorn app:app
     
-    # Variáveis de Ambiente (Substitua os valores pelos seus)
+    # Variáveis de Ambiente (Com dados fornecidos pelo usuário)
     envVars:
       - key: DATABASE_URL
-        # SUBSTITUA ESTE VALOR PELA URL DE CONEXÃO DO SEU POSTGRESQL
+        # URL de conexão do PostgreSQL fornecida pelo usuário
         value: "postgresql://claunnetworking_user:SHZXzj6270IughZA7c5mLJYqPxe6bzNe@dpg-d3pcfr49c44c73budb40-a/claunnetworking" 
       - key: SECRET_KEY
-        # SUBSTITUA ESTE VALOR PELA CHAVE SECRETA FORTE E ALEATÓRIA
+        # Chave secreta fornecida pelo usuário
         value: "927d3e4f6a1b8c5d0e2f4a7b9c1d0e3f5a6b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f"
       - key: PYTHON_VERSION
         value: 3.11.0 # Versão recomendada para o Render
