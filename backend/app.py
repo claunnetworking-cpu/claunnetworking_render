@@ -262,7 +262,7 @@ else:
     # Se DATABASE_URL não existe, usa SQLite (para desenvolvimento local)
     print("Usando SQLite para desenvolvimento local.")
     import sqlite3
-    DATABASE_PATH = 'database/claunnetworking.db' # Nome do banco de dados para SQLite
+    DATABASE_PATH = 'database/claunnet-datase.db' # <-- CORRIGIDO
     
     def get_db_connection():
         return sqlite3.connect(DATABASE_PATH)
@@ -500,8 +500,7 @@ else:
 # ----------------------------------------------------------------
 
 app = Flask(__name__)
-# A SECRET_KEY é lida da variável de ambiente, com um fallback para desenvolvimento
-app.secret_key = os.environ.get('SECRET_KEY', 'claunnetworking_secret_key_2024') 
+app.secret_key = os.environ.get('SECRET_KEY', 'claunnetworking_secret_key_2024') # Usar variável de ambiente para SECRET_KEY
 CORS(app, supports_credentials=True)
 
 # Configurações
@@ -511,6 +510,9 @@ UPLOAD_FOLDER = 'uploads'
 if not DATABASE_URL:
     os.makedirs('database', exist_ok=True)
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# Inicializa o banco de dados
+init_database()
 
 # Rotas de autenticação
 @app.route('/api/register', methods=['POST'])
@@ -684,6 +686,4 @@ def uploaded_file(filename):
 
 # Inicialização
 if __name__ == '__main__':
-    # A chamada a init_database() foi removida daqui para ser executada
-    # APENAS pelo db_init.py, garantindo que o Gunicorn não a chame duas vezes.
     app.run(debug=True)
