@@ -6,8 +6,8 @@ import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 try:
-    # Importa a função init_database do app.py
-    from app_final_final_v2 import init_database
+    # Tenta importar do módulo 'app' (que deve ser o app.py)
+    from app import init_database
     
     # A função init_database no app.py já contém a lógica para usar
     # PostgreSQL se DATABASE_URL estiver presente, ou SQLite caso contrário.
@@ -22,8 +22,9 @@ try:
         print("DATABASE_URL não encontrada. Executando inicialização do SQLite para desenvolvimento local.")
         init_database()
 
-except ImportError:
-    print("Erro: Não foi possível importar 'init_database' do 'app.py'. Certifique-se de que 'app.py' está no mesmo diretório.")
+except ImportError as e:
+    print(f"Erro: Não foi possível importar 'init_database' do 'app'. Detalhes: {e}")
+    print("Verifique se o arquivo principal do Flask se chama 'app.py' e se a função 'init_database' está definida nele.")
     sys.exit(1)
 except Exception as e:
     print(f"Erro fatal durante a inicialização do banco de dados: {e}")
