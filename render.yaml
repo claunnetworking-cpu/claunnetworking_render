@@ -3,7 +3,18 @@
 
 services:
   # ----------------------------------------------------------------
-  # 1. Serviço de Backend (Web Service)
+  # 1. Serviço de Banco de Dados PostgreSQL (Render)
+  # ----------------------------------------------------------------
+  - type: pserv
+    name: claunnetworking-db
+    plan: free # Ou 'standard' se necessário
+    databaseName: claunnetworking
+    user: claunnetworking_user
+    # O Render irá gerar a senha e a DATABASE_URL.
+    # A DATABASE_URL será injetada automaticamente no serviço 'claunnetworking-backend'.
+
+  # ----------------------------------------------------------------
+  # 2. Serviço de Backend (Web Service)
   # ----------------------------------------------------------------
   - type: web
     name: claunnetworking-backend
@@ -16,26 +27,18 @@ services:
     # Comando de Build: Instala as dependências do requirements.txt dentro de 'backend'
     buildCommand: pip install -r requirements.txt
     
-    # Comando de Pré-Deploy: Ativa o ambiente virtual e executa o script de inicialização do DB
-    # Nota: O log de erro anterior mostra que o Render executa o preDeployCommand no ambiente virtual.
+    # Comando de Pré-Deploy: Executa o script de inicialização do DB
     preDeployCommand: python3 db_init.py
     
-    # Comando de Inicialização: Inicia o servidor Gunicorn no ambiente virtual
-    # CORREÇÃO: Removido 'python3 -m' e adicionado 'source $VIRTUAL_ENV/bin/activate &&'
-    # O Render já ativa o ambiente virtual para o startCommand, mas para garantir que o Gunicorn
-    # seja encontrado no PATH do ambiente virtual, o comando mais limpo é apenas 'gunicorn app:app'.
-    # Se o Render não estiver ativando o ambiente virtual corretamente, a forma mais robusta é:
-    # startCommand: source $VIRTUAL_ENV/bin/activate && gunicorn app:app
-    # No entanto, a documentação do Render sugere que apenas 'gunicorn app:app' é suficiente
-    # quando o buildCommand é 'pip install -r requirements.txt'.
-    # Vamos usar a forma mais limpa, que é a recomendada pelo Render para Python:
+    # Comando de Inicialização: Inicia o servidor Gunicorn no ambiente virtual (CORRIGIDO)
     startCommand: gunicorn app:app
     
-    # Variáveis de Ambiente (Com dados fornecidos pelo usuário)
+    # Variáveis de Ambiente
     envVars:
-      - key: DATABASE_URL
-        # URL de conexão do PostgreSQL fornecida pelo usuário
-        value: "postgresql://claunnetworking_user:SHZXzj6270IughZA7c5mLJYqPxe6bzNe@dpg-d3pcfr49c44c73budb40-a/claunnetworking" 
+      # A DATABASE_URL será injetada automaticamente pelo serviço 'claunnetworking-db'
+      # Não é necessário definir a DATABASE_URL aqui se o serviço de DB for criado no Render.
+      # Se for um DB externo, mantenha a configuração original.
+      # Vamos manter a SECRET_KEY e a PYTHON_VERSION.
       - key: SECRET_KEY
         # Chave secreta fornecida pelo usuário
         value: "927d3e4f6a1b8c5d0e2f4a7b9c1d0e3f5a6b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f"
@@ -43,7 +46,7 @@ services:
         value: 3.11.0 # Versão recomendada para o Render
         
     # ----------------------------------------------------------------
-    # 2. Serviço de Frontend (Site Estático) - Exemplo
+    # 3. Serviço de Frontend (Site Estático) - Exemplo
     # ----------------------------------------------------------------
   - type: static
     name: claunnetworking-main-site
