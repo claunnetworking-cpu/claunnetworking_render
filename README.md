@@ -2,9 +2,9 @@
 
 ## 🚀 Projeto Pronto para Produção no Render
 
-Este é o projeto ClaunNetworking configurado especificamente para implantação na plataforma Render, com uma estrutura de código **refatorada** para maior modularidade e facilidade de manutenção.
+Este é o projeto ClaunNetworking configurado especificamente para implantação na plataforma Render, com uma estrutura de código **refatorada** para maior modularidade e facilidade de manutenção, e **otimizado** para melhor desempenho de carregamento do frontend.
 
-### 📋 Estrutura do Projeto (Refatorada)
+### 📋 Estrutura do Projeto (Refatorada e Otimizada)
 
 A estrutura foi simplificada, consolidando o frontend e modularizando o backend:
 
@@ -20,7 +20,9 @@ claunnetworking_render/
 ├── frontend/                # Frontend unificado (Site Principal e Admin)
 │   ├── admin/               # Conteúdo do Painel Administrativo (roteado via app.py)
 │   ├── css/
-│   ├── js/
+│   ├── js/                  # Scripts consolidados e minificados para melhor performance
+│   │   ├── main-bundle.min.js # Bundle minificado para o site principal
+│   │   └── admin-bundle.min.js # Bundle minificado para o painel administrativo
 │   └── index.html           # Página principal
 ├── docs/                    # Documentação de implantação
 ├── scripts/                 # Scripts de inicialização
@@ -62,6 +64,13 @@ Para executar o projeto localmente, siga estes passos:
     ```
     O servidor estará disponível em `http://127.0.0.1:5000/`.
 
+### ⚡ Otimização de Desempenho do Frontend
+
+O frontend foi otimizado para reduzir o tempo de carregamento:
+*   **Consolidação de Scripts:** Múltiplos arquivos JavaScript foram combinados em bundles únicos (`main-bundle.min.js` e `admin-bundle.min.js`).
+*   **Minificação:** Os bundles foram minificados para reduzir o tamanho total do código.
+*   **Redução de Requisições:** O número de requisições HTTP necessárias para carregar o JavaScript foi drasticamente reduzido.
+
 ### 🔐 Credenciais de Administrador
 
 - **Email**: `admin@claunnet.com.br`
@@ -91,5 +100,5 @@ Para questões técnicas sobre a implantação, consulte a documentação em `do
 ---
 
 **Desenvolvido por**: Manus AI  
-**Versão**: 2.0.0 - Refatorado  
+**Versão**: 3.0.0 - Otimizado  
 **Data**: Novembro 2025
