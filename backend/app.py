@@ -5,6 +5,7 @@ Sistema completo de backend para a plataforma ClaunNetworking
 """
 
 from flask import Flask, request, jsonify, session, send_from_directory
+from flask_talisman import Talisman
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
@@ -21,8 +22,28 @@ from app.services.database import execute_sql
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
-app.secret_key = os.environ.get('SECRET_KEY', 'sua_chave_secreta_padrao')
+
+# --- Passo 8.4: Remover Chave Secreta Padrão ---
+# A chave secreta deve ser definida via variável de ambiente e ser forte.
+# Se não for definida, o aplicativo falhará, o que é o comportamento de segurança desejado.
+secret_key = os.environ.get('SECRET_KEY')
+if not secret_key or secret_key == 'sua_chave_secreta_padrao':
+    raise ValueError("SECRET_KEY não definida ou usando valor padrão. Defina uma chave secreta forte.")
+app.secret_key = secret_key
 app.permanent_session_lifetime = timedelta(days=7)
+
+# --- Passo 8.1: Hardening de Sessões e Cookies ---
+app.config.update(
+    SESSION_COOKIE_SECURE=True,  # Enviar cookie apenas por HTTPS
+    SESSION_COOKIE_HTTPONLY=True, # Impedir acesso via JavaScript
+    SESSION_COOKIE_SAMESITE='Lax', # Mitigar CSRF
+)
+
+# --- Passo 8.2.1: Implementação de Security Headers com Talisman ---
+# Talisman adiciona HSTS, CSP, X-Frame-Options, etc.
+# O Talisman é configurado para funcionar com CORS e Flask-Session.
+Talisman(app, content_security_policy=None) # CSP é desabilitado para evitar quebras no frontend, mas HSTS e outros headers são aplicados.
+
 
 # ----------------------------------------------------------------
 # Rotas de Autenticação
