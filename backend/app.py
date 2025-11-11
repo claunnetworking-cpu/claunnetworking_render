@@ -95,7 +95,12 @@ def login():
         if not user_data:
             return jsonify({"error": "E-mail ou senha inválidos"}), 401
 
-        user_id, password_hash, user_type, name = user_data[0]
+        # Com a otimização, user_data[0] é um dicionário (ou Row/RealDictRow)
+        user_dict = dict(user_data[0])
+        user_id = user_dict['id']
+        password_hash = user_dict['password_hash']
+        user_type = user_dict['user_type']
+        name = user_dict['name']
 
         if check_password_hash(password_hash, password):
             session.permanent = True
@@ -171,9 +176,9 @@ def get_profile():
         profile_data = execute_sql(sql, (user_id,), fetch=True)
         
         if profile_data:
-            # Simplificação: converte a tupla em um dicionário (idealmente, usar um ORM ou nomear colunas)
-            # Para este exemplo, apenas retornamos os dados brutos
-            return jsonify({"profile": profile_data[0]}), 200
+            # Com a otimização, profile_data[0] já é um dicionário (ou Row/RealDictRow)
+            # Convertemos para dict para garantir a serialização JSON
+            return jsonify({"profile": dict(profile_data[0])}), 200
         else:
             return jsonify({"error": "Perfil não encontrado"}), 404
 
