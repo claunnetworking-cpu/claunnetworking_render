@@ -62,23 +62,3 @@ services:
       - key: SKIP_INSTALL_DEPS
         value: true
 
-  # ----------------------------------------------------------------
-  # 4. Serviço de Frontend (Painel Administrativo) - NOVO
-  #    Configurado para ser acessado via subdomínio (ex: admin.claunnet.com.br)
-  # ----------------------------------------------------------------
-  - type: static
-    name: claunnetworking-admin-site
-    
-    # Define a subpasta 'admin-site' como o diretório raiz para este serviço
-    rootDir: admin-site
-    
-    # O site é estático puro, então não há comando de build
-    buildCommand: ""
-    
-    # O Publish Directory é o próprio Root Directory (o ponto '.')
-    publishPath: .
-    
-    # Variável crucial para sites estáticos sem package.json
-    envVars:
-      - key: SKIP_INSTALL_DEPS
-        value: true

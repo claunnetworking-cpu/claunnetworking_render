@@ -190,21 +190,7 @@ def get_profile():
 def serve_index():
     return send_from_directory('../frontend', 'index.html')
 
-# Serve arquivos estáticos do frontend principal
-@app.route('/<path:path>')
-def serve_static(path):
-    # Garante que o usuário não acesse arquivos sensíveis
-    if '..' in path:
-        return "Acesso negado", 403
-    
-    # Tenta servir o arquivo do diretório 'frontend'
-    try:
-        return send_from_directory('../frontend', path)
-    except Exception:
-        # Se não encontrar, retorna 404
-        return "Não encontrado", 404
-
-# ----------------------------------------------------------------
+# Serve arquivos estáticos do frontend principal e admin\n@app.route('/<path:path>')\ndef serve_static(path):\n    # Garante que o usuário não acesse arquivos sensíveis\n    if '..' in path:\n        return "Acesso negado", 403\n    \n    # 1. Tenta servir o arquivo diretamente do diretório 'frontend'\n    try:\n        return send_from_directory('../frontend', path)\n    except Exception:\n        pass # Continua para a próxima verificação\n\n    # 2. Se a rota for para o admin, tenta servir o index do admin\n    if path.startswith('admin'):\n        # Serve o index do admin para rotas como /admin ou /admin/dashboard\n        return send_from_directory('../frontend/admin', 'admin_dashboard.html')\n\n    # 3. Se não encontrar, retorna 404\n    return "Não encontrado", 404\n\n# Rota específica para o index do admin\n@app.route('/admin')\ndef serve_admin_index():\n    return send_from_directory('../frontend/admin', 'admin_dashboard.html')--------------------------------------------------------
 # Execução
 # ----------------------------------------------------------------
 
