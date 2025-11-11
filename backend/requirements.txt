@@ -6,3 +6,4 @@ gunicorn
 python-dotenv
 # Adicione outras dependências do seu projeto aqui, se houver
 Flask-Talisman
+sentry-sdk

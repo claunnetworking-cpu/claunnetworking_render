@@ -5,6 +5,9 @@ Sistema completo de backend para a plataforma ClaunNetworking
 """
 
 from flask import Flask, request, jsonify, session, send_from_directory
+import logging
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
 from flask_talisman import Talisman
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -19,6 +22,16 @@ from app.services.database import execute_sql
 # ----------------------------------------------------------------
 # Configuração do Aplicativo
 # ----------------------------------------------------------------
+
+# --- Passo 9.1.2: Inicializar Sentry ---
+sentry_sdk.init(
+    dsn=os.environ.get("SENTRY_DSN"),
+    integrations=[FlaskIntegration()],
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    traces_sample_rate=1.0,
+    environment=os.environ.get("FLASK_ENV", "development")
+)
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -96,7 +109,7 @@ def register():
         if "unique constraint" in str(e).lower() or "duplicate key" in str(e).lower():
             return jsonify({"error": "Este e-mail já está registrado."}), 409
         
-        print(f"Erro no registro: {e}")
+        app.logger.error(f"Falha no registro do usuário {email}: {e}", extra={"user_email": email, "error_type": "registration_failure"})
         return jsonify({"error": "Erro interno do servidor durante o registro."}), 500
 
 @app.route('/api/login', methods=['POST'])
@@ -111,9 +124,8 @@ def login():
     sql = "SELECT id, password_hash, user_type, name FROM users WHERE email = %s;"
     
     try:
-        user_data = execute_sql(sql, (email,), fetch=True)
-        
-        if not user_data:
+        user_data         if not user_data:
+            app.logger.warning(f"Tentativa de login falha (e-mail não encontrado): {email}", extra={"user_email": email, "error_type": "user_not_found"})
             return jsonify({"error": "E-mail ou senha inválidos"}), 401
 
         # Com a otimização, user_data[0] é um dicionário (ou Row/RealDictRow)
@@ -129,18 +141,15 @@ def login():
             session['user_type'] = user_type
             session['name'] = name
             
+            app.logger.info(f"Login bem-sucedido para o usuário: {email}", extra={"user_id": user_id, "user_type": user_type, "event_type": "login_success"})
             return jsonify({"message": "Login bem-sucedido", "user_type": user_type, "name": name}), 200
         else:
+            app.logger.warning(f"Tentativa de login falha (senha incorreta) para o e-mail: {email}", extra={"user_email": email, "error_type": "invalid_password"})
             return jsonify({"error": "E-mail ou senha inválidos"}), 401
 
     except Exception as e:
-        print(f"Erro no login: {e}")
-        return jsonify({"error": "Erro interno do servidor durante o login."}), 500
-
-@app.route('/api/logout', methods=['POST'])
-def logout():
-    session.pop('user_id', None)
-    session.pop('user_type', None)
+        app.logger.error(f"Erro interno no login para o e-mail: {email}: {e}", extra={"user_email": email, "error_type": "internal_login_error"})
+        return jsonify({"error": "Erro interno do servidor durante o login."}), 500ssion.pop('user_type', None)
     session.pop('name', None)
     return jsonify({"message": "Logout bem-sucedido"}), 200
 
@@ -225,4 +234,11 @@ if __name__ == '__main__':
     # Em desenvolvimento local, o desenvolvedor deve executar db_init.py manualmente
     print("Atenção: A lógica de inicialização do banco de dados foi movida para db_init.py.")
     print("Execute 'python3 db_init.py' para criar o banco de dados localmente (SQLite).")
-    app.run(debug=True, host='0.0.0.0', port=os.environ.get('PORT', 5000))
+        app.run(debug=True, host='0.0.0.0', port=os.environ.get('PORT', 5000))
+
+# --- Passo 9.3: Tratamento de Erros Genéricos ---
+@app.errorhandler(500)
+def internal_server_error(e):
+    # Loga o erro antes de retornar a resposta genérica
+    app.logger.error(f"Erro 500 capturado: {e}")
+    return jsonify({"error": "Erro interno do servidor. Tente novamente mais tarde."}), 500
