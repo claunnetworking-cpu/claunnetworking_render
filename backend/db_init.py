@@ -1,38 +1,15 @@
 # db_init.py
 import os
 import sys
-import importlib.util
 
-# ----------------------------------------------------------------
-# SOLUÇÃO ROBUSTA DE IMPORTAÇÃO PARA AMBIENTES DE EXECUÇÃO (RENDER)
-# ----------------------------------------------------------------
-
-# 1. Define o caminho para o arquivo app.py
-APP_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'app.py')
-
-# 2. Cria uma especificação de módulo a partir do arquivo
-spec = importlib.util.spec_from_file_location("app", APP_PATH)
-
-if spec is None:
-    print(f"Erro: Não foi possível encontrar o arquivo app.py no caminho: {APP_PATH}")
-    sys.exit(1)
-
-# 3. Carrega o módulo (executa o código de nível superior do app.py)
-app_module = importlib.util.module_from_spec(spec)
-
+# Importa diretamente a função do novo módulo de serviço
+# Assumindo que o db_init.py está no mesmo nível de 'app' e que 'app' está no PYTHONPATH
 try:
-    spec.loader.exec_module(app_module)
-except Exception as e:
-    print(f"Erro fatal ao executar o código de nível superior do app.py durante a importação: {e}")
-    print("Isso pode ser causado por uma DATABASE_URL incorreta ou um erro de sintaxe.")
+    from app.services.database import init_database
+except ImportError as e:
+    print(f"Erro de importação: {e}")
+    print("Certifique-se de que o módulo 'app.services.database' está acessível.")
     sys.exit(1)
-
-# 4. Obtém a função init_database do módulo carregado
-if not hasattr(app_module, 'init_database'):
-    print("Erro: A função 'init_database' não foi encontrada no app.py.")
-    sys.exit(1)
-
-init_database = app_module.init_database
 
 # ----------------------------------------------------------------
 # LÓGICA DE INICIALIZAÇÃO DO BANCO DE DADOS

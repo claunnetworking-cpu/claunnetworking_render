@@ -1,5 +1,6 @@
 # render.yaml
 # Configuração final para o monorepo ClaunNetworking
+# ATUALIZADO: Refatoração do Frontend para usar 'frontend' como site principal e adicionar 'admin-site'
 
 services:
   # ----------------------------------------------------------------
@@ -10,7 +11,6 @@ services:
     plan: free # Ou 'standard' se necessário
     databaseName: claunnetworking
     user: claunnetworking_user
-    # O Render irá gerar a senha e a DATABASE_URL.
     # A DATABASE_URL será injetada automaticamente no serviço 'claunnetworking-backend'.
 
   # ----------------------------------------------------------------
@@ -21,7 +21,6 @@ services:
     env: python
     
     # Define a subpasta 'backend' como o diretório raiz para este serviço
-    # Assumindo que app.py, db_init.py e requirements.txt estão em 'backend/'
     rootDir: backend
     
     # Comando de Build: Instala as dependências do requirements.txt dentro de 'backend'
@@ -30,29 +29,48 @@ services:
     # Comando de Pré-Deploy: Executa o script de inicialização do DB
     preDeployCommand: python3 db_init.py
     
-    # Comando de Inicialização: Inicia o servidor Gunicorn no ambiente virtual (CORRIGIDO)
+    # Comando de Inicialização: Inicia o servidor Gunicorn
     startCommand: gunicorn app:app
     
     # Variáveis de Ambiente
     envVars:
       # A DATABASE_URL será injetada automaticamente pelo serviço 'claunnetworking-db'
-      # Não é necessário definir a DATABASE_URL aqui se o serviço de DB for criado no Render.
-      # Se for um DB externo, mantenha a configuração original.
-      # Vamos manter a SECRET_KEY e a PYTHON_VERSION.
       - key: SECRET_KEY
         # Chave secreta fornecida pelo usuário
         value: "927d3e4f6a1b8c5d0e2f4a7b9c1d0e3f5a6b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f"
       - key: PYTHON_VERSION
         value: 3.11.0 # Versão recomendada para o Render
         
-    # ----------------------------------------------------------------
-    # 3. Serviço de Frontend (Site Estático) - Exemplo
-    # ----------------------------------------------------------------
+  # ----------------------------------------------------------------
+  # 3. Serviço de Frontend (Site Estático Principal) - ATUALIZADO
+  #    Usa o diretório 'frontend' após a consolidação do código.
+  # ----------------------------------------------------------------
   - type: static
     name: claunnetworking-main-site
     
-    # Define a subpasta 'main-site' como o diretório raiz para este serviço
-    rootDir: main-site
+    # Define a subpasta 'frontend' como o diretório raiz para este serviço
+    rootDir: frontend # ATUALIZADO: Usando 'frontend'
+    
+    # O site é estático puro, então não há comando de build
+    buildCommand: ""
+    
+    # O Publish Directory é o próprio Root Directory (o ponto '.')
+    publishPath: .
+    
+    # Variável crucial para sites estáticos sem package.json
+    envVars:
+      - key: SKIP_INSTALL_DEPS
+        value: true
+
+  # ----------------------------------------------------------------
+  # 4. Serviço de Frontend (Painel Administrativo) - NOVO
+  #    Configurado para ser acessado via subdomínio (ex: admin.claunnet.com.br)
+  # ----------------------------------------------------------------
+  - type: static
+    name: claunnetworking-admin-site
+    
+    # Define a subpasta 'admin-site' como o diretório raiz para este serviço
+    rootDir: admin-site
     
     # O site é estático puro, então não há comando de build
     buildCommand: ""
