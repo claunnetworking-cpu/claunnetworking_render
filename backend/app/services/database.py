@@ -89,7 +89,13 @@ def execute_sql(sql, params=None, fetch=False, commit=False):
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
         
-        cursor.execute(sql, params or ())
+        # SQLite usa '?' como placeholder, PostgreSQL usa '%s'.
+        # Se for SQLite, converte '%s' para '?' no SQL antes de executar.
+        if not DATABASE_URL:
+            sql_sqlite = sql.replace('%s', '?')
+            cursor.execute(sql_sqlite, params or ())
+        else:
+            cursor.execute(sql, params or ())
         
         if commit:
             conn.commit()
