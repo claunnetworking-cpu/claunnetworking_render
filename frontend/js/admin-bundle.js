@@ -368,7 +368,7 @@ class AdminFunctions {
             {
                 id: 'audit_001',
                 datetime: '2025-10-03 14:30:15',
-                user: 'admin@claunnetworking.com',
+                user: 'admin@claunnetworkingworking.com',
                 action: 'Aprovação',
                 resource: 'Vaga',
                 resourceId: 'vaga_123',
@@ -377,7 +377,7 @@ class AdminFunctions {
             {
                 id: 'audit_002',
                 datetime: '2025-10-03 13:45:22',
-                user: 'admin@claunnetworking.com',
+                user: 'admin@claunnetworkingworking.com',
                 action: 'Criação',
                 resource: 'Curso',
                 resourceId: 'curso_456',
@@ -386,7 +386,7 @@ class AdminFunctions {
             {
                 id: 'audit_003',
                 datetime: '2025-10-03 12:15:08',
-                user: 'admin@claunnetworking.com',
+                user: 'admin@claunnetworkingworking.com',
                 action: 'Exclusão',
                 resource: 'Usuário',
                 resourceId: 'user_789',
@@ -3852,7 +3852,7 @@ class CoursePricingLogic {
         }
 
         // Fallback para localStorage (compatibilidade)
-        const userType = localStorage.getItem('claunnetworking_user_type');
+        const userType = localStorage.getItem('claunnetworkingworking_user_type');
         return userType || 'guest';
     }
 
@@ -3966,7 +3966,7 @@ class CoursePricingLogic {
         }
 
         // Fallback para localStorage
-        return localStorage.getItem('claunnetworking_active_plan') === 'true';
+        return localStorage.getItem('claunnetworkingworking_active_plan') === 'true';
     }
 
     // Método para empresas sem plano ativo
@@ -6392,12 +6392,12 @@ class JobEngagement {
 
     loadEngagementData() {
         // Carregar dados de engajamento do localStorage
-        const saved = localStorage.getItem('claunnetworking_job_engagement');
+        const saved = localStorage.getItem('claunnetworkingworking_job_engagement');
         return saved ? JSON.parse(saved) : {};
     }
 
     saveEngagementData() {
-        localStorage.setItem('claunnetworking_job_engagement', JSON.stringify(this.engagementData));
+        localStorage.setItem('claunnetworkingworking_job_engagement', JSON.stringify(this.engagementData));
     }
 
     addEngagementListeners() {
@@ -9207,7 +9207,7 @@ function acceptResponsibility() {
     const dontShowAgain = document.getElementById('dontShowAgain').checked;
     
     if (dontShowAgain) {
-        localStorage.setItem('claunnetworking_responsibility_accepted', 'true');
+        localStorage.setItem('claunnetworkingworking_responsibility_accepted', 'true');
     }
     
     closeResponsibilityAlert();
@@ -9227,7 +9227,7 @@ function closeResponsibilityAlert() {
 }
 
 function checkResponsibilityAcceptance() {
-    const accepted = localStorage.getItem('claunnetworking_responsibility_accepted');
+    const accepted = localStorage.getItem('claunnetworkingworking_responsibility_accepted');
     return accepted === 'true';
 }
 
@@ -9839,7 +9839,7 @@ window.salaryTransparencySystem = new SalaryTransparencySystem();
 
 class ServicesManager {
     constructor() {
-        this.storageKey = 'claunnetworking_services';
+        this.storageKey = 'claunnetworkingworking_services';
         this.listeners = [];
         this.initializeDefaultServices();
         this.setupStorageListener();

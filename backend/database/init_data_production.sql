@@ -26,5 +26,5 @@ INSERT INTO plans (name, description, price, features, plan_type, is_active) VAL
 
 -- Inserir usuário administrador
 INSERT INTO users (email, password_hash, user_type, name, phone, is_active, is_verified) VALUES
-('admin@claunnet.com.br', 'pbkdf2:sha256:260000$your_secure_salt$your_secure_hash', 'admin', 'Administrador ClaunNetworking', '11999999999', 1, 1);
+('admin@claunnetworking.com.br', 'pbkdf2:sha256:260000$your_secure_salt$your_secure_hash', 'admin', 'Administrador ClaunNetworking', '11999999999', 1, 1);
 

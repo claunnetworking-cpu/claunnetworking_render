@@ -124,7 +124,8 @@ def login():
     sql = "SELECT id, password_hash, user_type, name FROM users WHERE email = %s;"
     
     try:
-        user_data         if not user_data:
+        user_data = execute_sql(sql, (email,), fetch=True)
+        if not user_data:
             app.logger.warning(f"Tentativa de login falha (e-mail não encontrado): {email}", extra={"user_email": email, "error_type": "user_not_found"})
             return jsonify({"error": "E-mail ou senha inválidos"}), 401
 
@@ -149,7 +150,12 @@ def login():
 
     except Exception as e:
         app.logger.error(f"Erro interno no login para o e-mail: {email}: {e}", extra={"user_email": email, "error_type": "internal_login_error"})
-        return jsonify({"error": "Erro interno do servidor durante o login."}), 500ssion.pop('user_type', None)
+        return jsonify({"error": "Erro interno do servidor durante o login."}), 500
+
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    session.pop('user_id', None)
+    session.pop('user_type', None)
     session.pop('name', None)
     return jsonify({"message": "Logout bem-sucedido"}), 200
 
@@ -225,7 +231,31 @@ def get_profile():
 def serve_index():
     return send_from_directory('../frontend', 'index.html')
 
-# Serve arquivos estáticos do frontend principal e admin\n@app.route('/<path:path>')\ndef serve_static(path):\n    # Garante que o usuário não acesse arquivos sensíveis\n    if '..' in path:\n        return "Acesso negado", 403\n    \n    # 1. Tenta servir o arquivo diretamente do diretório 'frontend'\n    try:\n        return send_from_directory('../frontend', path)\n    except Exception:\n        pass # Continua para a próxima verificação\n\n    # 2. Se a rota for para o admin, tenta servir o index do admin\n    if path.startswith('admin'):\n        # Serve o index do admin para rotas como /admin ou /admin/dashboard\n        return send_from_directory('../frontend/admin', 'admin_dashboard.html')\n\n    # 3. Se não encontrar, retorna 404\n    return "Não encontrado", 404\n\n# Rota específica para o index do admin\n@app.route('/admin')\ndef serve_admin_index():\n    return send_from_directory('../frontend/admin', 'admin_dashboard.html')--------------------------------------------------------
+# Serve arquivos estáticos do frontend principal e admin
+@app.route('/<path:path>')
+def serve_static(path):
+    # Garante que o usuário não acesse arquivos sensíveis
+    if '..' in path:
+        return "Acesso negado", 403
+    
+    # 1. Tenta servir o arquivo diretamente do diretório 'frontend'
+    try:
+        return send_from_directory('../frontend', path)
+    except Exception:
+        pass # Continua para a próxima verificação
+
+    # 2. Se a rota for para o admin, tenta servir o index do admin
+    if path.startswith('admin/'):
+        # Serve o index do admin para rotas como /admin/dashboard
+        return send_from_directory('../frontend', 'admin.html')
+
+    # 3. Se não encontrar, retorna 404
+    return "Não encontrado", 404
+
+# Rota específica para o index do admin
+@app.route('/admin')
+def serve_admin_index():
+    return send_from_directory('../frontend', 'admin.html')
 # Execução
 # ----------------------------------------------------------------
 
@@ -234,7 +264,7 @@ if __name__ == '__main__':
     # Em desenvolvimento local, o desenvolvedor deve executar db_init.py manualmente
     print("Atenção: A lógica de inicialização do banco de dados foi movida para db_init.py.")
     print("Execute 'python3 db_init.py' para criar o banco de dados localmente (SQLite).")
-        app.run(debug=True, host='0.0.0.0', port=os.environ.get('PORT', 5000))
+    app.run(debug=True, host='0.0.0.0', port=os.environ.get('PORT', 5000))
 
 # --- Passo 9.3: Tratamento de Erros Genéricos ---
 @app.errorhandler(500)

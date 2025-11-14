@@ -565,8 +565,8 @@
         // Controlar exibição do campo de link baseado no tipo de usuário
         function checkUserTypeAndToggleLinkField() {
             // Verificar se o usuário é uma empresa com plano ativo
-            const userType = localStorage.getItem('claunnetworking_user_type') || 'public';
-            const hasActivePlan = localStorage.getItem('claunnetworking_active_plan') === 'true';
+            const userType = localStorage.getItem('claunnetworkingworking_user_type') || 'public';
+            const hasActivePlan = localStorage.getItem('claunnetworkingworking_active_plan') === 'true';
             
             const linkField = document.getElementById('linkField');
             const linkInput = document.querySelector('input[name="applicationLink"]');

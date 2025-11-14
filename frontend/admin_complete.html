@@ -1372,7 +1372,7 @@
                         </div>
                         <div>
                             <h2 style="margin: 0 0 0.5rem 0;">Administrador do Sistema</h2>
-                            <p style="margin: 0; opacity: 0.9;">admin@claunnetworking.com</p>
+                            <p style="margin: 0; opacity: 0.9;">admin@claunnetworkingworking.com</p>
                             <p style="margin: 0.5rem 0 0 0; opacity: 0.8;">Último acesso: 28/09/2025 às 14:30</p>
                         </div>
                     </div>
@@ -1391,7 +1391,7 @@
                                 </div>
                                 <div>
                                     <label style="display: block; margin-bottom: 0.5rem; color: #374151; font-weight: 600;">Email</label>
-                                    <input type="email" value="admin@claunnetworking.com" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                                    <input type="email" value="admin@claunnetworkingworking.com" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
                                 </div>
                             </div>
                             
@@ -4033,7 +4033,7 @@ Motivo: ${reason || 'Não informado'}`);
         }
 
         function loadContentData() {
-            const saved = localStorage.getItem('claunnetworking_content_data');
+            const saved = localStorage.getItem('claunnetworkingworking_content_data');
             if (saved) {
                 return JSON.parse(saved);
             }
@@ -4078,19 +4078,19 @@ Motivo: ${reason || 'Não informado'}`);
         function updateBenefitIcon(index, value) {
             const contentData = loadContentData();
             contentData.benefits[index].icon = value;
-            localStorage.setItem('claunnetworking_content_data', JSON.stringify(contentData));
+            localStorage.setItem('claunnetworkingworking_content_data', JSON.stringify(contentData));
         }
 
         function updateBenefitTitle(index, value) {
             const contentData = loadContentData();
             contentData.benefits[index].title = value;
-            localStorage.setItem('claunnetworking_content_data', JSON.stringify(contentData));
+            localStorage.setItem('claunnetworkingworking_content_data', JSON.stringify(contentData));
         }
 
         function updateBenefitDescription(index, value) {
             const contentData = loadContentData();
             contentData.benefits[index].description = value;
-            localStorage.setItem('claunnetworking_content_data', JSON.stringify(contentData));
+            localStorage.setItem('claunnetworkingworking_content_data', JSON.stringify(contentData));
         }
 
         function saveContentChanges() {
@@ -4102,7 +4102,7 @@ Motivo: ${reason || 'Não informado'}`);
 
         function resetContentToDefault() {
             if (confirm('Tem certeza que deseja restaurar o conteúdo padrão? Todas as alterações serão perdidas.')) {
-                localStorage.removeItem('claunnetworking_content_data');
+                localStorage.removeItem('claunnetworkingworking_content_data');
                 showContentManagement();
                 alert('🔄 Conteúdo restaurado para o padrão!');
             }
