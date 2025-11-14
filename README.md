@@ -9,7 +9,7 @@ Este é o projeto ClaunNetworking configurado especificamente para implantação
 A estrutura foi simplificada, consolidando o frontend e modularizando o backend:
 
 ```
-claunnetworkingworkingworking_render/
+claunnetworking_render/
 ├── backend/
 │   ├── app/
 │   │   └── services/

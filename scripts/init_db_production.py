@@ -13,7 +13,7 @@ from werkzeug.security import generate_password_hash
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Configurações
-DATABASE_PATH = os.path.join(script_dir, '../backend/database/claunnetworkingworkingworking_production.db')
+DATABASE_PATH = os.path.join(script_dir, '../backend/database/claunnetworking_production.db')
 SCHEMA_PATH = os.path.join(script_dir, '../backend/app/models/database.py')
 DATA_PATH = os.path.join(script_dir, '../backend/database/init_data_production.sql')
 

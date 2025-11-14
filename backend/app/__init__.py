@@ -11,11 +11,11 @@ from .models import database
 
 def create_app():
     app = Flask(__name__, static_folder='../../frontend', static_url_path='/')
-    app.secret_key = 'claunnetworkingworkingworking_secret_key_2024'
+    app.secret_key = 'claunnetworking_secret_key_2024'
     CORS(app, supports_credentials=True)
 
     # Configurar o caminho do banco de dados
-    app.config['DATABASE_PATH'] = os.path.join(app.instance_path, 'database', 'claunnetworkingworkingworking.db')
+    app.config['DATABASE_PATH'] = os.path.join(app.instance_path, 'database', 'claunnetworking.db')
     app.config['UPLOAD_FOLDER'] = os.path.join(app.instance_path, 'uploads')
 
     # Criar diretórios necessários

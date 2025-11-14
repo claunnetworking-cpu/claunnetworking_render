@@ -7,17 +7,17 @@ services:
   # 1. Serviço de Banco de Dados PostgreSQL (Render)
   # ----------------------------------------------------------------
   - type: pserv
-    name: claunnetworkingworkingworking-db
+    name: claunnetworking-db
     plan: free # Ou 'standard' se necessário
-    databaseName: claunnetworkingworkingworking
-    user: claunnetworkingworkingworking_user
-    # A DATABASE_URL será injetada automaticamente no serviço 'claunnetworkingworkingworking-backend'.
+    databaseName: claunnetworking
+    user: claunnetworking_user
+    # A DATABASE_URL será injetada automaticamente no serviço 'claunnetworking-backend'.
 
   # ----------------------------------------------------------------
   # 2. Serviço de Backend (Web Service)
   # ----------------------------------------------------------------
   - type: web
-    name: claunnetworkingworkingworking-backend
+    name: claunnetworking-backend
     env: python
     
     # Define a subpasta 'backend' como o diretório raiz para este serviço
@@ -34,7 +34,7 @@ services:
     
     # Variáveis de Ambiente
     envVars:
-      # A DATABASE_URL será injetada automaticamente pelo serviço 'claunnetworkingworkingworking-db'
+      # A DATABASE_URL será injetada automaticamente pelo serviço 'claunnetworking-db'
       - key: SECRET_KEY
         # Chave secreta fornecida pelo usuário
         value: "927d3e4f6a1b8c5d0e2f4a7b9c1d0e3f5a6b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f"
@@ -46,7 +46,7 @@ services:
   #    Usa o diretório 'frontend' após a consolidação do código.
   # ----------------------------------------------------------------
   - type: static
-    name: claunnetworkingworkingworking-main-site
+    name: claunnetworking-main-site
     
     # Define a subpasta 'frontend' como o diretório raiz para este serviço
     rootDir: frontend # ATUALIZADO: Usando 'frontend'
