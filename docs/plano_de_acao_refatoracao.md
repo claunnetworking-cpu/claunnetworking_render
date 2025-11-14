@@ -31,10 +31,10 @@ Esta fase garante que a nova estrutura de diretórios seja corretamente refletid
 
 | Passo | Ação | Detalhes |
 | :--- | :--- | :--- |
-| **3.1** | **Atualizar Serviço Principal** | Editar o arquivo `render.yaml` e alterar o `rootDir` do serviço `claunnetworkingworking-main-site` para apontar para o diretório principal consolidado (ex: `rootDir: frontend`). |
+| **3.1** | **Atualizar Serviço Principal** | Editar o arquivo `render.yaml` e alterar o `rootDir` do serviço `claunnetworking-main-site` para apontar para o diretório principal consolidado (ex: `rootDir: frontend`). |
 | **3.2** | **Adicionar Serviço do Admin** | Adicionar um novo serviço estático (`type: static`) no `render.yaml` para o painel administrativo. |
 | **3.3** | **Configurar Admin Deploy** | Definir o `rootDir` do novo serviço como `admin-site` e configurar um subdomínio ou caminho para ele (ex: `admin.claunnetworking.com.br`). |
-| **3.4** | **Revisar Backend `rootDir`** | Confirmar que o `rootDir` do serviço `claunnetworkingworking-backend` ainda está corretamente definido como `backend`. |
+| **3.4** | **Revisar Backend `rootDir`** | Confirmar que o `rootDir` do serviço `claunnetworking-backend` ainda está corretamente definido como `backend`. |
 
 ## Resumo das Alterações no `render.yaml` (Exemplo)
 
@@ -45,7 +45,7 @@ Esta fase garante que a nova estrutura de diretórios seja corretamente refletid
 # 3. Serviço de Frontend (Site Estático Principal) - ATUALIZADO
 # ----------------------------------------------------------------
 - type: static
-  name: claunnetworkingworking-main-site
+  name: claunnetworking-main-site
   rootDir: frontend # Alterado de 'main-site' para 'frontend'
   buildCommand: ""
   publishPath: .
@@ -57,7 +57,7 @@ Esta fase garante que a nova estrutura de diretórios seja corretamente refletid
 # 4. Serviço de Frontend (Painel Administrativo) - NOVO
 # ----------------------------------------------------------------
 - type: static
-  name: claunnetworkingworking-admin-site
+  name: claunnetworking-admin-site
   rootDir: admin-site
   buildCommand: ""
   publishPath: .

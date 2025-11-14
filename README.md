@@ -31,8 +31,8 @@ claunnetworking_render/
 
 ### 🌐 Domínios Configurados
 
-- **Site Principal & Painel Administrativo**: `https://claunnetworkingworking.com.br` (O backend em `app.py` roteia para o site principal (`/`) e para o painel administrativo (`/admin/`)).
-- **API Backend**: `https://claunnetworkingworking-api.onrender.com` (O Web Service do Render).
+- **Site Principal & Painel Administrativo**: `https://claunnetworking.com.br` (O backend em `app.py` roteia para o site principal (`/`) e para o painel administrativo (`/admin/`)).
+- **API Backend**: `https://claunnetworking-api.onrender.com` (O Web Service do Render).
 
 ### 🔧 Implantação no Render (Simplificada)
 
@@ -90,7 +90,7 @@ Para garantir a estabilidade e a segurança em tempo real, o backend foi integra
 
 ### 🔐 Credenciais de Administrador
 
-- **Email**: `admin@claunnetworkingworking.com.br`
+- **Email**: admin@claunnetworking.com.br
 - **Senha**: Definida pela variável de ambiente `ADMIN_PASSWORD`
 
 ### 📚 Funcionalidades

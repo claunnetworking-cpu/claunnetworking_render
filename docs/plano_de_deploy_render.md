@@ -1,12 +1,12 @@
 ## Plano de Ação Detalhado para Implantação em Produção (Render)
 
-Este plano de ação detalha os passos necessários para implantar o projeto `claunnetworkingworking_render` na plataforma Render, aproveitando a configuração do `render.yaml` e as melhorias de segurança e otimização implementadas.
+Este plano de ação detalha os passos necessários para implantar o projeto `claunnetworking_render` na plataforma Render, aproveitando a configuração do `render.yaml` e as melhorias de segurança e otimização implementadas.
 
 ### Fase 1: Configuração Inicial no Render
 
 | Passo | Ação | Detalhes |
 | :--- | :--- | :--- |
-| **1.1** | **Conectar Repositório** | Conecte sua conta Render ao repositório GitHub `claunnetworkingworking_render`. |
+| **1.1** | **Conectar Repositório** | Conecte sua conta Render ao repositório GitHub `claunnetworking_render`. |
 | **1.2** | **Criar Novo Blueprint** | No painel do Render, selecione a opção para criar um novo serviço a partir de um **Blueprint** e aponte para o arquivo `render.yaml` na raiz do repositório. |
 | **1.3** | **Aprovar Deploy** | O Render irá analisar o `render.yaml` e propor a criação de dois serviços: o **Banco de Dados PostgreSQL** e o **Web Service (Backend)**. Confirme a criação. |
 
@@ -44,5 +44,5 @@ O deploy utiliza uma arquitetura simplificada de **Monolito Híbrido** no Render
 
 | Serviço | Tipo | Diretório | Função |
 | :--- | :--- | :--- | :--- |
-| `claunnetworkingworking-db` | PostgreSQL | N/A | Armazenamento de dados. |
-| `claunnetworkingworking-backend` | Web Service | `backend` | API Flask, Servidor de Arquivos Estáticos (Frontend), Roteamento do Admin. |
+| `claunnetworking-db` | PostgreSQL | N/A | Armazenamento de dados. |
+| `claunnetworking-backend` | Web Service | `backend` | API Flask, Servidor de Arquivos Estáticos (Frontend), Roteamento do Admin. |
