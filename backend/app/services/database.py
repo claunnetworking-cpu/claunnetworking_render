@@ -10,7 +10,7 @@ from psycopg2.pool import SimpleConnectionPool
 # ----------------------------------------------------------------
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
-DATABASE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'database', 'claunnetworkingworking-database.db')
+DATABASE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'database', 'claunnetworking.db')
 
 # Variável global para o pool de conexões
 connection_pool = None
