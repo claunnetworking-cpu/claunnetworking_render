@@ -58,7 +58,7 @@ def init_database_production():
     conn.close()
 
     print("Banco de dados de produção inicializado com sucesso!")
-    print(f"Credenciais do administrador: admin@claunnetworkingworking.com.br / {admin_password}")
+    print(f"Credenciais do administrador: admin@claunnetworking.com.br / {admin_password}")
 
 if __name__ == '__main__':
     init_database_production()
