@@ -11,33 +11,33 @@ Esta fase pressupõe que a Fase 4 (Refatoração do Backend) e a limpeza inicial
 
 | Ação | Descrição | Arquivos/Diretórios Envolvidos |
 | :--- | :--- | :--- |
-| **5.1.1** | Criar um subdiretório dedicado para o painel administrativo dentro do `frontend`. | `claunnetworking_render/frontend/admin/` |
-| **5.1.2** | Mover todos os arquivos HTML específicos do `admin-site` para o novo subdiretório. | `claunnetworking_render/admin-site/*.html` -> `claunnetworking_render/frontend/admin/` |
-| **5.1.3** | Mover os arquivos JavaScript específicos do `admin-site` para o subdiretório de JS do admin. | `claunnetworking_render/admin-site/js/*.js` -> `claunnetworking_render/frontend/js/admin/` |
-| **5.1.4** | Excluir o diretório `admin-site` original, que agora estará vazio. | `claunnetworking_render/admin-site/` |
+| **5.1.1** | Criar um subdiretório dedicado para o painel administrativo dentro do `frontend`. | `claunnetworkingworking_render/frontend/admin/` |
+| **5.1.2** | Mover todos os arquivos HTML específicos do `admin-site` para o novo subdiretório. | `claunnetworkingworking_render/admin-site/*.html` -> `claunnetworkingworking_render/frontend/admin/` |
+| **5.1.3** | Mover os arquivos JavaScript específicos do `admin-site` para o subdiretório de JS do admin. | `claunnetworkingworking_render/admin-site/js/*.js` -> `claunnetworkingworking_render/frontend/js/admin/` |
+| **5.1.4** | Excluir o diretório `admin-site` original, que agora estará vazio. | `claunnetworkingworking_render/admin-site/` |
 
 ### Passo 5.2: Ajuste de Referências no Frontend
 
 | Ação | Descrição | Arquivos/Diretórios Envolvidos |
 | :--- | :--- | :--- |
-| **5.2.1** | Atualizar todas as referências de caminhos (CSS, JS, imagens) dentro dos arquivos HTML movidos para refletir a nova estrutura (`/admin/`). | `claunnetworking_render/frontend/admin/*.html` |
-| **5.2.2** | Renomear o arquivo `admin-config.js` para um nome mais genérico, como `config.js`, e movê-lo para o diretório `frontend/js/admin/`. | `claunnetworking_render/frontend/js/admin/config.js` |
-| **5.2.3** | Atualizar as referências ao `admin-config.js` nos arquivos HTML do admin. | `claunnetworking_render/frontend/admin/*.html` |
+| **5.2.1** | Atualizar todas as referências de caminhos (CSS, JS, imagens) dentro dos arquivos HTML movidos para refletir a nova estrutura (`/admin/`). | `claunnetworkingworking_render/frontend/admin/*.html` |
+| **5.2.2** | Renomear o arquivo `admin-config.js` para um nome mais genérico, como `config.js`, e movê-lo para o diretório `frontend/js/admin/`. | `claunnetworkingworking_render/frontend/js/admin/config.js` |
+| **5.2.3** | Atualizar as referências ao `admin-config.js` nos arquivos HTML do admin. | `claunnetworkingworking_render/frontend/admin/*.html` |
 
 ### Passo 5.3: Ajuste de Roteamento no Backend
 
 | Ação | Descrição | Arquivos/Diretórios Envolvidos |
 | :--- | :--- | :--- |
-| **5.3.1** | Modificar a função `serve_static` em `backend/app.py` para verificar se o caminho solicitado corresponde a uma rota administrativa. | `claunnetworking_render/backend/app.py` |
-| **5.3.2** | Se a rota for administrativa (ex: `/admin/dashboard`), o backend deve servir o arquivo correspondente do novo subdiretório `frontend/admin/`. | `claunnetworking_render/backend/app.py` |
-| **5.3.3** | Garantir que a rota `/admin` sirva o arquivo principal do painel (ex: `frontend/admin/admin_dashboard.html`). | `claunnetworking_render/backend/app.py` |
+| **5.3.1** | Modificar a função `serve_static` em `backend/app.py` para verificar se o caminho solicitado corresponde a uma rota administrativa. | `claunnetworkingworking_render/backend/app.py` |
+| **5.3.2** | Se a rota for administrativa (ex: `/admin/dashboard`), o backend deve servir o arquivo correspondente do novo subdiretório `frontend/admin/`. | `claunnetworkingworking_render/backend/app.py` |
+| **5.3.3** | Garantir que a rota `/admin` sirva o arquivo principal do painel (ex: `frontend/admin/admin_dashboard.html`). | `claunnetworkingworking_render/backend/app.py` |
 
 ### Passo 5.4: Atualização Final do Deploy (Render)
 
 | Ação | Descrição | Arquivos/Diretórios Envolvidos |
 | :--- | :--- | :--- |
-| **5.4.1** | Remover o serviço estático `claunnetworking-admin-site` do arquivo `render.yaml`. | `claunnetworking_render/render.yaml` |
-| **5.4.2** | O único serviço de frontend restante será o `claunnetworking-main-site`, que agora gerencia todas as rotas estáticas (principal e administrativa) através do roteamento do backend. | `claunnetworking_render/render.yaml` |
+| **5.4.1** | Remover o serviço estático `claunnetworkingworking-admin-site` do arquivo `render.yaml`. | `claunnetworkingworking_render/render.yaml` |
+| **5.4.2** | O único serviço de frontend restante será o `claunnetworkingworking-main-site`, que agora gerencia todas as rotas estáticas (principal e administrativa) através do roteamento do backend. | `claunnetworkingworking_render/render.yaml` |
 
 ## Próximos Passos (Fase 6)
 

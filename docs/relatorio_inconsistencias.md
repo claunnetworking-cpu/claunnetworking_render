@@ -1,11 +1,11 @@
-# Relatório de Análise de Inconsistências - Repositório `claunnetworking_render`
+# Relatório de Análise de Inconsistências - Repositório `claunnetworkingworking_render`
 
 **Data da Análise:** 10 de Novembro de 2025
 **Agente Analista:** Manus AI
 
 ## 1. Resumo Executivo
 
-A análise do repositório `claunnetworking_render` revelou um projeto com uma estrutura de monorepo que visa o deploy na plataforma Render. Embora a configuração de deploy (`render.yaml`) e a lógica de inicialização do backend (Python/Flask) estejam bem definidas, foram identificadas **inconsistências significativas** na organização do frontend, principalmente relacionadas à **duplicação de código** e à **estrutura de diretórios redundante**.
+A análise do repositório `claunnetworkingworking_render` revelou um projeto com uma estrutura de monorepo que visa o deploy na plataforma Render. Embora a configuração de deploy (`render.yaml`) e a lógica de inicialização do backend (Python/Flask) estejam bem definidas, foram identificadas **inconsistências significativas** na organização do frontend, principalmente relacionadas à **duplicação de código** e à **estrutura de diretórios redundante**.
 
 As inconsistências encontradas podem impactar a manutenção, o tamanho do repositório e a eficiência do processo de deploy.
 
@@ -29,7 +29,7 @@ O arquivo `render.yaml` está bem estruturado, mas apresenta uma inconsistência
 
 | Linha | Configuração | Inconsistência | Impacto |
 | :--- | :--- | :--- | :--- |
-| 51-67 | Definição do serviço `claunnetworking-main-site` como `type: static` com `rootDir: main-site`. | **Redundância de Deploy:** O projeto possui um diretório `frontend` completo e um diretório `main-site` duplicado. Além disso, o diretório `admin-site` não está configurado para deploy. | O painel administrativo (`admin-site`) não será acessível no deploy atual, a menos que seja servido pelo backend ou configurado como um segundo serviço estático. |
+| 51-67 | Definição do serviço `claunnetworkingworking-main-site` como `type: static` com `rootDir: main-site`. | **Redundância de Deploy:** O projeto possui um diretório `frontend` completo e um diretório `main-site` duplicado. Além disso, o diretório `admin-site` não está configurado para deploy. | O painel administrativo (`admin-site`) não será acessível no deploy atual, a menos que seja servido pelo backend ou configurado como um segundo serviço estático. |
 
 **Recomendação:**
 1.  Decidir qual diretório de frontend será o principal (ex: `frontend`).

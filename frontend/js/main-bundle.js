@@ -254,9 +254,9 @@ class AuthSystem {
             },
             
             // Admin de teste
-            'admin@claunnetworkingworking.com': {
+            'admin@claunnetworkingworkingworking.com': {
                 id: 'admin_001',
-                email: 'admin@claunnetworkingworking.com',
+                email: 'admin@claunnetworkingworkingworking.com',
                 password: 'admin123',
                 type: this.userTypes.ADMIN,
                 name: 'Administrador Sistema',
@@ -313,13 +313,13 @@ class AuthSystem {
     
     init() {
         // Verificar se há usuário logado no localStorage
-        const savedUser = localStorage.getItem('claunnetworkingworking_user');
+        const savedUser = localStorage.getItem('claunnetworkingworkingworking_user');
         if (savedUser) {
             try {
                 this.currentUser = JSON.parse(savedUser);
             } catch (e) {
                 console.warn('Erro ao carregar usuário salvo:', e);
-                localStorage.removeItem('claunnetworkingworking_user');
+                localStorage.removeItem('claunnetworkingworkingworking_user');
             }
         }
     }
@@ -347,7 +347,7 @@ class AuthSystem {
         delete this.currentUser.password; // Não manter senha na sessão
         
         // Salvar no localStorage
-        localStorage.setItem('claunnetworkingworking_user', JSON.stringify(this.currentUser));
+        localStorage.setItem('claunnetworkingworkingworking_user', JSON.stringify(this.currentUser));
         
         return {
             success: true,
@@ -368,7 +368,7 @@ class AuthSystem {
         };
         
         this.currentUser = user;
-        localStorage.setItem('claunnetworkingworking_user', JSON.stringify(user));
+        localStorage.setItem('claunnetworkingworkingworking_user', JSON.stringify(user));
         
         return {
             success: true,
@@ -380,7 +380,7 @@ class AuthSystem {
     // Logout
     logout() {
         this.currentUser = null;
-        localStorage.removeItem('claunnetworkingworking_user');
+        localStorage.removeItem('claunnetworkingworkingworking_user');
         window.location.href = 'index.html';
     }
     
@@ -499,7 +499,7 @@ class AuthSystem {
                 { email: 'faculdade@exemplo.com', password: '123456', name: 'Faculdade de Negócios e Gestão' }
             ],
             admin: [
-                { email: 'admin@claunnetworkingworking.com', password: 'admin123', name: 'Administrador Sistema' }
+                { email: 'admin@claunnetworkingworkingworking.com', password: 'admin123', name: 'Administrador Sistema' }
             ]
         };
     }

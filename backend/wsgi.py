@@ -21,7 +21,7 @@ if os.environ.get('FLASK_ENV') == 'production':
 # Health check endpoint para o Render
 @app.route('/api/health')
 def health_check():
-    return {'status': 'healthy', 'service': 'claunnetworkingworking-api'}, 200
+    return {'status': 'healthy', 'service': 'claunnetworkingworkingworking-api'}, 200
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))

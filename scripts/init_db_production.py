@@ -13,7 +13,7 @@ from werkzeug.security import generate_password_hash
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Configurações
-DATABASE_PATH = os.path.join(script_dir, '../backend/database/claunnetworkingworking_production.db')
+DATABASE_PATH = os.path.join(script_dir, '../backend/database/claunnetworkingworkingworking_production.db')
 SCHEMA_PATH = os.path.join(script_dir, '../backend/app/models/database.py')
 DATA_PATH = os.path.join(script_dir, '../backend/database/init_data_production.sql')
 
@@ -58,7 +58,7 @@ def init_database_production():
     conn.close()
 
     print("Banco de dados de produção inicializado com sucesso!")
-    print(f"Credenciais do administrador: admin@claunnetworking.com.br / {admin_password}")
+    print(f"Credenciais do administrador: admin@claunnetworkingworking.com.br / {admin_password}")
 
 if __name__ == '__main__':
     init_database_production()
